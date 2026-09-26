@@ -35,8 +35,135 @@
         "contact_information": "District Collectorate / Divisional Commissioner Office"
       }
     ],
-    "documents": [],
-    "prerequisites": [],
+    "documents": [
+      {
+        "document_code": "lbl_1_4600",
+        "category": "Proof of Identity",
+        "document_name": "Aadhaar Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": "Government issued biometric identity",
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_1_4607",
+        "category": "Proof of Identity",
+        "document_name": "PAN Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_1_4601",
+        "category": "Proof of Identity",
+        "document_name": "Passport",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_1_4604",
+        "category": "Proof of Identity",
+        "document_name": "Voter ID Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_1_4602",
+        "category": "Proof of Identity",
+        "document_name": "Driving License",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_2_4613",
+        "category": "Proof of Address",
+        "document_name": "Aadhaar Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_2_4609",
+        "category": "Proof of Address",
+        "document_name": "Ration Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_2_4614",
+        "category": "Proof of Address",
+        "document_name": "Electricity Bill",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_2_4615",
+        "category": "Proof of Address",
+        "document_name": "Water Bill",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_3_inc1",
+        "category": "Proof of Income",
+        "document_name": "Salary Certificate / Form 16 from Employer",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": "Required for salaried individuals",
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_3_inc2",
+        "category": "Proof of Income",
+        "document_name": "Income Verification Certificate / Talathi Enquiry Report",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": "Issued by Competent Revenue Officer (Tahsildar / Talathi)",
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_3_inc3",
+        "category": "Proof of Income",
+        "document_name": "Income Tax Return (ITR) Acknowledgment",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": "For self-employed and business applicants",
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      },
+      {
+        "document_code": "lbl_3_inc4",
+        "category": "Proof of Income",
+        "document_name": "Self-Declaration / Income Affidavit",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": "Statutory self-declaration format as per RTS Act",
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+      }
+    ],
+    "prerequisites": [
+      {
+        "prerequisite_name": "Aadhaar Card Linked Mobile Number",
+        "description": "Required for OTP verification and e-KYC on the Aaple Sarkar portal."
+      },
+      {
+        "prerequisite_name": "Annual Family Income Statement",
+        "description": "Documentation proving total family income for the preceding financial year."
+      }
+    ],
     "dependencies": [],
     "fee": {
       "amount": null,
@@ -1241,8 +1368,59 @@
         "contact_information": "District Collectorate / Divisional Commissioner Office"
       }
     ],
-    "documents": [],
-    "prerequisites": [],
+    "documents": [
+      {
+        "document_code": "lbl_1_se1",
+        "category": "Proof of Identity",
+        "document_name": "Aadhaar Card of Proprietor / Partners / Directors",
+        "is_mandatory": true,
+        "group_rule": "Mandatory",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863"
+      },
+      {
+        "document_code": "lbl_1_se2",
+        "category": "Proof of Identity",
+        "document_name": "PAN Card of Business / Proprietor",
+        "is_mandatory": true,
+        "group_rule": "Mandatory",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863"
+      },
+      {
+        "document_code": "lbl_2_se1",
+        "category": "Proof of Address",
+        "document_name": "Commercial Premises Electricity Bill / Property Tax Receipt",
+        "is_mandatory": true,
+        "group_rule": "Mandatory",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863"
+      },
+      {
+        "document_code": "lbl_2_se2",
+        "category": "Proof of Address",
+        "document_name": "Registered Rent Agreement / Lease Deed / NOC from Landlord",
+        "is_mandatory": true,
+        "group_rule": "Mandatory",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863"
+      },
+      {
+        "document_code": "lbl_3_se1",
+        "category": "Other Documents",
+        "document_name": "Photograph of Establishment with Name Board (in Marathi / Devanagari script)",
+        "is_mandatory": true,
+        "group_rule": "Mandatory",
+        "notes": "Statutory display requirement under Maharashtra Shops & Establishments Act",
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863"
+      }
+    ],
+    "prerequisites": [
+      {
+        "prerequisite_name": "Commercial Premises Agreement / Possession Proof",
+        "description": "Legal possession or tenancy right to operate business at the premises."
+      }
+    ],
     "dependencies": [],
     "fee": {
       "amount": null,

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Civic Task Navigator - Verified Government Service Steps</title>
+  <meta name="description" content="Find the steps required to complete a government service backed by verified PostgreSQL records.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <!-- Header Section -->
+  <header class="site-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="site-title">Civic Task Navigator</h1>
+          <p class="site-subtitle">Find the steps required to complete a government service.</p>
+        </div>
+      </div>
+      <div class="provenance-badge">
+        <span class="badge-dot"></span> Verified PostgreSQL Data Source
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-container">
+    <!-- Search Form Section -->
+    <section class="search-card">
+      <form id="searchForm" class="search-form">
+        <div class="form-group form-group-query">
+          <label for="queryInput" class="form-label">What government service do you need?</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              id="queryInput" 
+              name="q" 
+              class="form-control" 
+              placeholder="Steps to register for an income certificate in Thane" 
+              value="{{ initial_query }}"
+              required
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group form-group-location">
+            <label for="locationInput" class="form-label">Location (City / District)</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <input 
+                type="text" 
+                id="locationInput" 
+                name="location" 
+                class="form-control" 
+                placeholder="Thane, Maharashtra" 
+                value="{{ initial_location }}"
+              />
+            </div>
+          </div>
+
+          <div class="form-group form-group-btn">
+            <button type="submit" id="findStepsBtn" class="btn btn-primary">
+              <span class="btn-text">Find Steps</span>
+              <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Example Queries -->
+      <div class="examples-container">
+        <span class="examples-label">Try searching:</span>
+        <div class="example-chips">
+          <button type="button" class="chip-btn" data-query="Steps to register for an income certificate in Thane" data-location="Thane, Maharashtra">
+            Steps to register for an income certificate in Thane
+          </button>
+          <button type="button" class="chip-btn" data-query="How do I get an income certificate?" data-location="Maharashtra State">
+            How do I get an income certificate?
+          </button>
+          <button type="button" class="chip-btn" data-query="Register a small business in Pune" data-location="Pune, Maharashtra">
+            Register a small business in Pune
+          </button>
+          <button type="button" class="chip-btn" data-query="How to get a caste certificate?" data-location="Maharashtra State">
+            How to get a caste certificate?
+          </button>
+          <button type="button" class="chip-btn" data-query="7/12 Land Record Extract" data-location="Maharashtra State">
+            7/12 Land Record Extract
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="state-container hidden">
+      <div class="spinner"></div>
+      <p class="loading-text">Querying PostgreSQL verified service records...</p>
+    </div>
+
+    <!-- Error / Not Found Container -->
+    <div id="notFoundContainer" class="not-found-card hidden">
+      <div class="not-found-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="not-found-body">
+        <h2 class="not-found-title" id="notFoundTitle">We could not find sufficient verified information for this service in our current database.</h2>
+        <p class="not-found-explanation">
+          To maintain strict fidelity to law and official statutory procedures, we do <strong>not</strong> invent or hallucinate government processes. Only services with verified administrative provenance in PostgreSQL are displayed.
+        </p>
+        <div class="verified-suggestions">
+          <span class="suggestions-label">Available verified services in our database:</span>
+          <div id="availableServicesList" class="available-chips"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultContainer" class="result-container hidden">
+      <!-- Service Summary Header -->
+      <section class="service-header-card">
+        <div class="service-meta-top">
+          <span class="service-id-badge" id="serviceIdBadge">Service ID: 1251</span>
+          <span class="service-sla-badge" id="serviceSlaBadge">Statutory SLA: 15 Days</span>
+        </div>
+        <h2 class="service-name" id="serviceNameDisplay">Income Certificate</h2>
+        
+        <div class="service-location-row">
+          <div class="loc-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span id="serviceLocationDisplay">Thane, Maharashtra</span>
+          </div>
+          <div class="dept-item">
+            <span class="dept-label">Department:</span>
+            <span class="dept-name" id="serviceDepartmentDisplay">Revenue and Forest Department</span>
+          </div>
+        </div>
+
+        <p class="service-description" id="serviceDescriptionDisplay">
+          Official public service 'Income Certificate' under the Maharashtra Right to Public Services Act (RTS).
+        </p>
+      </section>
+
+      <!-- Roadmap Section -->
+      <section class="roadmap-card">
+        <div class="section-title-row">
+          <h3 class="section-heading">ROADMAP</h3>
+          <span class="section-subheading">Step-by-step statutory execution path</span>
+        </div>
+
+        <div id="roadmapTimeline" class="roadmap-timeline">
+          <!-- Dynamically populated roadmap steps with connectors -->
+        </div>
+      </section>
+
+      <!-- Verified Information Grid -->
+      <section class="metadata-card">
+        <div class="section-title-row">
+          <h3 class="section-heading">Verified Service Information</h3>
+          <span class="provenance-tag">Direct PostgreSQL Source of Truth</span>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-box">
+            <span class="meta-label">Department</span>
+            <p class="meta-value" id="metaDepartment">-</p>
+          </div>
+
+          <div class="meta-box">
+            <span class="meta-label">Location / Jurisdiction</span>
+            <p class="meta-value" id="metaLocation">-</p>
+          </div>
+
+          <div class="meta-box">
+            <span class="meta-label">Processing Time</span>
+            <p class="meta-value" id="metaProcessingTime">-</p>
+          </div>
+
+          <div class="meta-box">
+            <span class="meta-label">Statutory Fee</span>
+            <p class="meta-value" id="metaFee">-</p>
+          </div>
+
+          <div class="meta-box meta-box-wide">
+            <span class="meta-label">Eligibility Criteria</span>
+            <p class="meta-value" id="metaEligibility">-</p>
+          </div>
+
+          <div class="meta-box meta-box-wide">
+            <span class="meta-label">Application Method</span>
+            <p class="meta-value" id="metaAppMethod">-</p>
+          </div>
+
+          <div class="meta-box meta-box-wide">
+            <span class="meta-label">Official Application URL</span>
+            <p class="meta-value">
+              <a href="#" id="metaAppUrl" class="official-link" target="_blank" rel="noopener noreferrer">
+                <span>Open Official Application Portal</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </p>
+          </div>
+
+          <div class="meta-box meta-box-wide">
+            <span class="meta-label">Official Source URL (Provenance)</span>
+            <p class="meta-value">
+              <a href="#" id="metaSourceUrl" class="official-link" target="_blank" rel="noopener noreferrer">
+                <span>View Official Source on Aaple Sarkar</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </p>
+          </div>
+
+          <div class="meta-box">
+            <span class="meta-label">Last Verified Date</span>
+            <p class="meta-value" id="metaVerifiedDate">-</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <p>Municipal Bureaucracy Path Visualizer • Civic Task Navigator</p>
+      <p class="footer-sub">All statutory data originates strictly from verified PostgreSQL government records.</p>
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
