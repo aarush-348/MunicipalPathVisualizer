@@ -1,0 +1,1738 @@
+[
+  {
+    "service_id": "1251",
+    "service_name": "Income Certificate",
+    "original_service_name": "Income Certificate",
+    "department": "Revenue and Forest Department",
+    "department_code": "RevDept",
+    "sub_department": "Revenue Services",
+    "description": "Official public service 'Income Certificate' under the Maharashtra Right to Public Services Act (RTS), administered by Revenue and Forest Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 15,
+    "processing_time_raw": "15",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Nayab Tahsildar",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Tahsildar",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Sub Divisional Officer",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251",
+      "source_title": "Aaple Sarkar Portal - Income Certificate",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:29:56.625115+00:00",
+      "last_verified_at": "2026-09-26T15:29:56.625115+00:00"
+    }
+  },
+  {
+    "service_id": "1253",
+    "service_name": "Age Nationality and Domicile Certificate",
+    "original_service_name": "Age Nationality and Domicile Certificate",
+    "department": "Revenue and Forest Department",
+    "department_code": "RevDept",
+    "sub_department": "Revenue Services",
+    "description": "Official public service 'Age Nationality and Domicile Certificate' under the Maharashtra Right to Public Services Act (RTS), administered by Revenue and Forest Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 15,
+    "processing_time_raw": "15",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Tahsildar",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Sub Divisional Officer",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Additional Collector",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253",
+      "source_title": "Aaple Sarkar Portal - Age Nationality and Domicile Certificate",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:29:57.274355+00:00",
+      "last_verified_at": "2026-09-26T15:29:57.274355+00:00"
+    }
+  },
+  {
+    "service_id": "1284",
+    "service_name": "Caste Certificate",
+    "original_service_name": "Caste Certificate",
+    "department": "Revenue and Forest Department",
+    "department_code": "RevDept",
+    "sub_department": "Revenue Services",
+    "description": "Official public service 'Caste Certificate' under the Maharashtra Right to Public Services Act (RTS), administered by Revenue and Forest Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 45,
+    "processing_time_raw": "45",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Sub-Divisional Officer/ Dy. Collector",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Additional Collector",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Collector",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [
+      {
+        "document_code": "lbl_1_4607",
+        "category": "Proof of Identity",
+        "document_name": "PAN Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_1_4601",
+        "category": "Proof of Identity",
+        "document_name": "Passport",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_1_4603",
+        "category": "Proof of Identity",
+        "document_name": "RSBY Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_1_4608",
+        "category": "Proof of Identity",
+        "document_name": "MNREGA Job Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_1_4602",
+        "category": "Proof of Identity",
+        "document_name": "Driver’s License",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_1_4597",
+        "category": "Proof of Identity",
+        "document_name": "Photo of Applicant",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_1_4606",
+        "category": "Proof of Identity",
+        "document_name": "Identity card issued by Govt or Semi Govt organisations",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4612",
+        "category": "Proof of Address",
+        "document_name": "Passport",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4615",
+        "category": "Proof of Address",
+        "document_name": "Water Bill",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4609",
+        "category": "Proof of Address",
+        "document_name": "Ration Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4613",
+        "category": "Proof of Address",
+        "document_name": "Aadhaar Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4611",
+        "category": "Proof of Address",
+        "document_name": "Voter ID Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4617",
+        "category": "Proof of Address",
+        "document_name": "Telephone Bill",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4610",
+        "category": "Proof of Address",
+        "document_name": "Driving License",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4614",
+        "category": "Proof of Address",
+        "document_name": "Electricity Bill",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4618",
+        "category": "Proof of Address",
+        "document_name": "Property Tax Receipt",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_2_4616",
+        "category": "Proof of Address",
+        "document_name": "Extracts of 7/12 and 8 A/ Rent Receipt",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_561",
+        "category": "Other Documents",
+        "document_name": "Other",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_538",
+        "category": "Other Documents",
+        "document_name": "Affidavit",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_826",
+        "category": "Other Documents",
+        "document_name": "8 A Extract",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_825",
+        "category": "Other Documents",
+        "document_name": "7/12 Extract",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_965",
+        "category": "Other Documents",
+        "document_name": "Caste Validity",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_555",
+        "category": "Other Documents",
+        "document_name": "Deposit Receipt",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_556",
+        "category": "Other Documents",
+        "document_name": "Copy of Khasara",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_549",
+        "category": "Other Documents",
+        "document_name": "Record of Rights",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_553",
+        "category": "Other Documents",
+        "document_name": "Copy of Voter List",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_557",
+        "category": "Other Documents",
+        "document_name": "Copy of Service Book",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_546",
+        "category": "Other Documents",
+        "document_name": "Photo of Benificiary",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_544",
+        "category": "Other Documents",
+        "document_name": "Photo ID of Applicant",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_975",
+        "category": "Other Documents",
+        "document_name": "Circle Enquiry Report",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_558",
+        "category": "Other Documents",
+        "document_name": "Photo ID of Beneficiary",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_547",
+        "category": "Other Documents",
+        "document_name": "Extract of Talathi Book",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_559",
+        "category": "Other Documents",
+        "document_name": "Gazzate Notification copy",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_552",
+        "category": "Other Documents",
+        "document_name": "School Leaving Certificate",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_962",
+        "category": "Other Documents",
+        "document_name": "Copy of Death Certificate",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_837",
+        "category": "Other Documents",
+        "document_name": "Copy of Kotwal Book of Uncle",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_834",
+        "category": "Other Documents",
+        "document_name": "Copy of Kotwal Book of Father",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_827",
+        "category": "Other Documents",
+        "document_name": "Salary Certificate or Form 16",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_537",
+        "category": "Other Documents",
+        "document_name": "Application in form B of Dated",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_548",
+        "category": "Other Documents",
+        "document_name": "Caste Certificate of the Father",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_828",
+        "category": "Other Documents",
+        "document_name": "Caste Certificate of the Relative",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_844",
+        "category": "Other Documents",
+        "document_name": "Resident Proof of Gram Panchayat",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_539",
+        "category": "Other Documents",
+        "document_name": "TC Bonafide Certificate (TC No)",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_986",
+        "category": "Other Documents",
+        "document_name": "Copy of Caste Validity of Brother",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_843",
+        "category": "Other Documents",
+        "document_name": "Resident Proof of Nagar Parishad",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_835",
+        "category": "Other Documents",
+        "document_name": "Copy of Kotwal Book of Grandfather",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_836",
+        "category": "Other Documents",
+        "document_name": "Copy of Kotwal Book of Grandmother",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_840",
+        "category": "Other Documents",
+        "document_name": "Form 16 of the employer for 3 years",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_542",
+        "category": "Other Documents",
+        "document_name": "Relation Certificate (Relation Self)",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_846",
+        "category": "Other Documents",
+        "document_name": "Copy of Adoption Will by Grandfather",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_841",
+        "category": "Other Documents",
+        "document_name": "Copy of Caste Certificate Applicant",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_830",
+        "category": "Other Documents",
+        "document_name": "Affidavit submitted by the Applicant",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_838",
+        "category": "Other Documents",
+        "document_name": "Income proof of 3 years from Talathi",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_543",
+        "category": "Other Documents",
+        "document_name": "Special Executive Officer certificate",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_550",
+        "category": "Other Documents",
+        "document_name": "Extract of Register showing the entry",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_847",
+        "category": "Other Documents",
+        "document_name": "Copy of Death Certificate Grandfather",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_829",
+        "category": "Other Documents",
+        "document_name": "Application submitted by the Applicant",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_845",
+        "category": "Other Documents",
+        "document_name": "Copy of Ration Card & Electoral Photo ID",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_842",
+        "category": "Other Documents",
+        "document_name": "Resident Proof of Municipal Corporation",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_839",
+        "category": "Other Documents",
+        "document_name": "Income proof – Salary Certificate of 3 years",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_832",
+        "category": "Other Documents",
+        "document_name": "Copy of School Leaving Certificate of Father",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_833",
+        "category": "Other Documents",
+        "document_name": "Copy of School Leaving Certificate of Grandfather",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_831",
+        "category": "Other Documents",
+        "document_name": "Copy of School Leaving Certificate of beneficiary",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_540",
+        "category": "Other Documents",
+        "document_name": "Enquiry Report of Talathi / Sarpanch /Police Patil",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_554",
+        "category": "Other Documents",
+        "document_name": "Extract of Birth/Death in the Gram Panchayat Register",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_560",
+        "category": "Other Documents",
+        "document_name": "राजपत्रामध्ये जाहीर केलेल्या नावातील बदलाबाबतचा पुरावा",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_535",
+        "category": "Other Documents",
+        "document_name": "Caste Certificate issue by the Local Competent Authority",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_536",
+        "category": "Other Documents",
+        "document_name": "Income Certificate for the last 3 years issued by the Tahsildar",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      },
+      {
+        "document_code": "lbl_3_541",
+        "category": "Other Documents",
+        "document_name": "Certificate of the member of Municipal Councilor/ Municipal Corporation",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      }
+    ],
+    "prerequisites": [
+      {
+        "prerequisite_name": "7 -12 Extract",
+        "description": "Proof of Land/Cultivation: 7/12 Extract is an official prerequisite document.",
+        "mandatory": true,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      }
+    ],
+    "dependencies": [
+      {
+        "depends_on_service_name": "7 -12 Extract",
+        "depends_on_service_id": "4440",
+        "dependency_type": "Prerequisite Land Record",
+        "description": "Proof of Land/Cultivation: 7/12 Extract is an official prerequisite document.",
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+      }
+    ],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284",
+      "source_title": "Aaple Sarkar Portal - Caste Certificate",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:29:57.915945+00:00",
+      "last_verified_at": "2026-09-26T15:29:57.915945+00:00"
+    }
+  },
+  {
+    "service_id": "1286",
+    "service_name": "Non Creamy Layer Certificate",
+    "original_service_name": "Non Creamy Layer Certificate",
+    "department": "Revenue and Forest Department",
+    "department_code": "RevDept",
+    "sub_department": "Revenue Services",
+    "description": "Official public service 'Non Creamy Layer Certificate' under the Maharashtra Right to Public Services Act (RTS), administered by Revenue and Forest Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 21,
+    "processing_time_raw": "21",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Sub Divisional Officer",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Additional Collector",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Collector",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [
+      {
+        "document_code": "lbl_1_15044",
+        "category": "Proof of Identity",
+        "document_name": "PAN Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_1_15045",
+        "category": "Proof of Identity",
+        "document_name": "Passport",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_1_15042",
+        "category": "Proof of Identity",
+        "document_name": "Aadhaar Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_1_15046",
+        "category": "Proof of Identity",
+        "document_name": "Voter ID Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_1_15043",
+        "category": "Proof of Identity",
+        "document_name": "Driving License",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15051",
+        "category": "Proof of Address",
+        "document_name": "Passport",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15055",
+        "category": "Proof of Address",
+        "document_name": "Water Bill",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15053",
+        "category": "Proof of Address",
+        "document_name": "Ration Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15047",
+        "category": "Proof of Address",
+        "document_name": "Aadhaar Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15054",
+        "category": "Proof of Address",
+        "document_name": "Voter ID Card",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15048",
+        "category": "Proof of Address",
+        "document_name": "Driving License",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15049",
+        "category": "Proof of Address",
+        "document_name": "Electricity Bill",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15052",
+        "category": "Proof of Address",
+        "document_name": "Property Tax Receipt",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_2_15050",
+        "category": "Proof of Address",
+        "document_name": "Extracts of 7/12 and 8 A/ Rent Receipt",
+        "is_mandatory": true,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_15_15057",
+        "category": "Mandatory Documents(All Mandatory)",
+        "document_name": "Income proof",
+        "is_mandatory": false,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      },
+      {
+        "document_code": "lbl_15_15056",
+        "category": "Mandatory Documents(All Mandatory)",
+        "document_name": "Caste certificate",
+        "is_mandatory": false,
+        "group_rule": "Select 1",
+        "notes": null,
+        "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+      }
+    ],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286",
+      "source_title": "Aaple Sarkar Portal - Non Creamy Layer Certificate",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:29:58.593788+00:00",
+      "last_verified_at": "2026-09-26T15:29:58.593788+00:00"
+    }
+  },
+  {
+    "service_id": "1254",
+    "service_name": "Solvency Certificate",
+    "original_service_name": "Solvency Certificate",
+    "department": "Revenue and Forest Department",
+    "department_code": "RevDept",
+    "sub_department": "Revenue Services",
+    "description": "Official public service 'Solvency Certificate' under the Maharashtra Right to Public Services Act (RTS), administered by Revenue and Forest Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 21,
+    "processing_time_raw": "21",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Nayab Tahsildar (Upto Rs. 2 Lacs)",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Tahsildar",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Sub Divisional Officer",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1254"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1254",
+      "source_title": "Aaple Sarkar Portal - Solvency Certificate",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:29:59.220818+00:00",
+      "last_verified_at": "2026-09-26T15:29:59.220818+00:00"
+    }
+  },
+  {
+    "service_id": "1255",
+    "service_name": "Senior Citizen Certificate",
+    "original_service_name": "Senior Citizen Certificate",
+    "department": "Revenue and Forest Department",
+    "department_code": "RevDept",
+    "sub_department": "Revenue Services",
+    "description": "Official public service 'Senior Citizen Certificate' under the Maharashtra Right to Public Services Act (RTS), administered by Revenue and Forest Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 7,
+    "processing_time_raw": "7",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Tahsildar",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Sub Divisional Officer",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Additional Collector",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1255"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1255",
+      "source_title": "Aaple Sarkar Portal - Senior Citizen Certificate",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:29:59.847450+00:00",
+      "last_verified_at": "2026-09-26T15:29:59.847450+00:00"
+    }
+  },
+  {
+    "service_id": "4440",
+    "service_name": "7 -12 Extract",
+    "original_service_name": "7 -12 Extract",
+    "department": "Revenue and Forest Department",
+    "department_code": "RevDept",
+    "sub_department": "Land Records & Revenue",
+    "description": "Official public service '7 -12 Extract' under the Maharashtra Right to Public Services Act (RTS), administered by Revenue and Forest Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 1,
+    "processing_time_raw": "1",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Talathi",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Circle Officer",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Tahsildar",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=4440"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=4440",
+      "source_title": "Aaple Sarkar Portal - 7 -12 Extract",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:00.542319+00:00",
+      "last_verified_at": "2026-09-26T15:30:00.542319+00:00"
+    }
+  },
+  {
+    "service_id": "2318",
+    "service_name": "Agriculturist Certificate",
+    "original_service_name": "Agriculturist Certificate",
+    "department": "Revenue and Forest Department",
+    "department_code": "RevDept",
+    "sub_department": "Revenue Services",
+    "description": "Official public service 'Agriculturist Certificate' under the Maharashtra Right to Public Services Act (RTS), administered by Revenue and Forest Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 15,
+    "processing_time_raw": "15",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Tahsildar",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Sub Divisional Officer",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Additional Collector",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2318"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2318",
+      "source_title": "Aaple Sarkar Portal - Agriculturist Certificate",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:01.233517+00:00",
+      "last_verified_at": "2026-09-26T15:30:01.233517+00:00"
+    }
+  },
+  {
+    "service_id": "1863",
+    "service_name": "Application for Registration of Shops & Establishment (Form A)",
+    "original_service_name": "Application for Registration of Shops & Establishment (Form A)",
+    "department": "Urban Development Department",
+    "department_code": "UDD",
+    "sub_department": "Brihanmumbai Municipal Corporation",
+    "description": "Official public service 'Application for Registration of Shops & Establishment (Form A)' under the Maharashtra Right to Public Services Act (RTS), administered by Urban Development Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 7,
+    "processing_time_raw": "7",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Senior Inspector (Shops and Establishments)",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Assistant Municipal Commissioner",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Deputy Municipal Commissioner",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863",
+      "source_title": "Aaple Sarkar Portal - Application for Registration of Shops & Establishment (Form A)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:01.897446+00:00",
+      "last_verified_at": "2026-09-26T15:30:01.897446+00:00"
+    }
+  },
+  {
+    "service_id": "1864",
+    "service_name": "Application for Notice of Change in Shops & Establishment (Form I)",
+    "original_service_name": "Application for Notice of Change in Shops & Establishment (Form I)",
+    "department": "Urban Development Department",
+    "department_code": "UDD",
+    "sub_department": "Brihanmumbai Municipal Corporation",
+    "description": "Official public service 'Application for Notice of Change in Shops & Establishment (Form I)' under the Maharashtra Right to Public Services Act (RTS), administered by Urban Development Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 7,
+    "processing_time_raw": "7",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Senior Inspector (Shops and Establishments)",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Assistant Municipal Commissioner",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Deputy Municipal Commissioner",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1864"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1864",
+      "source_title": "Aaple Sarkar Portal - Application for Notice of Change in Shops & Establishment (Form I)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:02.544462+00:00",
+      "last_verified_at": "2026-09-26T15:30:02.544462+00:00"
+    }
+  },
+  {
+    "service_id": "1866",
+    "service_name": "Application for Cancellation of Shops & Establishment (Form J)",
+    "original_service_name": "Application for Cancellation of Shops & Establishment (Form J)",
+    "department": "Urban Development Department",
+    "department_code": "UDD",
+    "sub_department": "Brihanmumbai Municipal Corporation",
+    "description": "Official public service 'Application for Cancellation of Shops & Establishment (Form J)' under the Maharashtra Right to Public Services Act (RTS), administered by Urban Development Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 7,
+    "processing_time_raw": "7",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Senior Inspector (Shops and Establishments)",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Assistant Municipal Commissioner",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Deputy Municipal Commissioner",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1866"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1866",
+      "source_title": "Aaple Sarkar Portal - Application for Cancellation of Shops & Establishment (Form J)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:03.182733+00:00",
+      "last_verified_at": "2026-09-26T15:30:03.182733+00:00"
+    }
+  },
+  {
+    "service_id": "7129",
+    "service_name": "Application for Cancellation (Trade Licence)",
+    "original_service_name": "Application for Cancellation (Trade Licence)",
+    "department": "Urban Development Department",
+    "department_code": "UDD",
+    "sub_department": "Brihanmumbai Municipal Corporation",
+    "description": "Official public service 'Application for Cancellation (Trade Licence)' under the Maharashtra Right to Public Services Act (RTS), administered by Urban Development Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 7,
+    "processing_time_raw": "7",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Ward Sr.Inspector (Licence)",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Ward Asstt. Commissioner",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Zonal DMC",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=7129"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=7129",
+      "source_title": "Aaple Sarkar Portal - Application for Cancellation (Trade Licence)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:03.819124+00:00",
+      "last_verified_at": "2026-09-26T15:30:03.819124+00:00"
+    }
+  },
+  {
+    "service_id": "7084",
+    "service_name": "Building Permission (BPMS)",
+    "original_service_name": "Building Permission (BPMS)",
+    "department": "Urban Development Department",
+    "department_code": "UDD",
+    "sub_department": "Building Permission Management System",
+    "description": "Official public service 'Building Permission (BPMS)' under the Maharashtra Right to Public Services Act (RTS), administered by Urban Development Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 30,
+    "processing_time_raw": "30",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Assistant Town Planner / Town Planning Officer",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Associate Town Planner",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Municipal Commissioner / Chief Officer",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=7084"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=7084",
+      "source_title": "Aaple Sarkar Portal - Building Permission (BPMS)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:04.444189+00:00",
+      "last_verified_at": "2026-09-26T15:30:04.444189+00:00"
+    }
+  },
+  {
+    "service_id": "8864",
+    "service_name": "Commencement Certificate (AutoDCR)",
+    "original_service_name": "Commencement Certificate (AutoDCR)",
+    "department": "Urban Development Department",
+    "department_code": "UDD",
+    "sub_department": "Building Permission System - AutoDCR",
+    "description": "Official public service 'Commencement Certificate (AutoDCR)' under the Maharashtra Right to Public Services Act (RTS), administered by Urban Development Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 30,
+    "processing_time_raw": "30",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Assistant Town Planner",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Deputy Director Town Planning",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Municipal Commissioner",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8864"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8864",
+      "source_title": "Aaple Sarkar Portal - Commencement Certificate (AutoDCR)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:05.215249+00:00",
+      "last_verified_at": "2026-09-26T15:30:05.215249+00:00"
+    }
+  },
+  {
+    "service_id": "8865",
+    "service_name": "Plinth Completion Certificate (AutoDCR)",
+    "original_service_name": "Plinth Completion Certificate (AutoDCR)",
+    "department": "Urban Development Department",
+    "department_code": "UDD",
+    "sub_department": "Building Permission System - AutoDCR",
+    "description": "Official public service 'Plinth Completion Certificate (AutoDCR)' under the Maharashtra Right to Public Services Act (RTS), administered by Urban Development Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 15,
+    "processing_time_raw": "15",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Executive Engineer / Building Proposal Officer",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Superintending Engineer",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Chief Engineer",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8865"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8865",
+      "source_title": "Aaple Sarkar Portal - Plinth Completion Certificate (AutoDCR)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:05.858209+00:00",
+      "last_verified_at": "2026-09-26T15:30:05.858209+00:00"
+    }
+  },
+  {
+    "service_id": "8866",
+    "service_name": "Occupancy Certificate (AutoDCR)",
+    "original_service_name": "Occupancy Certificate (AutoDCR)",
+    "department": "Urban Development Department",
+    "department_code": "UDD",
+    "sub_department": "Building Permission System - AutoDCR",
+    "description": "Official public service 'Occupancy Certificate (AutoDCR)' under the Maharashtra Right to Public Services Act (RTS), administered by Urban Development Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 30,
+    "processing_time_raw": "30",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Assistant Town Planner / Executive Engineer",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "City Planner",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Municipal Commissioner",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8866"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8866",
+      "source_title": "Aaple Sarkar Portal - Occupancy Certificate (AutoDCR)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:06.502249+00:00",
+      "last_verified_at": "2026-09-26T15:30:06.502249+00:00"
+    }
+  },
+  {
+    "service_id": "2476",
+    "service_name": "Birth Certificate (Rural)",
+    "original_service_name": "Birth Certificate (Rural)",
+    "department": "Rural Development and Panchayat Raj Department",
+    "department_code": "EPRI",
+    "sub_department": "Panchayat Raj Services",
+    "description": "Official public service 'Birth Certificate (Rural)' under the Maharashtra Right to Public Services Act (RTS), administered by Rural Development and Panchayat Raj Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 5,
+    "processing_time_raw": "5",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Gram Sevak",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Assistant Block Development Officer",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Block Development Officer",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2476"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2476",
+      "source_title": "Aaple Sarkar Portal - Birth Certificate (Rural)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:07.174582+00:00",
+      "last_verified_at": "2026-09-26T15:30:07.174582+00:00"
+    }
+  },
+  {
+    "service_id": "2480",
+    "service_name": "Death Certificate (Rural)",
+    "original_service_name": "Death Certificate (Rural)",
+    "department": "Rural Development and Panchayat Raj Department",
+    "department_code": "EPRI",
+    "sub_department": "Panchayat Raj Services",
+    "description": "Official public service 'Death Certificate (Rural)' under the Maharashtra Right to Public Services Act (RTS), administered by Rural Development and Panchayat Raj Department.",
+    "eligibility": "Citizen/Resident or registered business entity in the State of Maharashtra meeting statutory documentation criteria.",
+    "service_type": "Citizen / Business Service",
+    "application_method": "Online via Aaple Sarkar Portal or In-Person at Aaple Sarkar Seva Kendra (CSC)",
+    "application_url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "processing_time_days": 5,
+    "processing_time_raw": "5",
+    "applicable_location": "Maharashtra State (Statewide / Municipal Jurisdiction)",
+    "status": "Active Notified Service",
+    "officers": [
+      {
+        "officer_type": "Designated Officer",
+        "designation": "Gram Sevak",
+        "officer_name": null,
+        "contact_information": "Respective District/Taluka/Ward Administrative Office"
+      },
+      {
+        "officer_type": "First Appellate Officer",
+        "designation": "Assistant Block Development Officer",
+        "officer_name": null,
+        "contact_information": "Sub-Divisional / Municipal Appellate Authority"
+      },
+      {
+        "officer_type": "Second Appellate Officer",
+        "designation": "Block Development Officer",
+        "officer_name": null,
+        "contact_information": "District Collectorate / Divisional Commissioner Office"
+      }
+    ],
+    "documents": [],
+    "prerequisites": [],
+    "dependencies": [],
+    "fee": {
+      "amount": null,
+      "currency": "INR",
+      "description": "Statutory application and facilitation fee per Maharashtra Right to Public Services Rules",
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2480"
+    },
+    "source": {
+      "source_url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2480",
+      "source_title": "Aaple Sarkar Portal - Death Certificate (Rural)",
+      "source_type": "Official Government Portal",
+      "scraped_at": "2026-09-26T15:30:07.820503+00:00",
+      "last_verified_at": "2026-09-26T15:30:07.820503+00:00"
+    }
+  }
+]

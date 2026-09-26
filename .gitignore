@@ -1,0 +1,17 @@
+# Virtual environment
+env/
+venv/
+.env
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Local logs
+logs/*.log
+
+# Scratch scripts
+scratch/
+
+# Local runner wrapper
+powershell.bat
