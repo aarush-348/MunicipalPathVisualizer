@@ -1,0 +1,605 @@
+/* ==========================================================================
+   CIVIC TASK NAVIGATOR — CIVIC TRANSIT LEDGER DESIGN SYSTEM
+   Grounded in 20th-century municipal wayfinding (Vignelli NYC Subway / TfL)
+   and authoritative official government ledger discipline.
+   ========================================================================== */
+
+:root {
+  /* Institutional Palette */
+  --primary: #000b21;
+  --primary-container: #152238;
+  --primary-fixed: #d7e3ff;
+  --primary-fixed-dim: #bac7e4;
+  --on-primary: #ffffff;
+  --on-primary-container: #7d89a4;
+
+  --secondary: #51606f;
+  --secondary-fixed: #d5e4f6;
+  --secondary-fixed-dim: #b9c8d9;
+  --on-secondary: #ffffff;
+  --secondary-container: #d2e1f3;
+  --on-secondary-container: #556473;
+
+  --tertiary: #130a00;
+  --tertiary-fixed: #ffdeaa;
+  --tertiary-fixed-dim: #f5bd58;
+  --signal-amber: #d9a441;
+  --signal-amber-bg: #fdf3e7;
+  --signal-amber-text: #8a5800;
+
+  --canvas: #f9faf8;
+  --paper: #ffffff;
+  --surface-dim: #d9dad8;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f3f4f2;
+  --surface-container: #edeeec;
+  --surface-container-high: #e7e8e6;
+  --surface-container-highest: #e2e3e1;
+
+  --on-surface: #191c1b;
+  --on-surface-variant: #44474d;
+  --outline: #75777e;
+  --outline-variant: #c5c6cd;
+  --border-strong: #cbd5e1;
+  --border-light: #d8dfe6;
+
+  /* Semantics */
+  --forest-green: #2f6848;
+  --forest-green-bg: #edf6f0;
+  --forest-green-text: #1d4a32;
+
+  --blocker-crimson: #c23b22;
+  --blocker-crimson-bg: #fdf0ed;
+  --blocker-crimson-text: #8a1f0d;
+
+  /* Typography */
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Elevation */
+  --shadow-architectural: 4px 4px 0px 0px rgba(21, 34, 56, 0.15);
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Base Normalization */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-family: var(--font-sans);
+  background-color: var(--canvas);
+  color: var(--on-surface);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Helpers */
+.font-headline { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.015em; }
+.font-prose { font-family: var(--font-serif); }
+.font-mono-code { font-family: var(--font-mono); font-size: 12px; }
+
+/* Structural Ledger Cards */
+.ledger-card {
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+}
+
+.ledger-card-primary {
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-top: 4px solid var(--primary-container);
+  border-radius: 4px;
+}
+
+.ledger-card-active {
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--signal-amber);
+  border-radius: 4px;
+}
+
+.ledger-card-verified {
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-left: 4px solid var(--forest-green);
+  border-radius: 4px;
+}
+
+/* Top Ticker Bar */
+.ticker-bar {
+  background-color: var(--primary);
+  color: var(--on-primary);
+  border-bottom: 1px solid var(--primary-container);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  height: 32px;
+}
+
+/* Header Navigation Bar */
+.main-header {
+  background: var(--paper);
+  border-bottom: 1px solid var(--outline-variant);
+  height: 72px;
+}
+
+.nav-tab-btn {
+  display: flex;
+  align-items: center;
+  padding: 0 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  text-decoration: none;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.nav-tab-btn:hover {
+  color: var(--on-surface);
+  background-color: var(--surface-container-low);
+}
+
+.nav-tab-btn.active {
+  color: var(--primary);
+  font-weight: 600;
+  border-bottom: 2px solid var(--primary);
+  background-color: var(--surface-container-low);
+}
+
+/* Status Chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.chip-action-required {
+  background-color: var(--signal-amber-bg);
+  color: var(--signal-amber-text);
+  border: 1px solid var(--signal-amber);
+}
+
+.chip-in-progress {
+  background-color: var(--surface-container-low);
+  color: var(--primary-container);
+  border: 1px solid var(--secondary);
+}
+
+.chip-verified {
+  background-color: var(--forest-green-bg);
+  color: var(--forest-green-text);
+  border: 1px solid var(--forest-green);
+}
+
+.chip-blocked {
+  background-color: var(--blocker-crimson-bg);
+  color: var(--blocker-crimson-text);
+  border: 1px solid var(--blocker-crimson);
+}
+
+.chip-code {
+  font-family: var(--font-mono);
+  background-color: var(--surface-container);
+  color: var(--primary-container);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+/* Buttons */
+.btn-civic-primary {
+  background-color: var(--primary-container);
+  color: var(--on-primary);
+  border: 1px solid var(--primary-container);
+  padding: 10px 18px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.btn-civic-primary:hover {
+  background-color: var(--primary);
+}
+
+.btn-civic-secondary {
+  background-color: var(--paper);
+  color: var(--primary-container);
+  border: 1px solid var(--border-strong);
+  padding: 8px 16px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-civic-secondary:hover {
+  background-color: var(--surface-container-low);
+  border-color: var(--primary-container);
+}
+
+/* Transit Graph & Subway Map Styling */
+.transit-diagram-container {
+  overflow-x: auto;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 1.5rem;
+}
+
+.transit-node {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.transit-node:hover circle {
+  stroke-width: 3px;
+}
+
+/* Pulse Animation for Active Station */
+@keyframes signal-pulse {
+  0% { transform: scale(0.95); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 0.2; }
+  100% { transform: scale(0.95); opacity: 0.6; }
+}
+
+.pulse-ring {
+  animation: signal-pulse 2s infinite ease-in-out;
+  transform-origin: center;
+}
+
+/* Structured Data Ledgers (Tables) */
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.ledger-table th {
+  background-color: var(--surface-container-low);
+  color: var(--primary-container);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.ledger-table td {
+  padding: 12px 14px;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--on-surface);
+}
+
+.ledger-table tr:hover td {
+  background-color: var(--surface-container-low);
+}
+
+/* Procedural Directive List */
+.directive-row {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--surface-container);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.directive-row:hover {
+  background-color: var(--surface-container-low);
+}
+
+/* Slide-over Drawer Backdrop */
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 14, 23, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 90;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.step-drawer {
+  position: fixed;
+  top: 0;
+  right: -580px;
+  width: 560px;
+  max-width: 95vw;
+  height: 100vh;
+  background: var(--paper);
+  border-left: 2px solid var(--primary-container);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.step-drawer.open {
+  right: 0;
+}
+
+/* DAG Canvas Wrapper */
+.dag-canvas-container {
+  width: 100%;
+  height: 520px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+#graph-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+#graph-canvas:active {
+  cursor: grabbing;
+}
+
+/* DAG Node styling */
+.node-rect {
+  fill: var(--paper);
+  stroke: var(--border-strong);
+  stroke-width: 1.5px;
+  rx: 4px;
+}
+
+.node-rect.status-completed {
+  stroke: var(--forest-green);
+  stroke-width: 2px;
+}
+
+.node-rect.status-ready {
+  stroke: var(--signal-amber);
+  stroke-width: 2px;
+}
+
+.node-rect.status-in_progress {
+  stroke: var(--primary-container);
+  stroke-width: 2.5px;
+}
+
+.node-rect.status-locked {
+  stroke: var(--outline-variant);
+  stroke-dasharray: 4, 3;
+}
+
+/* Canvas Toolbar */
+.canvas-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 4px;
+  background: var(--paper);
+  border: 1px solid var(--border-strong);
+  padding: 4px;
+  border-radius: 4px;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.tool-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--primary-container);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+}
+
+.tool-btn:hover {
+  background: var(--surface-container-low);
+  border-color: var(--border-strong);
+}
+
+.tool-btn.active {
+  background: var(--primary-container);
+  color: var(--on-primary);
+}
+
+/* Print Styles */
+@media print {
+  header, .canvas-toolbar, .no-print {
+    display: none !important;
+  }
+  main {
+    padding-top: 0 !important;
+  }
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
+/* ==========================================================================
+   GIGW 3.0 / INDIAN GOVERNMENT ACCESSIBILITY & STYLING COMPLIANCE
+   ========================================================================== */
+
+/* National Tricolor Top Accent Strip */
+.gov-tricolor-strip {
+  display: flex;
+  height: 4px;
+  width: 100%;
+}
+.gov-tricolor-strip .saffron {
+  flex: 1;
+  background-color: #ff9933;
+}
+.gov-tricolor-strip .white {
+  flex: 1;
+  background-color: #ffffff;
+}
+.gov-tricolor-strip .green {
+  flex: 1;
+  background-color: #138808;
+}
+
+/* Accessibility: Skip to Main Content */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 10px;
+  background: #000b21;
+  color: #ffffff;
+  padding: 8px 16px;
+  z-index: 1000;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s ease;
+  border: 2px solid #ff9933;
+}
+.skip-link:focus {
+  top: 10px;
+}
+
+/* Accessibility: Font Size Adjusters */
+body.font-size-sm {
+  font-size: 13px;
+}
+body.font-size-md {
+  font-size: 15px;
+}
+body.font-size-lg {
+  font-size: 17px;
+}
+body.font-size-xl {
+  font-size: 19px;
+}
+
+/* Accessibility: GIGW High Contrast Mode */
+body.high-contrast {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+}
+body.high-contrast header,
+body.high-contrast main,
+body.high-contrast footer,
+body.high-contrast section,
+body.high-contrast article,
+body.high-contrast div,
+body.high-contrast nav,
+body.high-contrast table,
+body.high-contrast thead,
+body.high-contrast tbody,
+body.high-contrast tr,
+body.high-contrast td,
+body.high-contrast th {
+  background-color: #000000 !important;
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+body.high-contrast a,
+body.high-contrast button {
+  color: #00ffff !important;
+  border-color: #00ffff !important;
+}
+body.high-contrast svg text {
+  fill: #ffff00 !important;
+}
+body.high-contrast svg path,
+body.high-contrast svg line {
+  stroke: #ffff00 !important;
+}
+body.high-contrast .chip-verified {
+  background: #003300 !important;
+  color: #00ff00 !important;
+  border-color: #00ff00 !important;
+}
+body.high-contrast .chip-action-required {
+  background: #332200 !important;
+  color: #ffcc00 !important;
+  border-color: #ffcc00 !important;
+}
+
+/* Modal Dialog Styles */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 11, 33, 0.65);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modal-backdrop.open {
+  display: flex;
+}
+.modal-dialog {
+  background: var(--paper);
+  border: 1px solid var(--primary);
+  box-shadow: 0 10px 25px rgba(0, 11, 33, 0.35);
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Document Locker Cards */
+.doc-card {
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.doc-card.ready {
+  border-left: 4px solid var(--forest-green);
+  background-color: #f7faf8;
+}
+.doc-card.missing {
+  border-left: 4px solid var(--signal-amber);
+  background-color: var(--paper);
+}
+
