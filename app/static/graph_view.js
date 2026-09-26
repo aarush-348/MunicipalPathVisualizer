@@ -330,4 +330,200 @@ class CivicGraphVisualizer {
     }
 }
 
+/**
+ * Dynamic Subway Transit Map Renderer
+ * Programmatically builds interactive subway transit route maps with casing trunk lines,
+ * dynamic branch forks, interchange stations, and status indicators for ANY civic task.
+ */
+class CivicSubwayRenderer {
+    constructor(svgId, onSelectCallback) {
+        this.svg = document.getElementById(svgId);
+        this.onSelect = onSelectCallback;
+    }
+
+    render(task, roadmap, completedStepIds, selectedStationId) {
+        if (!this.svg || !task || !task.steps || task.steps.length === 0) return;
+
+        const steps = task.steps;
+        const totalSteps = steps.length;
+        
+        // Dynamic SVG dimensions based on step count
+        const colWidth = totalSteps <= 4 ? 220 : (totalSteps <= 6 ? 160 : 135);
+        const svgHeight = 360;
+        const centerY = 180;
+
+        // Compute topological depth for each step based on prerequisites
+        const stepDepths = {};
+        steps.forEach((s) => {
+            if (!s.prerequisites || s.prerequisites.length === 0) {
+                stepDepths[s.id] = 0;
+            } else {
+                const maxParent = Math.max(...s.prerequisites.map(p => stepDepths[p] !== undefined ? stepDepths[p] : 0));
+                stepDepths[s.id] = maxParent + 1;
+            }
+        });
+
+        // Group steps by depth
+        const depthGroups = {};
+        steps.forEach(s => {
+            const d = stepDepths[s.id] || 0;
+            if (!depthGroups[d]) depthGroups[d] = [];
+            depthGroups[d].push(s);
+        });
+
+        const depthsList = Object.keys(depthGroups).map(Number).sort((a, b) => a - b);
+        const totalDepths = Math.max(depthsList.length, 1);
+        const svgWidth = Math.max(940, 160 + totalDepths * colWidth);
+
+        this.svg.setAttribute('viewBox', `0 0 ${svgWidth} ${svgHeight}`);
+
+        const colSpacing = (svgWidth - 180) / Math.max(totalDepths - 1, 1);
+        const stepPositions = {};
+
+        // Assign X and Y for each step
+        depthsList.forEach((depth, colIdx) => {
+            const groupSteps = depthGroups[depth];
+            const x = 90 + colIdx * colSpacing;
+            
+            if (groupSteps.length === 1) {
+                stepPositions[groupSteps[0].id] = { x, y: centerY, step: groupSteps[0] };
+            } else {
+                const spread = Math.min(110, 240 / (groupSteps.length - 1 || 1));
+                const startY = centerY - ((groupSteps.length - 1) * spread) / 2;
+                groupSteps.forEach((s, idx) => {
+                    stepPositions[s.id] = { x, y: startY + idx * spread, step: s };
+                });
+            }
+        });
+
+        // Structural grid marks
+        let gridLinesHtml = '';
+        for (let gx = 90; gx <= svgWidth - 70; gx += 140) {
+            gridLinesHtml += `<line x1="${gx}" x2="${gx}" y1="20" y2="${svgHeight - 20}"></line>`;
+        }
+
+        // Draw connecting track segments
+        let tracksCasingHtml = '';
+        let tracksCoreHtml = '';
+        const drawnEdges = new Set();
+
+        steps.forEach((s, idx) => {
+            const targetPos = stepPositions[s.id];
+            const isTargetDone = completedStepIds.has(s.id);
+            const isTargetActive = selectedStationId === s.id;
+
+            const sources = (s.prerequisites && s.prerequisites.length > 0)
+                ? s.prerequisites
+                : (idx > 0 ? [steps[idx - 1].id] : []);
+
+            sources.forEach(srcId => {
+                const srcPos = stepPositions[srcId];
+                if (!srcPos) return;
+
+                const edgeKey = `${srcId}->${s.id}`;
+                if (drawnEdges.has(edgeKey)) return;
+                drawnEdges.add(edgeKey);
+
+                const x1 = srcPos.x;
+                const y1 = srcPos.y;
+                const x2 = targetPos.x;
+                const y2 = targetPos.y;
+
+                let pathD = '';
+                if (Math.abs(y1 - y2) < 5) {
+                    pathD = `M ${x1} ${y1} L ${x2} ${y2}`;
+                } else {
+                    const cx1 = x1 + (x2 - x1) * 0.45;
+                    const cx2 = x1 + (x2 - x1) * 0.55;
+                    pathD = `M ${x1} ${y1} C ${cx1} ${y1}, ${cx2} ${y2}, ${x2} ${y2}`;
+                }
+
+                // Casing
+                tracksCasingHtml += `<path d="${pathD}" fill="none" stroke="#152238" stroke-width="12" stroke-linecap="round"/>`;
+
+                // Core stroke color
+                let coreColor = '#CBD5E1';
+                let strokeDash = '';
+                let coreWidth = '6';
+
+                if (isTargetDone) {
+                    coreColor = '#2F6848'; // green cleared
+                } else if (isTargetActive || completedStepIds.has(srcId)) {
+                    coreColor = '#D9A441'; // gold active
+                    strokeDash = 'stroke-dasharray="6,4"';
+                    coreWidth = '5';
+                }
+
+                tracksCoreHtml += `<path d="${pathD}" fill="none" stroke="${coreColor}" stroke-width="${coreWidth}" ${strokeDash} stroke-linecap="round"/>`;
+            });
+        });
+
+        // Station nodes
+        let stationsHtml = '';
+        steps.forEach((s, idx) => {
+            const pos = stepPositions[s.id];
+            const x = pos.x;
+            const y = pos.y;
+            const isDone = completedStepIds.has(s.id);
+            const isSelected = selectedStationId === s.id;
+            const stepNum = s.step_number < 10 ? `0${s.step_number}` : `${s.step_number}`;
+            const cleanTitle = s.title.length > 25 ? s.title.substring(0, 23) + '...' : s.title;
+
+            let nodeGraphics = '';
+            let statusLabel = '';
+            let statusColor = '#75777E';
+
+            if (isDone) {
+                statusLabel = 'CLEARED';
+                statusColor = '#2F6848';
+                nodeGraphics = `
+                    <circle cx="${x}" cy="${y}" r="16" fill="#152238"/>
+                    <circle cx="${x}" cy="${y}" r="12" fill="#2F6848"/>
+                    <path d="M ${x - 5} ${y} L ${x - 1} ${y + 4} L ${x + 6} ${y - 4}" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
+                `;
+            } else if (isSelected) {
+                statusLabel = 'ACTIVE STATION';
+                statusColor = '#8A5800';
+                nodeGraphics = `
+                    <circle class="animate-pulse" cx="${x}" cy="${y}" r="24" fill="#D9A441" fill-opacity="0.3"/>
+                    <circle cx="${x}" cy="${y}" r="18" fill="#152238"/>
+                    <circle cx="${x}" cy="${y}" r="13" fill="#FFFFFF"/>
+                    <circle cx="${x}" cy="${y}" r="8" fill="#D9A441"/>
+                `;
+            } else {
+                statusLabel = `${s.estimated_days}D • PENDING`;
+                statusColor = '#5C6B7A';
+                nodeGraphics = `
+                    <circle cx="${x}" cy="${y}" r="16" fill="#152238"/>
+                    <circle cx="${x}" cy="${y}" r="12" fill="#FFFFFF"/>
+                    <circle cx="${x}" cy="${y}" r="6" fill="#5C6B7A"/>
+                `;
+            }
+
+            const labelAbove = (y < centerY) || (y === centerY && idx % 2 === 1);
+            const titleY = labelAbove ? y - 34 : y + 36;
+            const subY = labelAbove ? y - 20 : y + 50;
+
+            stationsHtml += `
+                <g class="cursor-pointer group" onclick="window.app.selectStation('${s.id}')">
+                    ${nodeGraphics}
+                    <text x="${x}" y="${titleY}" font-family="'IBM Plex Sans'" font-size="11.5" font-weight="${isSelected ? '700' : '600'}" text-anchor="middle" fill="#152238">${stepNum}. ${cleanTitle}</text>
+                    <text x="${x}" y="${subY}" font-family="'JetBrains Mono'" font-size="9.5" font-weight="600" text-anchor="middle" fill="${statusColor}">${statusLabel}</text>
+                </g>
+            `;
+        });
+
+        this.svg.innerHTML = `
+            <g stroke="#e2e3e1" stroke-dasharray="2,6" stroke-width="1">
+                ${gridLinesHtml}
+            </g>
+            ${tracksCasingHtml}
+            ${tracksCoreHtml}
+            ${stationsHtml}
+        `;
+    }
+}
+
 window.CivicGraphVisualizer = CivicGraphVisualizer;
+window.CivicSubwayRenderer = CivicSubwayRenderer;
+

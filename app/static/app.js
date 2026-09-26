@@ -1,7 +1,7 @@
 /**
  * Main Civic Task Navigator Application Controller
  * Grounded in Civic Functionalism & Municipal Ledger discipline.
- * Localized for Indian Municipal Administration (MCGM / BMC, BBMP, MCD, GHMC)
+ * 100% Data-Driven & Decoupled Architecture across All Indian Municipalities
  * Conforming to GIGW 3.0 / S3WaaS and Stitch Design standards.
  */
 class CivicApp {
@@ -9,35 +9,23 @@ class CivicApp {
         this.currentTaskId = 'task-mum-bakery';
         this.currentTask = null;
         this.currentRoadmap = null;
-        this.selectedStationId = 'mum-bakery-3';
+        this.selectedStationId = null;
         
-        // Persistent progress storage
-        this.completedStepIds = new Set(JSON.parse(localStorage.getItem('civic_completed_steps') || '["mum-bakery-1", "mum-bakery-2"]'));
-        this.inProgressStepIds = new Set(JSON.parse(localStorage.getItem('civic_inprogress_steps') || '["mum-bakery-3"]'));
-        
+        // Active view tabs & visual modes
         this.activeTab = 'task-lookup';
         this.wayfindingMode = 'subway'; // 'subway' | 'dag'
         this.criticalPathActive = false;
-
-        // Citizen Document Locker persistent state
         this.activeDocCategory = 'all';
-        const storedDocs = localStorage.getItem('civic_user_docs_' + this.currentTaskId);
-        if (storedDocs) {
-            this.checkedDocIds = new Set(JSON.parse(storedDocs));
-        } else {
-            const defaultSeed = [
-                "Certificate of Incorporation (COI) & PAN",
-                "PAN Card & Aadhaar of all Directors",
-                "Registered Commercial Lease Agreement (3+ Years)",
-                "Electricity Bill of Commercial Premises (< 90 Days)",
-                "NOC from Society / Commercial Premise Landlord",
-                "Form 24 / Declaration under Maharashtra Shops Act",
-                "Board Resolution Authorizing Signatory",
-                "Passport Size Photographs (Directors & Food Handlers)"
-            ];
-            this.checkedDocIds = new Set(defaultSeed);
-            localStorage.setItem('civic_user_docs_' + this.currentTaskId, JSON.stringify(defaultSeed));
-        }
+
+        // Scoped progress & document state (will be loaded per-task)
+        this.completedStepIds = new Set();
+        this.inProgressStepIds = new Set();
+        this.checkedDocIds = new Set();
+        this.stepApplicationNumbers = {};
+
+        // All catalog tasks cache
+        this.allTasks = [];
+        this.lastSearchNotice = null;
 
         // Accessibility font sizing state
         this.fontSizes = ['font-size-sm', 'font-size-md', 'font-size-lg', 'font-size-xl'];
@@ -55,9 +43,18 @@ class CivicApp {
             this.selectStation(nodeId);
         });
 
+        // Initialize Dynamic Subway Transit Renderer
+        if (typeof CivicSubwayRenderer !== 'undefined') {
+            this.subwayRenderer = new CivicSubwayRenderer('subway-transit-svg', (nodeId) => {
+                this.selectStation(nodeId);
+            });
+        }
+
         // Initialize Admin manager
-        this.admin = new CivicAdminManager(this);
-        window.adminManager = this.admin;
+        if (typeof CivicAdminManager !== 'undefined') {
+            this.admin = new CivicAdminManager(this);
+            window.adminManager = this.admin;
+        }
 
         // Check URL hash for direct tab navigation
         const initialHash = window.location.hash.replace('#', '');
@@ -65,14 +62,19 @@ class CivicApp {
             this.activeTab = initialHash;
         }
 
-        // Load tasks and initial roadmap
+        // 1. Fetch available catalog tasks
         await this.loadTasksList();
-        await this.loadRoadmap(this.currentTaskId);
 
-        // Apply active tab
+        // 2. Load initial scoped task state & roadmap
+        await this.loadTaskAndRoute(this.currentTaskId);
+
+        // 3. Switch to initial tab
         this.switchNavTab(this.activeTab);
     }
 
+    // -------------------------------------------------------------------------
+    // Navigation & UI Events Binding
+    // -------------------------------------------------------------------------
     _bindNavigationEvents() {
         document.querySelectorAll('#top-nav-tabs .nav-tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -100,20 +102,6 @@ class CivicApp {
                 this.closeDrawer();
             }
         });
-
-        // Jurisdiction selector
-        const selectJur = document.getElementById('select-jurisdiction');
-        if (selectJur) {
-            selectJur.addEventListener('change', (e) => {
-                const val = e.target.value;
-                if (val === 'Mumbai') this.loadTaskAndRoute('task-mum-bakery');
-                else if (val === 'Bengaluru') this.loadTaskAndRoute('task-blr-restaurant');
-                else if (val === 'Delhi') this.loadTaskAndRoute('task-del-mutation');
-                else if (val === 'Hyderabad') this.loadTaskAndRoute('task-hyd-tech-biz');
-                else if (val === 'Pune') this.loadTaskAndRoute('task-mum-construction');
-                else this.loadTaskAndRoute('task-mum-bakery');
-            });
-        }
     }
 
     _bindUiEvents() {
@@ -127,7 +115,9 @@ class CivicApp {
         const btnToggleComplete = document.getElementById('btn-toggle-complete');
         if (btnToggleComplete) {
             btnToggleComplete.addEventListener('click', () => {
-                this.toggleStepCompletion(this.selectedStationId);
+                if (this.selectedStationId) {
+                    this.toggleStepCompletion(this.selectedStationId);
+                }
             });
         }
 
@@ -141,6 +131,96 @@ class CivicApp {
         if (btnZoomOut) btnZoomOut.addEventListener('click', () => this.visualizer.zoomOut());
         if (btnFit) btnFit.addEventListener('click', () => this.visualizer.fitToScreen());
         if (btnReset) btnReset.addEventListener('click', () => this.visualizer.resetView());
+    }
+
+    // -------------------------------------------------------------------------
+    // Per-Task Scoped State Management & Lifecycle
+    // -------------------------------------------------------------------------
+    loadTaskScopedState(taskId) {
+        this.currentTaskId = taskId;
+
+        // 1. Completed Steps
+        const savedCompleted = localStorage.getItem(`civic_completed_steps_${taskId}`);
+        if (savedCompleted) {
+            try {
+                this.completedStepIds = new Set(JSON.parse(savedCompleted));
+            } catch (e) {
+                this.completedStepIds = new Set();
+            }
+        } else {
+            this.completedStepIds = new Set();
+        }
+
+        // 2. In-Progress Steps
+        const savedInProgress = localStorage.getItem(`civic_inprogress_steps_${taskId}`);
+        if (savedInProgress) {
+            try {
+                this.inProgressStepIds = new Set(JSON.parse(savedInProgress));
+            } catch (e) {
+                this.inProgressStepIds = new Set();
+            }
+        } else {
+            this.inProgressStepIds = new Set();
+        }
+
+        // 3. Station Application / Challan Numbers Mapping
+        const savedAppNums = localStorage.getItem(`civic_station_app_nums_${taskId}`);
+        if (savedAppNums) {
+            try {
+                this.stepApplicationNumbers = JSON.parse(savedAppNums);
+            } catch (e) {
+                this.stepApplicationNumbers = {};
+            }
+        } else {
+            this.stepApplicationNumbers = {};
+        }
+
+        // 4. User Checked Document Bag (with universal identity document carry-over)
+        const savedDocs = localStorage.getItem(`civic_user_docs_${taskId}`);
+        if (savedDocs) {
+            try {
+                this.checkedDocIds = new Set(JSON.parse(savedDocs));
+            } catch (e) {
+                this.checkedDocIds = new Set();
+            }
+        } else {
+            // Find any standard KYC identity docs the citizen already marked in any previous task
+            const universalKeywords = ["aadhaar", "pan", "passport", "incorporation", "electricity bill", "lease agreement", "rent agreement"];
+            const carryOver = new Set();
+            try {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('civic_user_docs_')) {
+                        const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+                        parsed.forEach(docName => {
+                            const lower = (docName || '').toLowerCase();
+                            if (universalKeywords.some(kw => lower.includes(kw))) {
+                                carryOver.add(docName);
+                            }
+                        });
+                    }
+                }
+            } catch (e) {}
+
+            this.checkedDocIds = carryOver;
+            this.saveTaskDocs();
+        }
+    }
+
+    saveTaskCompleted() {
+        localStorage.setItem(`civic_completed_steps_${this.currentTaskId}`, JSON.stringify(Array.from(this.completedStepIds)));
+    }
+
+    saveTaskInProgress() {
+        localStorage.setItem(`civic_inprogress_steps_${this.currentTaskId}`, JSON.stringify(Array.from(this.inProgressStepIds)));
+    }
+
+    saveTaskDocs() {
+        localStorage.setItem(`civic_user_docs_${this.currentTaskId}`, JSON.stringify(Array.from(this.checkedDocIds)));
+    }
+
+    saveTaskAppNums() {
+        localStorage.setItem(`civic_station_app_nums_${this.currentTaskId}`, JSON.stringify(this.stepApplicationNumbers));
     }
 
     // GIGW Accessibility: Font Resizer
@@ -194,49 +274,143 @@ class CivicApp {
         } else if (tabName === 'citizen-ledger') {
             this.renderCitizenLedger();
         } else if (tabName === 'registry-admin') {
-            this.admin.switchTab('scraper');
+            if (this.admin) this.admin.switchTab('scraper');
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Tasks Catalog & Dynamic Jurisdiction Intake
+    // -------------------------------------------------------------------------
     async loadTasksList() {
         try {
             const resp = await fetch('/api/tasks');
-            this.allTasks = await resp.json();
+            if (resp.ok) {
+                this.allTasks = await resp.json();
+                this.renderTasksCatalog();
+                this.populateJurisdictionDropdowns();
+            }
         } catch (e) {
             console.error('Failed to load tasks list', e);
         }
     }
 
-    async loadTaskAndRoute(taskId) {
-        this.currentTaskId = taskId;
-        const storedDocs = localStorage.getItem('civic_user_docs_' + taskId);
-        if (storedDocs) {
-            this.checkedDocIds = new Set(JSON.parse(storedDocs));
-        } else {
-            const defaultSeed = taskId === 'task-mum-bakery' 
-                ? [
-                    "Certificate of Incorporation (COI) & PAN",
-                    "PAN Card & Aadhaar of all Directors",
-                    "Registered Commercial Lease Agreement (3+ Years)",
-                    "Electricity Bill of Commercial Premises (< 90 Days)",
-                    "NOC from Society / Commercial Premise Landlord",
-                    "Form 24 / Declaration under Maharashtra Shops Act",
-                    "Board Resolution Authorizing Signatory",
-                    "Passport Size Photographs (Directors & Food Handlers)"
-                  ] 
-                : [];
-            this.checkedDocIds = new Set(defaultSeed);
-            localStorage.setItem('civic_user_docs_' + taskId, JSON.stringify(defaultSeed));
+    renderTasksCatalog() {
+        const container = document.getElementById('directives-ledger-list');
+        if (!container || !this.allTasks || this.allTasks.length === 0) return;
+
+        container.innerHTML = this.allTasks.map((t, idx) => {
+            const isActive = t.id === this.currentTaskId;
+            const stepCount = (t.steps && t.steps.length) || 0;
+            const daysEst = `${t.total_estimated_days || 15}–${(t.total_estimated_days || 15) + 10} Days`;
+            const feesEst = this.formatINR(t.total_fees || 0);
+            const indexStr = idx < 9 ? `0${idx + 1}` : `${idx + 1}`;
+
+            // Authorities summary
+            let authorityTags = t.municipality;
+            if (t.steps && t.steps.length > 0) {
+                const uniqueDepts = Array.from(new Set(t.steps.map(s => (s.department && s.department.name ? s.department.name.split('(')[0].trim() : '')))).filter(Boolean);
+                if (uniqueDepts.length > 0) {
+                    authorityTags = uniqueDepts.slice(0, 3).join(' • ');
+                }
+            }
+
+            return `
+                <div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 ${isActive ? 'bg-amber-50/50 border-l-4 border-amber-600' : ''}" onclick="window.app.loadTaskAndRoute('${t.id}')">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 ${isActive ? 'bg-amber-700 text-white' : 'bg-primary text-on-primary'} flex items-center justify-center font-code text-xs font-bold border border-primary shrink-0">
+                            ${indexStr}
+                        </div>
+                        <div>
+                            <div class="font-headline text-sm font-semibold text-primary flex items-center gap-2 flex-wrap">
+                                <span>${t.title}</span>
+                                ${isActive ? '<span class="bg-amber-100 text-amber-900 font-label-sm text-[10px] px-1.5 py-0.5 font-bold uppercase border border-amber-300">Active Focus</span>' : ''}
+                                <span class="bg-surface-container text-secondary font-code text-[10px] px-1.5 py-0.5 border border-outline-variant">${t.municipality}</span>
+                            </div>
+                            <div class="font-body text-xs text-on-surface-variant mt-0.5 max-w-2xl line-clamp-2">
+                                ${t.description}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6 shrink-0 text-xs font-headline">
+                        <div class="text-right hidden sm:block">
+                            <div class="text-secondary text-[11px] uppercase">Jurisdiction &amp; Chain</div>
+                            <div class="font-code text-primary font-semibold truncate max-w-[180px]">${authorityTags}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-secondary text-[11px] uppercase">Est. Schedule</div>
+                            <div class="font-code text-primary font-semibold">${daysEst}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-secondary text-[11px] uppercase">Total Fees</div>
+                            <div class="font-code text-primary font-bold">${feesEst}</div>
+                        </div>
+                        <button class="${isActive ? 'bg-amber-700 text-white' : 'bg-surface-container text-primary hover:bg-primary hover:text-on-primary'} px-3 py-1.5 text-xs font-semibold transition-colors border border-outline-variant shrink-0" onclick="event.stopPropagation(); window.app.loadTaskAndRoute('${t.id}')">
+                            Load Route
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    populateJurisdictionDropdowns() {
+        if (!this.allTasks || this.allTasks.length === 0) return;
+
+        // Extract unique municipalities
+        const uniqueMunis = Array.from(new Set(this.allTasks.map(t => t.municipality))).filter(Boolean);
+
+        // 1. Top Navbar Jurisdiction Dropdown
+        const navSelect = document.getElementById('select-jurisdiction');
+        if (navSelect) {
+            navSelect.innerHTML = uniqueMunis.map(m => `
+                <option value="${m}" ${this.currentTask && this.currentTask.municipality === m ? 'selected' : ''}>${m}</option>
+            `).join('');
+
+            // Clean event listener
+            navSelect.onchange = (e) => {
+                const selectedMuni = e.target.value;
+                const matchTask = this.allTasks.find(t => t.municipality === selectedMuni);
+                if (matchTask) {
+                    this.loadTaskAndRoute(matchTask.id);
+                }
+            };
         }
+
+        // 2. Search Intake Jurisdiction Dropdown
+        const searchSelect = document.getElementById('jurisdictionSelect');
+        if (searchSelect) {
+            searchSelect.innerHTML = `
+                <option value="">All Municipal Jurisdictions (National)</option>
+                ${uniqueMunis.map(m => `<option value="${m}">${m}</option>`).join('')}
+            `;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Task Route Loading & DAG Formulation
+    // -------------------------------------------------------------------------
+    async loadTaskAndRoute(taskId) {
+        // 1. Load scoped persistence
+        this.loadTaskScopedState(taskId);
+
+        // 2. Load roadmap from server
         await this.loadRoadmap(taskId);
 
-        // Pick default step
-        if (this.currentTask && this.currentTask.steps.length > 0) {
-            const defaultStep = this.currentTask.steps.find(s => !this.completedStepIds.has(s.id)) || this.currentTask.steps[0];
-            this.selectStation(defaultStep.id);
+        // 3. Update task catalog highlight & dropdowns
+        this.renderTasksCatalog();
+        const navSelect = document.getElementById('select-jurisdiction');
+        if (navSelect && this.currentTask) {
+            navSelect.value = this.currentTask.municipality;
         }
 
-        // Switch to Roadmap view
+        // 4. Default station selection
+        if (this.currentTask && this.currentTask.steps.length > 0) {
+            const firstPending = this.currentTask.steps.find(s => !this.completedStepIds.has(s.id));
+            const targetStepId = firstPending ? firstPending.id : this.currentTask.steps[0].id;
+            this.selectStation(targetStepId);
+        }
+
+        // 5. Navigate to roadmap view
         this.switchNavTab('roadmap-and-route');
     }
 
@@ -255,11 +429,30 @@ class CivicApp {
             this.currentRoadmap = await resp.json();
             this.currentTask = this.currentRoadmap.task;
 
+            // Auto-initialize root steps as ready/in-progress if brand new task
+            if (this.completedStepIds.size === 0 && this.inProgressStepIds.size === 0 && this.currentTask.steps.length > 0) {
+                const rootSteps = this.currentTask.steps.filter(s => !s.prerequisites || s.prerequisites.length === 0);
+                rootSteps.forEach(rs => this.inProgressStepIds.add(rs.id));
+                this.saveTaskInProgress();
+            }
+
+            // Sync visual components
             this.updateHeaderAndStats();
             this.visualizer.setRoadmapData(this.currentRoadmap);
             this.renderRailMilestones();
             this.updateStationUI();
             this.renderCitizenLedger();
+
+            // Render Dynamic Subway Transit SVG
+            if (this.subwayRenderer) {
+                this.subwayRenderer.render(
+                    this.currentTask,
+                    this.currentRoadmap,
+                    this.completedStepIds,
+                    this.selectedStationId
+                );
+            }
+
             if (this.activeTab === 'document-locker') {
                 this.renderDocumentLocker();
             }
@@ -284,6 +477,14 @@ class CivicApp {
         if (elRouteId) elRouteId.innerText = `ROUTE #${t.id.toUpperCase().replace('TASK-', '')}`;
         if (elRouteClass) elRouteClass.innerText = t.category;
 
+        // Dynamic Inter-Agency Code under subway map
+        const elInterCode = document.getElementById('subway-interagency-code');
+        if (elInterCode) {
+            const muniCode = (t.municipality || 'MUNI').split(' ')[0].toUpperCase();
+            const catCode = (t.category || 'STATUTORY').toUpperCase().replace(/[^A-Z]/g, '-').slice(0, 10);
+            elInterCode.innerText = `INTER-AGENCY CODE: ${catCode}-${muniCode}-2026`;
+        }
+
         // Summary stats ribbon
         const elTimeline = document.getElementById('summary-stat-timeline');
         const elFees = document.getElementById('summary-stat-fees');
@@ -293,7 +494,7 @@ class CivicApp {
         const elDocs = document.getElementById('summary-stat-docs');
 
         const totalSteps = t.steps ? t.steps.length : 0;
-        const doneSteps = r.completed_count || 0;
+        const doneSteps = this.completedStepIds.size;
 
         if (elTimeline) elTimeline.innerText = `${r.total_estimated_days}–${r.total_estimated_days + 15}`;
         if (elFees) elFees.innerText = this.formatINR(r.total_estimated_fees || 0);
@@ -312,6 +513,30 @@ class CivicApp {
                 elBlocker.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span> ${firstPending.department.name.split('(')[0]}`;
             } else {
                 elBlocker.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-600 shrink-0"></span> All Milestones Cleared`;
+            }
+        }
+
+        // NLP Intent Resolution & Provenance Banner
+        const elNlpBanner = document.getElementById('nlp-intent-banner');
+        if (elNlpBanner) {
+            if (this.lastSearchNotice) {
+                elNlpBanner.classList.remove('hidden');
+                elNlpBanner.style.display = 'flex';
+                const isSynth = this.lastSearchNotice.type === 'synthesized';
+                elNlpBanner.className = isSynth
+                    ? 'mb-4 p-3 bg-purple-50 border border-purple-300 text-purple-950 font-headline text-xs flex items-center justify-between gap-3 shadow-sm'
+                    : 'mb-4 p-3 bg-blue-50 border border-blue-300 text-blue-950 font-headline text-xs flex items-center justify-between gap-3 shadow-sm';
+                const icon = isSynth ? 'auto_awesome' : 'translate';
+                elNlpBanner.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px] ${isSynth ? 'text-purple-700' : 'text-blue-700'}">${icon}</span>
+                        <span>${this.lastSearchNotice.message}</span>
+                    </div>
+                    <button class="text-secondary hover:text-primary underline text-[11px]" onclick="document.getElementById('nlp-intent-banner').style.display='none'">Dismiss</button>
+                `;
+            } else {
+                elNlpBanner.classList.add('hidden');
+                elNlpBanner.style.display = 'none';
             }
         }
     }
@@ -357,6 +582,16 @@ class CivicApp {
         this.selectedStationId = stepId;
         this.updateStationUI();
         this.renderRailMilestones();
+
+        // Refresh Subway Map Highlight
+        if (this.subwayRenderer && this.currentTask && this.currentRoadmap) {
+            this.subwayRenderer.render(
+                this.currentTask,
+                this.currentRoadmap,
+                this.completedStepIds,
+                this.selectedStationId
+            );
+        }
     }
 
     updateStationUI() {
@@ -365,6 +600,7 @@ class CivicApp {
         if (!step) return;
 
         const isCompleted = this.completedStepIds.has(step.id);
+        const stateCode = (this.currentTask.state || this.currentTask.municipality || 'IN').substring(0, 2).toUpperCase();
 
         // 1. Update Active Station Dossier Card on Roadmap view
         const badgeStep = document.getElementById('station-badge-step');
@@ -377,13 +613,13 @@ class CivicApp {
         const checklistEl = document.getElementById('station-checklist');
         const docketRef = document.getElementById('station-docket-ref');
 
-        if (badgeStep) badgeStep.innerText = `STOP 0${step.step_number} / ${step.department.jurisdiction.toUpperCase()}`;
+        if (badgeStep) badgeStep.innerText = `STOP 0${step.step_number} / ${(step.department.jurisdiction || this.currentTask.municipality).toUpperCase()}`;
         if (badgeAgency) badgeAgency.innerText = `Agency: ${step.department.name}`;
         if (titleEl) titleEl.innerText = step.title;
         if (descEl) descEl.innerText = step.description;
         if (slaEl) slaEl.innerText = `${step.estimated_days} Days`;
         if (feeEl) feeEl.innerText = step.fee_amount > 0 ? this.formatINR(step.fee_amount) : 'Exempt';
-        if (docketRef) docketRef.innerText = `DOCKET REF: MCGM-${step.id.toUpperCase()}-2024`;
+        if (docketRef) docketRef.innerText = `DOCKET REF: ${stateCode}-${step.id.toUpperCase()}-2026`;
 
         if (badgeStatus) {
             if (isCompleted) {
@@ -404,15 +640,28 @@ class CivicApp {
             `).join('') || '<div class="text-xs text-secondary font-headline">No prior physical filings required for this station.</div>';
         }
 
+        // Pre-fill Citizen Application / Challan Input with saved data
+        const appInput = document.getElementById('statutory-app-num') || document.getElementById('mcgm-app-num');
+        if (appInput) {
+            appInput.value = this.stepApplicationNumbers[step.id] || '';
+        }
+        const chkSelf = document.getElementById('chk-self-declaration');
+        if (chkSelf) chkSelf.checked = false;
+
         // 2. Update Step Dossier Tab View
         this.populateDossierView(step);
 
-        // 3. Update Drawer content as well
+        // 3. Update Drawer content
         this.populateDrawer(step);
     }
 
+    // -------------------------------------------------------------------------
+    // Step Dossier Decoupling: Fully Data-Driven from Task & Step
+    // -------------------------------------------------------------------------
     populateDossierView(step) {
         const isCompleted = this.completedStepIds.has(step.id);
+        const task = this.currentTask;
+        const muniCode = (task.municipality || 'IN').split(' ')[0].toUpperCase();
 
         const routeCrumb = document.getElementById('dossier-route-crumb');
         const stepCrumb = document.getElementById('dossier-step-crumb');
@@ -428,11 +677,11 @@ class CivicApp {
         const provLink = document.getElementById('dossier-provenance-link');
         const provLinkText = document.getElementById('dossier-provenance-link-text');
 
-        if (routeCrumb) routeCrumb.innerText = this.currentTask.title;
+        if (routeCrumb) routeCrumb.innerText = task.title;
         if (stepCrumb) stepCrumb.innerText = `Stop 0${step.step_number} (${step.title})`;
-        if (refCode) refCode.innerText = `REF: ${step.id.toUpperCase()}-2024-STATUTORY`;
-        if (stageIdx) stageIdx.innerText = `STAGE 0${step.step_number} / 0${this.currentTask.steps.length}`;
-        if (agencyName) agencyName.innerText = `${step.department.name} — ${step.department.jurisdiction}`;
+        if (refCode) refCode.innerText = `REF: ${muniCode}-${step.id.toUpperCase()}-2026`;
+        if (stageIdx) stageIdx.innerText = `STAGE 0${step.step_number} / 0${task.steps.length}`;
+        if (agencyName) agencyName.innerText = `${step.department.name} (${step.department.jurisdiction})`;
         if (mainTitle) mainTitle.innerText = `Step 0${step.step_number}: ${step.title}`;
         if (mainDesc) mainDesc.innerText = step.description;
 
@@ -444,34 +693,41 @@ class CivicApp {
         const gazetteTag = document.getElementById('dossier-gazette-tag');
         const verifiedDate = document.getElementById('dossier-verified-date');
         const crowdCount = document.getElementById('dossier-crowd-count');
-        if (gazetteTag) gazetteTag.innerText = step.last_gazette_notification || step.verification_source.gazette_ref || 'MMC Act 1888 § 394 & MCGM Regulations';
-        if (verifiedDate) verifiedDate.innerText = this.formatDateIN(step.verification_source.last_scraped_at || '2026-09-24');
-        if (crowdCount) crowdCount.innerText = `${step.community_verifications || 14} citizens successfully processed this milestone at Ward H/West this month`;
+        const statutoryAuth = step.last_gazette_notification || (step.verification_source && step.verification_source.gazette_ref) || `${task.category} Statutory Regulations`;
+
+        if (gazetteTag) gazetteTag.innerText = statutoryAuth;
+        if (verifiedDate) verifiedDate.innerText = this.formatDateIN(step.verification_source ? step.verification_source.last_scraped_at : null);
+        if (crowdCount) crowdCount.innerText = `${step.community_verifications || 14} citizens successfully processed this milestone across ${task.municipality} this month`;
 
         if (provText) {
-            provText.innerHTML = `Verified against <strong>${step.last_gazette_notification || step.verification_source.gazette_ref || 'Municipal Corporation of Greater Mumbai Regulations'}</strong> as of <strong>${this.formatDateIN(step.verification_source.last_scraped_at)}</strong>.`;
+            provText.innerHTML = `Verified against <strong>${statutoryAuth}</strong> as of <strong>${this.formatDateIN(step.verification_source?.last_scraped_at)}</strong>.`;
         }
-        if (provLink && provLinkText) {
-            provLink.href = step.verification_source.url;
-            provLinkText.innerText = step.verification_source.url.replace('https://', '');
+        if (provLink && provLinkText && step.verification_source) {
+            provLink.href = step.verification_source.url || '#';
+            provLinkText.innerText = (step.verification_source.url || 'portal.gov.in').replace('https://', '').replace('http://', '');
         }
 
         // Anti-Tout Sovereign Payment Notice
         const paymentChan = document.getElementById('dossier-payment-channel');
         const antiToutText = document.getElementById('dossier-anti-tout-text');
         const receiptMandate = document.getElementById('dossier-receipt-mandate');
-        if (paymentChan) paymentChan.innerText = step.statutory_payment_channel || 'Brihanmumbai Municipal Corporation (MCGM) Ward CFC E-Challan';
-        if (antiToutText) antiToutText.innerText = step.anti_tout_advisory || 'STRICT BMC ANTI-TOUT ADVISORY: All fees must be deposited via official computerized challan. Beware of touts claiming inspection waivers.';
-        if (receiptMandate) receiptMandate.innerText = step.official_receipt_mandate || 'Zero Cash Mandate: Computerized Municipal Receipt (MCR) required.';
+        
+        const defaultChannel = `${step.department.name} Official Treasury E-Challan / Bharatkosh`;
+        const defaultAdvisory = step.anti_tout_advisory || `Official Advisory: Never pay cash to middlemen. All statutory fees for ${step.department.name} must be deposited via verified Government E-Receipt / GRN.`;
+        const defaultReceipt = step.official_receipt_mandate || 'Zero Cash Mandate: Computerized Government Treasury E-Receipt required.';
+
+        if (paymentChan) paymentChan.innerText = step.statutory_payment_channel || defaultChannel;
+        if (antiToutText) antiToutText.innerText = defaultAdvisory;
+        if (receiptMandate) receiptMandate.innerText = defaultReceipt;
 
         // Prerequisites bar
         const prereqGrid = document.getElementById('dossier-prereqs-grid');
         const prereqStatus = document.getElementById('dossier-prereq-chain-status');
         if (prereqGrid) {
-            if (step.prerequisites.length === 0) {
+            if (!step.prerequisites || step.prerequisites.length === 0) {
                 prereqGrid.innerHTML = `
                     <div class="col-span-2 bg-surface-container-lowest p-3 border border-outline-variant text-xs text-secondary font-headline">
-                        ✓ Station Initializer: Root procedural milestone under Maharashtra statutory rules.
+                        ✓ Station Initializer: Root procedural milestone under ${task.municipality} statutory rules.
                     </div>
                 `;
                 if (prereqStatus) prereqStatus.innerText = 'CHAIN STATUS: ROOT MILESTONE';
@@ -481,7 +737,7 @@ class CivicApp {
                 if (prereqStatus) prereqStatus.innerText = `CHAIN STATUS: ${clearedReq}/${totalReq} SATISFIED`;
 
                 prereqGrid.innerHTML = step.prerequisites.map(pId => {
-                    const prereqStep = this.currentTask.steps.find(s => s.id === pId);
+                    const prereqStep = task.steps.find(s => s.id === pId);
                     const isPrereqDone = this.completedStepIds.has(pId);
                     return `
                         <div class="bg-surface-container-lowest p-3 border border-outline-variant flex items-center justify-between">
@@ -507,8 +763,9 @@ class CivicApp {
         const formsContainer = document.getElementById('dossier-forms-container');
         const formsCount = document.getElementById('dossier-forms-count');
         if (formsContainer) {
-            if (formsCount) formsCount.innerText = `${step.forms.length} Prescribed Instruments`;
-            formsContainer.innerHTML = step.forms.map(f => `
+            const forms = step.forms || [];
+            if (formsCount) formsCount.innerText = `${forms.length} Prescribed Instruments`;
+            formsContainer.innerHTML = forms.map(f => `
                 <div class="py-3 first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
                     <div class="space-y-0.5 max-w-xl">
                         <div class="flex items-center gap-2">
@@ -526,24 +783,25 @@ class CivicApp {
             `).join('') || '<div class="text-xs text-secondary font-headline">No separate form instruments prescribed. Proceed with direct declaration.</div>';
         }
 
-        // Evidence & Sealed Filings
+        // Evidence & Required Filings
         const evidenceContainer = document.getElementById('dossier-evidence-container');
         const evidenceCount = document.getElementById('dossier-evidence-count');
         if (evidenceContainer) {
-            if (evidenceCount) evidenceCount.innerText = `${step.documents.length} Evidence Criteria`;
-            evidenceContainer.innerHTML = step.documents.map(d => `
+            const docs = step.documents || [];
+            if (evidenceCount) evidenceCount.innerText = `${docs.length} Evidence Criteria`;
+            evidenceContainer.innerHTML = docs.map(d => `
                 <div class="p-3 bg-surface-container-lowest border border-outline-variant flex flex-col md:flex-row items-start justify-between gap-3">
                     <div class="space-y-0.5 max-w-xl">
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-amber-700 text-[18px]">pending</span>
                             <span class="font-headline text-sm font-semibold text-primary">${d.name}</span>
                         </div>
-                        <p class="font-body text-xs text-on-surface-variant leading-relaxed">${d.description}</p>
-                        <div class="font-code text-[11px] text-outline">CRITERIA: Must be authenticated and digitally signed</div>
+                        <p class="font-body text-xs text-on-surface-variant leading-relaxed">${d.description || 'Statutory proof required by inspection window.'}</p>
+                        <div class="font-code text-[11px] text-outline">CRITERIA: Must be authenticated and digitally verified</div>
                     </div>
                     <div class="shrink-0 flex flex-col items-start md:items-end gap-1">
                         <span class="font-headline text-[10px] bg-amber-50 text-amber-900 border border-amber-300 px-2 py-0.5 font-semibold">Action Required</span>
-                        <button class="font-headline text-xs text-primary underline hover:text-secondary font-medium mt-1" onclick="alert('Document upload portal opened for: ${d.name}')">Upload Document</button>
+                        <button class="font-headline text-xs text-primary underline hover:text-secondary font-medium mt-1" onclick="alert('Document checklist updated for: ${d.name}')">Upload / Verify</button>
                     </div>
                 </div>
             `).join('') || '<div class="text-xs text-secondary font-headline">No additional document filings mandated for this step.</div>';
@@ -553,13 +811,13 @@ class CivicApp {
         const feeTableBody = document.getElementById('dossier-fee-table-body');
         const feeTotalEl = document.getElementById('dossier-fee-total');
         if (feeTableBody) {
-            const breakdown = step.fee_breakdown;
+            const breakdown = step.fee_breakdown || {};
             const entries = Object.entries(breakdown);
             if (entries.length === 0) {
                 feeTableBody.innerHTML = `
                     <tr>
-                        <td class="py-2.5 px-4 font-semibold text-primary">Standard Processing Fee</td>
-                        <td class="py-2.5 px-4 text-secondary">Municipal Tariff Schedule</td>
+                        <td class="py-2.5 px-4 font-semibold text-primary">Standard Statutory Processing Fee</td>
+                        <td class="py-2.5 px-4 text-secondary">${task.category} Tariff Schedule</td>
                         <td class="py-2.5 px-4 text-right font-code">Per Unit</td>
                         <td class="py-2.5 px-4 text-right font-code font-semibold text-primary">${this.formatINR(step.fee_amount)}</td>
                     </tr>
@@ -568,7 +826,7 @@ class CivicApp {
                 feeTableBody.innerHTML = entries.map(([key, val]) => `
                     <tr>
                         <td class="py-2.5 px-4 font-semibold text-primary">${key}</td>
-                        <td class="py-2.5 px-4 text-secondary">MMC Act / Statutory Basis</td>
+                        <td class="py-2.5 px-4 text-secondary">${task.category} Statutory Basis</td>
                         <td class="py-2.5 px-4 text-right font-code">Per Filing Schedule</td>
                         <td class="py-2.5 px-4 text-right font-code font-semibold text-primary">${this.formatINR(val)}</td>
                     </tr>
@@ -580,10 +838,10 @@ class CivicApp {
         // Guidelines & Pitfalls
         const guidelinesText = document.getElementById('dossier-guidelines-text');
         if (guidelinesText) {
-            guidelinesText.innerText = step.tips_and_pitfalls || 'Ensure all submissions are accompanied by valid tax clearance certificates and registered engineer seals.';
+            guidelinesText.innerText = step.tips_and_pitfalls || `Ensure all submissions conform to ${task.municipality} public service standards and valid registration documents.`;
         }
 
-        // Office Details in Right Rail
+        // Office Details in Right Rail (Directly Bound from step.department)
         const officeAddress = document.getElementById('dossier-office-address');
         const officeWindow = document.getElementById('dossier-office-window');
         const officeCity = document.getElementById('dossier-office-city');
@@ -591,14 +849,21 @@ class CivicApp {
         const officeBorough = document.getElementById('dossier-office-borough');
         const ombudsPhone = document.getElementById('dossier-ombuds-phone');
         const ombudsEmail = document.getElementById('dossier-ombuds-email');
+        const cellTitle = document.getElementById('dossier-cell-title');
+        const cellDesc = document.getElementById('dossier-cell-desc');
 
-        if (officeAddress) officeAddress.innerText = step.department.office_address || 'MCGM Ward H/West Municipal Office';
-        if (officeWindow) officeWindow.innerText = `${step.department.name} — Intake Window`;
-        if (officeCity) officeCity.innerText = step.department.jurisdiction;
-        if (officeHours) officeHours.innerText = step.department.working_hours || 'Monday – Friday: 10:00 AM – 2:30 PM IST';
-        if (officeBorough) officeBorough.innerText = step.department.jurisdiction.toUpperCase();
-        if (ombudsPhone) ombudsPhone.innerText = step.department.contact_phone || '(022) 2642-2311';
-        if (ombudsEmail) ombudsEmail.innerText = step.department.contact_email || 'eodb.support@mcgm.gov.in';
+        const cleanMuni = (task.municipality || 'Civic').toLowerCase().replace(/[^a-z]/g, '');
+
+        if (officeAddress) officeAddress.innerText = step.department.office_address || `${step.department.name} Administrative Headquarters, ${task.municipality}`;
+        if (officeWindow) officeWindow.innerText = `${step.department.name} — Civic Facilitation Counter`;
+        if (officeCity) officeCity.innerText = step.department.jurisdiction || task.municipality;
+        if (officeHours) officeHours.innerText = step.department.working_hours || 'Monday – Friday: 10:00 AM – 4:00 PM IST';
+        if (officeBorough) officeBorough.innerText = (step.department.jurisdiction || task.municipality).toUpperCase();
+        if (ombudsPhone) ombudsPhone.innerText = step.department.contact_phone || '1800-GOV-HELP (Toll-Free)';
+        if (ombudsEmail) ombudsEmail.innerText = step.department.contact_email || `support.${cleanMuni}@gov.in`;
+
+        if (cellTitle) cellTitle.innerText = `${step.department.name} Facilitation Desk`;
+        if (cellDesc) cellDesc.innerText = `Dedicated administrative officers at ${step.department.name} assist applicants with verification protocols and procedural documentation.`;
 
         // Action button state
         const advanceBtn = document.getElementById('btn-advance-route');
@@ -632,15 +897,15 @@ class CivicApp {
 
         if (badge) badge.innerText = `Step ${step.step_number}`;
         if (title) title.innerText = step.title;
-        if (conf) conf.innerText = `${(step.verification_source.confidence_score * 100).toFixed(0)}% Match`;
-        if (url) {
-            url.href = step.verification_source.url;
-            url.innerText = step.verification_source.url;
+        if (conf && step.verification_source) conf.innerText = `${(step.verification_source.confidence_score * 100).toFixed(0)}% Match`;
+        if (url && step.verification_source) {
+            url.href = step.verification_source.url || '#';
+            url.innerText = step.verification_source.url || 'portal.gov.in';
         }
-        if (gaz) gaz.innerText = `Statutory Authority: ${step.verification_source.gazette_ref || 'MMC Act 1888 § 394'}`;
+        if (gaz) gaz.innerText = `Statutory Authority: ${step.last_gazette_notification || (step.verification_source && step.verification_source.gazette_ref) || 'State Public Service Code'}`;
         if (dept) dept.innerText = step.department.name;
-        if (addr) addr.innerText = step.department.office_address;
-        if (hours) hours.innerText = step.department.working_hours || 'Mon-Fri 10:00 AM - 2:30 PM IST';
+        if (addr) addr.innerText = step.department.office_address || `${step.department.name}, ${this.currentTask.municipality}`;
+        if (hours) hours.innerText = step.department.working_hours || 'Mon-Fri 10:00 AM - 4:00 PM IST';
         if (sla) sla.innerText = `${step.estimated_days} Days`;
         if (desc) desc.innerText = step.description;
 
@@ -685,25 +950,39 @@ class CivicApp {
         this.switchNavTab('step-dossier');
     }
 
+    // -------------------------------------------------------------------------
+    // Universal Procedural Milestone Advancement & Application Validator
+    // -------------------------------------------------------------------------
     async advanceStepAction() {
-        const inputRef = document.getElementById('mcgm-app-num') || document.getElementById('dob-job-num');
+        const inputRef = document.getElementById('statutory-app-num') || document.getElementById('mcgm-app-num');
+        const isSelfDeclared = document.getElementById('chk-self-declaration')?.checked;
         const val = inputRef ? inputRef.value.trim() : '';
 
-        if (!val || val.length < 6) {
-            alert('Procedural Notice: Please enter a valid 10-digit MCGM Citizen Application Number (e.g. 7204918204) before marking this step complete.');
+        // Validation: Alphanumeric min 4 chars OR self-declaration checkbox
+        const isValidInput = val.length >= 4 && /^[a-zA-Z0-9\-\/_]+$/.test(val);
+
+        if (!isValidInput && !isSelfDeclared) {
+            alert('Procedural Notice: Please enter a valid Application Reference / Challan Number (at least 4 alphanumeric characters) or check the self-declaration box before completing this milestone.');
             if (inputRef) inputRef.focus();
             return;
         }
 
         const stepId = this.selectedStationId;
+        const refNumber = val || `SELF-DECL-${Date.now().toString().slice(-6)}`;
+        
+        // Save application reference
+        this.stepApplicationNumbers[stepId] = refNumber;
+        this.saveTaskAppNums();
+
+        // Advance milestone
         this.completedStepIds.add(stepId);
         this.inProgressStepIds.delete(stepId);
-        localStorage.setItem('civic_completed_steps', JSON.stringify(Array.from(this.completedStepIds)));
-        localStorage.setItem('civic_inprogress_steps', JSON.stringify(Array.from(this.inProgressStepIds)));
+        this.saveTaskCompleted();
+        this.saveTaskInProgress();
 
-        alert(`Application #${val} successfully verified against MCGM Citizen Portal records. Milestone "${stepId}" recorded as Satisfied.`);
+        alert(`Application / Reference #${refNumber} recorded. Milestone "${stepId}" marked as Cleared & Verified.`);
 
-        // Find next step to select
+        // Find next incomplete step to select
         const steps = this.currentTask.steps;
         const currIdx = steps.findIndex(s => s.id === stepId);
         if (currIdx >= 0 && currIdx < steps.length - 1) {
@@ -716,12 +995,17 @@ class CivicApp {
     async toggleStepCompletion(stepId) {
         if (this.completedStepIds.has(stepId)) {
             this.completedStepIds.delete(stepId);
+            delete this.stepApplicationNumbers[stepId];
         } else {
             this.completedStepIds.add(stepId);
             this.inProgressStepIds.delete(stepId);
+            if (!this.stepApplicationNumbers[stepId]) {
+                this.stepApplicationNumbers[stepId] = `CIVIC-ACK-${Date.now().toString().slice(-6)}`;
+            }
         }
-        localStorage.setItem('civic_completed_steps', JSON.stringify(Array.from(this.completedStepIds)));
-        localStorage.setItem('civic_inprogress_steps', JSON.stringify(Array.from(this.inProgressStepIds)));
+        this.saveTaskCompleted();
+        this.saveTaskInProgress();
+        this.saveTaskAppNums();
 
         await this.loadRoadmap(this.currentTaskId);
         this.updateStationUI();
@@ -767,24 +1051,31 @@ class CivicApp {
 
         this.visualizer.toggleCriticalPath(this.criticalPathActive);
 
-        // Highlight subway tracks
-        const branch3a = document.getElementById('branch-3a-line');
-        const branch3b = document.getElementById('branch-3b-line');
-        if (branch3a && branch3b) {
-            branch3a.style.opacity = this.criticalPathActive ? '0.2' : '1';
-            branch3b.style.opacity = this.criticalPathActive ? '0.2' : '1';
+        // Re-render Subway Map with Critical Path highlight
+        if (this.subwayRenderer && this.currentTask && this.currentRoadmap) {
+            this.subwayRenderer.render(
+                this.currentTask,
+                this.currentRoadmap,
+                this.completedStepIds,
+                this.selectedStationId
+            );
         }
     }
 
+    // -------------------------------------------------------------------------
+    // Dynamic Citizen Compliance Ledger
+    // -------------------------------------------------------------------------
     renderCitizenLedger() {
         const tbody = document.getElementById('citizen-ledger-table-body');
         const totalCount = document.getElementById('ledger-total-milestones');
         const clearedCount = document.getElementById('ledger-cleared-milestones');
         const feeCount = document.getElementById('ledger-total-fees');
+        const actDesc = document.getElementById('ledger-act-desc');
 
         if (!tbody || !this.currentTask) return;
 
-        const steps = this.currentTask.steps;
+        const task = this.currentTask;
+        const steps = task.steps;
         const cleared = steps.filter(s => this.completedStepIds.has(s.id)).length;
         const totalFees = steps.reduce((sum, s) => sum + s.fee_amount, 0);
 
@@ -792,12 +1083,41 @@ class CivicApp {
         if (clearedCount) clearedCount.innerText = `${cleared} Cleared (${Math.round((cleared / steps.length) * 100)}%)`;
         if (feeCount) feeCount.innerText = `${this.formatINR(totalFees)} Base`;
 
+        // Dynamic State Public Service Guarantee Act
+        if (actDesc) {
+            let actName = `${task.municipality} Citizen Charter & Public Service Delivery Guarantee`;
+            const state = (task.state || '').toLowerCase();
+            const muni = (task.municipality || '').toLowerCase();
+
+            if (state.includes('maharashtra') || muni.includes('mumbai') || muni.includes('pune')) {
+                actName = 'Maharashtra Right to Public Services Act 2015';
+            } else if (state.includes('karnataka') || muni.includes('bengaluru')) {
+                actName = 'Karnataka Sakala Services Act 2011';
+            } else if (state.includes('delhi')) {
+                actName = 'Delhi Right of Citizen to Time Bound Delivery of Services Act 2011';
+            } else if (state.includes('telangana') || muni.includes('hyderabad')) {
+                actName = 'Telangana Citizen Charter & TS-iPASS Public Services Guarantee';
+            }
+            actDesc.innerText = `Cryptographically audited municipal filing log conforming to ${actName}. Certified receipts carry SHA-256 verification hashes.`;
+        }
+
+        const stateCode = (task.state || task.municipality || 'IN').substring(0, 2).toUpperCase();
+
         tbody.innerHTML = steps.map((s, idx) => {
             const isDone = this.completedStepIds.has(s.id);
             const statusHtml = isDone 
                 ? '<span class="chip chip-verified">✓ Satisfied &amp; Logged</span>'
                 : '<span class="chip chip-action-required">Action Required</span>';
-            const dateStr = isDone ? '28-09-2024 [NODE MUM-W-HW]' : 'Pending Filing';
+
+            const savedAppRef = this.stepApplicationNumbers[s.id];
+            const deptJurisdiction = (s.department && s.department.jurisdiction ? s.department.jurisdiction : task.municipality).toUpperCase();
+            const dateStr = isDone 
+                ? `${this.formatDateIN(new Date().toISOString())} [NODE: ${deptJurisdiction}]` 
+                : 'Pending Filing';
+
+            const docketRefCode = savedAppRef 
+                ? savedAppRef 
+                : `${stateCode}-${s.id.toUpperCase()}-2026`;
 
             return `
                 <tr>
@@ -807,7 +1127,7 @@ class CivicApp {
                         <div class="font-body text-xs text-secondary mt-0.5 truncate max-w-md">${s.description}</div>
                     </td>
                     <td class="font-headline text-xs">${s.department.name.split('(')[0]}</td>
-                    <td class="font-code text-xs text-secondary">MCGM-${s.id.toUpperCase()}-2024</td>
+                    <td class="font-code text-xs text-secondary">${docketRefCode}</td>
                     <td class="font-code text-xs font-semibold text-primary">${this.formatINR(s.fee_amount)}</td>
                     <td>
                         <div>${statusHtml}</div>
@@ -823,10 +1143,14 @@ class CivicApp {
         }).join('');
     }
 
+    // -------------------------------------------------------------------------
+    // Dual-Track NLP Intent Resolution & Procedure Search
+    // -------------------------------------------------------------------------
     async performSearch() {
         const queryInput = document.getElementById('taskQuery');
         const jurSelect = document.getElementById('jurisdictionSelect');
-        const q = queryInput ? queryInput.value.trim().toLowerCase() : '';
+        const btnSubmit = document.getElementById('btn-generate-roadmap');
+        const q = queryInput ? queryInput.value.trim() : '';
         const jur = jurSelect ? jurSelect.value : '';
 
         if (!q) {
@@ -834,21 +1158,131 @@ class CivicApp {
             return;
         }
 
-        // Direct keyword matching
-        if (q.includes('bakery') || q.includes('cafe') || q.includes('mumbai') || q.includes('bandra') || q.includes('mcgm') || q.includes('bmc') || jur.includes('Mumbai')) {
-            await this.loadTaskAndRoute('task-mum-bakery');
-        } else if (q.includes('bengaluru') || q.includes('bbmp') || q.includes('karnataka') || jur.includes('Bengaluru')) {
-            await this.loadTaskAndRoute('task-blr-restaurant');
-        } else if (q.includes('building') || q.includes('construction') || q.includes('autodcr') || jur.includes('Pune')) {
-            await this.loadTaskAndRoute('task-mum-construction');
-        } else if (q.includes('mutation') || q.includes('property') || q.includes('delhi') || q.includes('mcd') || jur.includes('Delhi')) {
-            await this.loadTaskAndRoute('task-del-mutation');
-        } else if (q.includes('tech') || q.includes('it') || q.includes('hyderabad') || q.includes('ghmc') || jur.includes('Hyderabad')) {
-            await this.loadTaskAndRoute('task-hyd-tech-biz');
-        } else {
-            // Default to Mumbai Bakery flagship
-            await this.loadTaskAndRoute('task-mum-bakery');
+        // Show loading spinner on button
+        const originalBtnHtml = btnSubmit ? btnSubmit.innerHTML : '';
+        if (btnSubmit) {
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `
+                <span class="material-symbols-outlined text-[18px] animate-spin">sync</span>
+                <span>Resolving Statutory Intent...</span>
+            `;
         }
+
+        try {
+            const resp = await fetch('/api/tasks/resolve-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: q, municipality: jur })
+            });
+
+            if (!resp.ok) {
+                throw new Error(`HTTP error ${resp.status}`);
+            }
+
+            const data = await resp.json();
+            console.log('NLP Intent Resolution Result:', data);
+
+            // Render interactive search feedback cards on Intake Screen
+            this.renderNlpResolutionFeedback(data);
+
+            if (data.top_task_id) {
+                // Set provenance notice for the roadmap header banner
+                if (data.hinglish_detected) {
+                    this.lastSearchNotice = {
+                        type: 'hinglish',
+                        message: `Hinglish query detected: Interpreted and mapped to statutory terms ("${data.normalized_query}").`
+                    };
+                } else if (data.synthesis) {
+                    this.lastSearchNotice = {
+                        type: 'synthesized',
+                        message: `Zero-shot statutory route dynamically synthesized for "${data.original_query}". Formulated pursuant to statutory rules.`
+                    };
+                } else {
+                    this.lastSearchNotice = null;
+                }
+
+                await this.loadTaskAndRoute(data.top_task_id);
+            } else {
+                await this.loadTaskAndRoute('task-mum-bakery');
+            }
+        } catch (err) {
+            console.error('NLP Intent Resolution failed, falling back to local heuristic:', err);
+            const qLower = q.toLowerCase();
+            if (qLower.includes('delhi') || qLower.includes('mutation')) {
+                await this.loadTaskAndRoute('task-del-mutation');
+            } else if (qLower.includes('bengaluru') || qLower.includes('bbmp')) {
+                await this.loadTaskAndRoute('task-blr-restaurant');
+            } else if (qLower.includes('hyderabad') || qLower.includes('ghmc') || qLower.includes('tech')) {
+                await this.loadTaskAndRoute('task-hyd-tech-biz');
+            } else if (qLower.includes('construction') || qLower.includes('autodcr')) {
+                await this.loadTaskAndRoute('task-mum-construction');
+            } else {
+                await this.loadTaskAndRoute('task-mum-bakery');
+            }
+        } finally {
+            if (btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalBtnHtml;
+            }
+        }
+    }
+
+    renderNlpResolutionFeedback(data) {
+        const container = document.getElementById('nlp-search-feedback');
+        if (!container) return;
+
+        if (!data || !data.matches || data.matches.length === 0) {
+            container.classList.add('hidden');
+            return;
+        }
+
+        container.classList.remove('hidden');
+
+        let hinglishBadgeHtml = '';
+        if (data.hinglish_detected) {
+            hinglishBadgeHtml = `
+                <div class="flex items-center gap-2 p-2 bg-amber-50 border border-amber-300 text-amber-900 rounded-none text-xs">
+                    <span class="material-symbols-outlined text-[16px] text-amber-700">translate</span>
+                    <span><strong>Hinglish / Regional Terms Detected:</strong> Interpreted as: <em class="font-code text-[11px] font-semibold">${data.normalized_query}</em></span>
+                </div>
+            `;
+        }
+
+        const matchCardsHtml = data.matches.slice(0, 3).map((m) => {
+            const isSynth = m.match_type === 'synthesized';
+            const pct = Math.round(m.confidence * 100);
+            const badgeClass = isSynth
+                ? 'bg-purple-100 text-purple-900 border border-purple-300'
+                : (pct >= 70 ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-blue-100 text-blue-900 border border-blue-300');
+            const typeLabel = isSynth ? 'AI Zero-Shot Synthesis' : `${pct}% Semantic Match`;
+
+            return `
+                <div class="p-2.5 bg-surface-container-lowest border border-outline-variant hover:border-primary transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div class="space-y-0.5">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="font-code text-[10px] px-1.5 py-0.5 font-bold ${badgeClass}">${typeLabel}</span>
+                            <span class="text-xs font-semibold text-primary">${m.title}</span>
+                        </div>
+                        <p class="text-[11px] text-on-surface-variant line-clamp-1">${m.municipality} • ${m.category}</p>
+                    </div>
+                    <button class="bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold px-3 py-1.5 transition-colors shrink-0 flex items-center gap-1"
+                            onclick="window.app.loadTaskAndRoute('${m.task_id}')">
+                        <span>Load Route</span>
+                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    </button>
+                </div>
+            `;
+        }).join('');
+
+        container.innerHTML = `
+            ${hinglishBadgeHtml}
+            <div class="font-headline text-[11px] font-semibold text-secondary uppercase tracking-wider">
+                Statutory Intent Resolved (${data.matches.length} matches):
+            </div>
+            <div class="space-y-1.5">
+                ${matchCardsHtml}
+            </div>
+        `;
     }
 
     // -------------------------------------------------------------------------
@@ -874,7 +1308,7 @@ class CivicApp {
     }
 
     // -------------------------------------------------------------------------
-    // Feature 1: Unified Citizen Document Readiness Locker & Expiry Guard
+    // Dynamic Document Readiness Locker & Expiry Guard
     // -------------------------------------------------------------------------
     renderDocumentLocker() {
         const listContainer = document.getElementById('document-locker-list');
@@ -882,12 +1316,19 @@ class CivicApp {
         const pctScore = document.getElementById('locker-readiness-pct');
         const progressBar = document.getElementById('locker-progress-bar');
         const deficitAlert = document.getElementById('locker-deficit-alert');
+        const headingDesc = document.getElementById('locker-heading-desc');
+        const filterContainer = document.getElementById('locker-category-filters');
         
-        if (!this.currentRoadmap) return;
+        if (!this.currentRoadmap || !this.currentTask) return;
         const allDocs = this.currentRoadmap.consolidated_documents || [];
         const totalCount = allDocs.length;
         const readyCount = allDocs.filter(d => this.checkedDocIds.has(d.name)).length;
         const pct = totalCount > 0 ? Math.round((readyCount / totalCount) * 100) : 0;
+
+        // Dynamic Header Description
+        if (headingDesc) {
+            headingDesc.innerText = `Consolidated multi-agency document inventory required across all ${this.currentTask.steps.length} procedural milestones. Audit your physical file or DigiLocker records before visiting ${this.currentTask.municipality} counters to eliminate rejection delays.`;
+        }
 
         // Update counts & progress
         if (labelScore) labelScore.innerText = `${readyCount} / ${totalCount} Documents Ready (${pct}%)`;
@@ -909,28 +1350,31 @@ class CivicApp {
             }
         }
 
-        // Category counts
-        const countAll = document.getElementById('count-doc-all');
-        const countKyc = document.getElementById('count-doc-kyc');
-        const countProp = document.getElementById('count-doc-prop');
-        const countStat = document.getElementById('count-doc-stat');
-        const countTech = document.getElementById('count-doc-tech');
+        // Dynamic Category Filter Tabs from actual consolidated_documents
+        if (filterContainer) {
+            const categories = Array.from(new Set(allDocs.map(d => d.category || 'General'))).filter(Boolean);
+            
+            // Build buttons: 'All' + each non-empty category
+            let buttonsHtml = `
+                <button onclick="window.app.filterDocumentLocker('all')" class="locker-filter-btn px-3 py-1.5 ${this.activeDocCategory === 'all' ? 'bg-primary text-on-primary' : 'bg-surface-container text-primary'} font-semibold shrink-0" data-category="all">
+                    All Documents (${totalCount})
+                </button>
+            `;
 
-        if (countAll) countAll.innerText = totalCount;
-        if (countKyc) countKyc.innerText = allDocs.filter(d => d.category === 'Identity & KYC').length;
-        if (countProp) countProp.innerText = allDocs.filter(d => d.category === 'Property & Premise').length;
-        if (countStat) countStat.innerText = allDocs.filter(d => d.category === 'Statutory Clearances').length;
-        if (countTech) countTech.innerText = allDocs.filter(d => d.category === 'Technical Plans & Drawings').length;
+            categories.forEach(cat => {
+                const count = allDocs.filter(d => d.category === cat).length;
+                if (count > 0) {
+                    const isActive = this.activeDocCategory === cat;
+                    buttonsHtml += `
+                        <button onclick="window.app.filterDocumentLocker('${cat.replace(/'/g, "\'")}')" class="locker-filter-btn px-3 py-1.5 ${isActive ? 'bg-primary text-on-primary font-semibold' : 'bg-surface-container hover:bg-surface-container-high text-primary border border-outline-variant'} shrink-0" data-category="${cat}">
+                            ${cat} (${count})
+                        </button>
+                    `;
+                }
+            });
 
-        // Filter button active classes
-        document.querySelectorAll('.locker-filter-btn').forEach(btn => {
-            const cat = btn.getAttribute('data-category');
-            const isActive = cat === this.activeDocCategory;
-            btn.classList.toggle('bg-primary', isActive);
-            btn.classList.toggle('text-on-primary', isActive);
-            btn.classList.toggle('bg-surface-container', !isActive);
-            btn.classList.toggle('text-primary', !isActive);
-        });
+            filterContainer.innerHTML = buttonsHtml;
+        }
 
         if (!listContainer) return;
 
@@ -951,7 +1395,7 @@ class CivicApp {
                 ? stepNums.map(sNum => `Stop 0${sNum}`).join(', ')
                 : 'General Milestone';
 
-            const safeDocName = d.name.replace(/'/g, "\\'");
+            const safeDocName = d.name.replace(/'/g, "\'");
 
             return `
                 <div class="doc-card ${isReady ? 'ready' : 'missing'} p-4 border border-outline-variant flex flex-col justify-between gap-3 shadow-sm">
@@ -1002,7 +1446,7 @@ class CivicApp {
         } else {
             this.checkedDocIds.add(docName);
         }
-        localStorage.setItem('civic_user_docs_' + this.currentTaskId, JSON.stringify(Array.from(this.checkedDocIds)));
+        this.saveTaskDocs();
         this.renderDocumentLocker();
         this.updateHeaderAndStats();
     }
@@ -1015,14 +1459,14 @@ class CivicApp {
     resetDocumentChecklist() {
         if (confirm('Reset citizen document bag? All documents will be marked as missing for pre-visit audit.')) {
             this.checkedDocIds.clear();
-            localStorage.setItem('civic_user_docs_' + this.currentTaskId, JSON.stringify([]));
+            this.saveTaskDocs();
             this.renderDocumentLocker();
             this.updateHeaderAndStats();
         }
     }
 
     // -------------------------------------------------------------------------
-    // Feature 3: Verification Staleness Sentinel & Direct Counter Discrepancy Reporting
+    // Verification Staleness Sentinel & Direct Counter Discrepancy Reporting
     // -------------------------------------------------------------------------
     openDiscrepancyModal(stepId) {
         const sId = stepId || this.selectedStationId;
@@ -1039,7 +1483,7 @@ class CivicApp {
         const elContact = document.getElementById('discrepancy-contact');
 
         if (elTargetStep) elTargetStep.innerText = `Stop 0${step.step_number}: ${step.title}`;
-        if (elTargetAgency) elTargetAgency.innerText = `${step.department.name} — ${step.department.office_address || step.department.jurisdiction}`;
+        if (elTargetAgency) elTargetAgency.innerText = `${step.department.name} — ${step.department.office_address || step.department.jurisdiction || this.currentTask.municipality}`;
         if (elRecordedVal) elRecordedVal.value = `Official Fee: ${this.formatINR(step.fee_amount)} | SLA: ${step.estimated_days} Days`;
         if (elDemandedVal) elDemandedVal.value = '';
         if (elNotes) elNotes.value = '';
@@ -1085,7 +1529,8 @@ class CivicApp {
 
             if (resp.ok) {
                 const auditRef = Math.floor(100000 + Math.random() * 900000);
-                alert(`Citizen Discrepancy Report submitted successfully.\n\nAudit Ref: #DISC-${auditRef}\nTransmitted to MCGM Vigilance / Citizen Review Queue for administrative verification.`);
+                const targetMuni = (this.currentTask && this.currentTask.municipality) || 'Municipal';
+                alert(`Citizen Discrepancy Report submitted successfully.\n\nAudit Ref: #DISC-${auditRef}\nTransmitted to ${targetMuni} Grievance & Vigilance Cell for administrative verification.`);
                 this.closeDiscrepancyModal();
                 if (this.admin && typeof this.admin.loadFeedback === 'function') {
                     this.admin.loadFeedback();

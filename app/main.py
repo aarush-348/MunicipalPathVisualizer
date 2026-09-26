@@ -7,11 +7,13 @@ from fastapi.responses import FileResponse
 
 from app.models import (
     CivicTask, TaskStep, RoadmapResponse, UserProgressUpdate,
-    ScrapeRequest, ScrapeResult, AdminVerificationUpdate
+    ScrapeRequest, ScrapeResult, AdminVerificationUpdate,
+    IntentRequest, IntentMatchModel, IntentResolutionResponse
 )
 from app.database import db
 from app.graph_engine import CivicGraphEngine
 from app.scraper_service import scraper_service
+from app.nlp_engine import nlp_engine
 
 app = FastAPI(
     title="Municipal Bureaucracy Path Visualizer API",
@@ -27,9 +29,46 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Initialize NLP index with catalog tasks
+nlp_engine.index_tasks(db.get_all_tasks())
+
 # ---------------------------------------------------------------------------
 # Citizen Civic Navigation Endpoints
 # ---------------------------------------------------------------------------
+
+@app.post("/api/tasks/resolve-intent", response_model=IntentResolutionResponse)
+async def resolve_task_intent(payload: IntentRequest):
+    """
+    Production Dual-Track NLP Intent Resolution & Procedure Engine.
+    Accepts natural language queries, Hinglish transliterations, and regional
+    dialects, matching them via semantic vectorization or synthesizing zero-shot
+    statutory workflows dynamically into the runtime database.
+    """
+    res = nlp_engine.resolve_intent(query=payload.query, municipality_hint=payload.municipality or "")
+    top_id = res.matches[0].task_id if res.matches else None
+
+    return IntentResolutionResponse(
+        original_query=res.original_query,
+        normalized_query=res.normalized_query,
+        hinglish_detected=res.hinglish_detected,
+        top_task_id=top_id,
+        matches=[
+            IntentMatchModel(
+                task_id=m.task_id,
+                title=m.title,
+                municipality=m.municipality,
+                state=m.state,
+                category=m.category,
+                confidence=m.confidence,
+                match_type=m.match_type,
+                matched_tokens=m.matched_tokens,
+                description=m.description
+            )
+            for m in res.matches
+        ],
+        synthesis=res.synthesis
+    )
+
 
 @app.get("/api/tasks", response_model=List[CivicTask])
 async def list_tasks(

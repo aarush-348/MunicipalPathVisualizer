@@ -164,3 +164,27 @@ class AdminVerificationUpdate(BaseModel):
     updated_fee: Optional[float] = None
     updated_sla_days: Optional[int] = None
     updated_source_url: Optional[str] = None
+
+class IntentRequest(BaseModel):
+    query: str
+    municipality: Optional[str] = None
+
+class IntentMatchModel(BaseModel):
+    task_id: str
+    title: str
+    municipality: str
+    state: str
+    category: str
+    confidence: float
+    match_type: str  # 'catalog_exact' | 'catalog_semantic' | 'synthesized'
+    matched_tokens: List[str] = Field(default_factory=list)
+    description: str = ""
+
+class IntentResolutionResponse(BaseModel):
+    original_query: str
+    normalized_query: str
+    hinglish_detected: bool
+    top_task_id: Optional[str] = None
+    matches: List[IntentMatchModel]
+    synthesis: Optional[Dict[str, Any]] = None
+
