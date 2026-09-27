@@ -113,6 +113,7 @@ class GraphNode(BaseModel):
     prerequisites: List[str]
     has_official_source: bool
     confidence_score: float
+    official_url: Optional[str] = None
 
 class GraphEdge(BaseModel):
     id: str

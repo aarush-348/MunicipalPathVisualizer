@@ -32,14 +32,14 @@ const TRANSLATIONS = {
 
 class CivicApp {
     constructor() {
-        this.currentTaskId = 'task-mah-small-biz';
+        this.currentTaskId = null;
         this.currentTask = null;
         this.currentRoadmap = null;
         this.selectedStationId = null;
         
         // Active view tabs & visual modes
         this.activeTab = 'task-lookup';
-        this.wayfindingMode = 'subway'; // 'subway' | 'dag'
+        this.wayfindingMode = 'dag'; // 'dag' only
         this.criticalPathActive = false;
         this.activeDocCategory = 'all';
 
@@ -100,8 +100,10 @@ class CivicApp {
         // 1. Fetch available catalog tasks
         await this.loadTasksList();
 
-        // 2. Load initial scoped task state & roadmap
-        await this.loadTaskAndRoute(this.currentTaskId);
+        // 2. Load initial scoped task state & roadmap if explicitly requested
+        if (this.currentTaskId) {
+            await this.loadTaskAndRoute(this.currentTaskId);
+        }
 
         // 3. Switch to initial tab
         this.switchNavTab(this.activeTab);
@@ -490,14 +492,6 @@ class CivicApp {
             this.updateStationUI();
             this.renderCitizenLedger();
 
-            if (this.subwayRenderer && this.currentRoadmap) {
-                this.subwayRenderer.render(
-                    this.currentTask,
-                    this.currentRoadmap,
-                    this.completedStepIds,
-                    this.selectedStationId
-                );
-            }
             if (this.visualizer && this.currentRoadmap) {
                 this.visualizer.setRoadmapData(this.currentRoadmap);
             }
@@ -877,16 +871,18 @@ class CivicApp {
     }
 
     populateJurisdictionDropdowns() {
-        if (!this.allTasks || this.allTasks.length === 0) return;
-
         const isMr = (this.currentLang === 'mr');
-        // Extract unique municipalities
-        const uniqueMunis = Array.from(new Set(this.allTasks.map(t => t.municipality))).filter(Boolean);
+        const canonicalMunis = [
+            'Mumbai (BMC / MCGM)',
+            'Pune (PMC)',
+            'Nashik (NMC)',
+            'Maharashtra Statewide (Aaple Sarkar)'
+        ];
 
         // 1. Top Navbar Jurisdiction Dropdown
         const navSelect = document.getElementById('select-jurisdiction');
         if (navSelect) {
-            navSelect.innerHTML = uniqueMunis.map(m => {
+            navSelect.innerHTML = canonicalMunis.map(m => {
                 const label = isMr ? (window.MUNI_TRANSLATIONS?.[m] || m) : m;
                 return `<option value="${m}" ${this.currentTask && this.currentTask.municipality === m ? 'selected' : ''}>${label}</option>`;
             }).join('');
@@ -904,10 +900,10 @@ class CivicApp {
         // 2. Search Intake Jurisdiction Dropdown
         const searchSelect = document.getElementById('jurisdictionSelect');
         if (searchSelect) {
-            const allLabel = isMr ? 'सर्व महानगरपालिका / अधिकारक्षेत्र (महाराष्ट्र)' : 'All Municipal Jurisdictions (National)';
+            const allLabel = isMr ? 'सर्व अधिकारक्षेत्रे (महाराष्ट्र)' : 'All Jurisdictions / Auto-detect';
             searchSelect.innerHTML = `
-                <option value="">${allLabel}</option>
-                ${uniqueMunis.map(m => {
+                <option value="all">${allLabel}</option>
+                ${canonicalMunis.map(m => {
                     const label = isMr ? (window.MUNI_TRANSLATIONS?.[m] || m) : m;
                     return `<option value="${m}">${label}</option>`;
                 }).join('')}
@@ -965,22 +961,15 @@ class CivicApp {
                 this.saveTaskInProgress();
             }
 
-            // Sync visual components
+            // Sync visual components (DAG Topology view)
             this.updateHeaderAndStats();
+            const dagWrapper = document.getElementById('dag-canvas-wrapper');
+            if (dagWrapper) dagWrapper.style.display = 'block';
             this.visualizer.setRoadmapData(this.currentRoadmap);
+            setTimeout(() => this.visualizer.fitToScreen(), 80);
             this.renderRailMilestones();
             this.updateStationUI();
             this.renderCitizenLedger();
-
-            // Render Dynamic Subway Transit SVG
-            if (this.subwayRenderer) {
-                this.subwayRenderer.render(
-                    this.currentTask,
-                    this.currentRoadmap,
-                    this.completedStepIds,
-                    this.selectedStationId
-                );
-            }
 
             // Shops Act 2017 workers intake toggle visibility
             const shopsToggle = document.getElementById('shops-act-workers-toggle');
@@ -1131,15 +1120,7 @@ class CivicApp {
         this.updateStationUI();
         this.renderRailMilestones();
 
-        // Refresh Subway Map Highlight
-        if (this.subwayRenderer && this.currentTask && this.currentRoadmap) {
-            this.subwayRenderer.render(
-                this.currentTask,
-                this.currentRoadmap,
-                this.completedStepIds,
-                this.selectedStationId
-            );
-        }
+
     }
 
     updateStationUI() {
@@ -1227,7 +1208,34 @@ class CivicApp {
 
         const isMr = (this.currentLang === 'mr');
 
-        container.innerHTML = this.currentTask.steps.map((s, idx) => {
+        const startNode = (this.currentRoadmap?.nodes || []).find(n => n.step_number === 0 || n.id.endsWith('-portal-start'));
+        const officialPortalUrl = startNode?.official_url || (this.currentTask.steps[0]?.verification_source?.url) || (this.currentTask.steps[0]?.department?.portal_url);
+
+        let portalBannerHtml = '';
+        if (officialPortalUrl) {
+            const portalAuthority = startNode?.department_name || this.currentTask.municipality || 'Official Citizen Portal';
+            portalBannerHtml = `
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs mb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">🏛</span>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Starting Node 0</span>
+                                <span class="text-xs text-blue-700 font-semibold font-mono">100% Verified Government Source</span>
+                            </div>
+                            <h4 class="font-heading text-sm font-bold text-blue-950 mt-0.5">${isMr ? 'अधिकृत शासकीय पोर्टलवर जा' : 'Visit Official Government Portal'}</h4>
+                            <p class="font-sans text-xs text-blue-800/80">${portalAuthority}</p>
+                        </div>
+                    </div>
+                    <a href="${officialPortalUrl}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-xs shrink-0 cursor-pointer">
+                        <span>${isMr ? 'अधिकृत पोर्टल उघडा' : 'Visit Official Website'}</span>
+                        <span class="material-symbols-outlined text-[15px]">open_in_new</span>
+                    </a>
+                </div>
+            `;
+        }
+
+        const stepCardsHtml = this.currentTask.steps.map((s, idx) => {
             const isCompleted = this.completedStepIds.has(s.id);
             const isSelected = this.selectedStationId === s.id;
             const prereqs = s.prerequisites || [];
@@ -1305,7 +1313,8 @@ class CivicApp {
                     </div>
                 </div>
             `;
-        }).join('');
+        });
+        container.innerHTML = portalBannerHtml + stepCardsHtml.join('');
     }
 
     // -------------------------------------------------------------------------
@@ -1795,52 +1804,29 @@ class CivicApp {
     }
 
     toggleWayfindingView(mode) {
-        const subwayWrapper = document.getElementById('subway-diagram-wrapper');
         const dagWrapper = document.getElementById('dag-canvas-wrapper');
-        const btnSubway = document.getElementById('btn-mode-subway');
         const btnDag = document.getElementById('btn-mode-dag');
 
         if (mode === 'cards') {
-            if (subwayWrapper) subwayWrapper.style.display = 'none';
             if (dagWrapper) dagWrapper.style.display = 'none';
+            this.wayfindingMode = 'cards';
             return;
         }
 
-        if (mode === 'subway') {
-            const isCurrentlyShown = subwayWrapper && subwayWrapper.style.display === 'block';
-            if (isCurrentlyShown && this.wayfindingMode === 'subway') {
-                if (subwayWrapper) subwayWrapper.style.display = 'none';
-                return;
-            }
-            this.wayfindingMode = 'subway';
-            if (subwayWrapper) subwayWrapper.style.display = 'block';
+        // Only DAG topology is supported
+        const isCurrentlyShown = dagWrapper && dagWrapper.style.display === 'block';
+        if (isCurrentlyShown && mode === 'dag' && this.wayfindingMode === 'dag') {
             if (dagWrapper) dagWrapper.style.display = 'none';
-            if (btnSubway) {
-                btnSubway.className = 'px-3 py-1.5 rounded font-semibold bg-primary text-white';
-            }
-            if (btnDag) {
-                btnDag.className = 'px-3 py-1.5 rounded font-semibold text-gray-700 hover:text-primary';
-            }
-            if (this.subwayRenderer && this.currentTask && this.currentRoadmap) {
-                this.subwayRenderer.render(
-                    this.currentTask,
-                    this.currentRoadmap,
-                    this.completedStepIds,
-                    this.selectedStationId
-                );
-            }
-        } else if (mode === 'dag') {
-            this.wayfindingMode = 'dag';
-            if (subwayWrapper) subwayWrapper.style.display = 'none';
-            if (dagWrapper) dagWrapper.style.display = 'block';
-            if (btnSubway) {
-                btnSubway.className = 'px-3 py-1.5 rounded font-semibold text-gray-700 hover:text-primary';
-            }
-            if (btnDag) {
-                btnDag.className = 'px-3 py-1.5 rounded font-semibold bg-primary text-white';
-            }
-            setTimeout(() => this.visualizer.fitToScreen(), 50);
+            this.wayfindingMode = 'cards';
+            return;
         }
+
+        this.wayfindingMode = 'dag';
+        if (dagWrapper) dagWrapper.style.display = 'block';
+        if (btnDag) {
+            btnDag.className = 'px-2.5 py-1.5 rounded-md font-semibold bg-slate-900 text-white shadow-xs';
+        }
+        setTimeout(() => this.visualizer.fitToScreen(), 50);
     }
 
     toggleCriticalPathHighlight() {
@@ -1854,15 +1840,7 @@ class CivicApp {
 
         this.visualizer.toggleCriticalPath(this.criticalPathActive);
 
-        // Re-render Subway Map with Critical Path highlight
-        if (this.subwayRenderer && this.currentTask && this.currentRoadmap) {
-            this.subwayRenderer.render(
-                this.currentTask,
-                this.currentRoadmap,
-                this.completedStepIds,
-                this.selectedStationId
-            );
-        }
+
     }
 
     // -------------------------------------------------------------------------
@@ -1979,7 +1957,8 @@ class CivicApp {
         const jur = jurSelect ? jurSelect.value : '';
 
         if (!q) {
-            this.switchNavTab('roadmap-and-route');
+            alert('Please enter a municipal permit, license, or civic service query.');
+            if (queryInput) queryInput.focus();
             return;
         }
 
@@ -1998,7 +1977,7 @@ class CivicApp {
             const resp = await fetch('/api/tasks/resolve-intent', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query: q, municipality: jur })
+                body: JSON.stringify({ query: q, municipality: (jur && jur !== 'all') ? jur : '' })
             });
 
             if (!resp.ok) {
@@ -2011,12 +1990,22 @@ class CivicApp {
             // Render interactive search feedback cards on Intake Screen
             this.renderNlpResolutionFeedback(data);
 
+            // Handle Missing Municipal Data / Unsupported Request
+            if (data.is_missing_data || (data.synthesis && data.synthesis.missing_data)) {
+                const bannerEl = document.getElementById('nlp-intent-banner');
+                if (bannerEl) {
+                    bannerEl.classList.remove('hidden');
+                    bannerEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return;
+            }
+
+            // Multi-candidate disambiguation required: do NOT auto-redirect
             if (data.needs_disambiguation && data.matches && data.matches.length >= 2) {
-                // Multi-candidate disambiguation required: do NOT auto-redirect!
-                // Stay on Intake Screen and smoothly focus the disambiguation options
-                const feedbackEl = document.getElementById('nlp-search-feedback');
-                if (feedbackEl) {
-                    feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                const bannerEl = document.getElementById('nlp-intent-banner');
+                if (bannerEl) {
+                    bannerEl.classList.remove('hidden');
+                    bannerEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
                 return;
             }
@@ -2043,26 +2032,14 @@ class CivicApp {
 
                 await this.loadTaskAndRoute(data.top_task_id);
             } else {
-                await this.loadTaskAndRoute('task-mum-bakery');
+                const bannerEl = document.getElementById('nlp-intent-banner');
+                if (bannerEl) {
+                    bannerEl.classList.remove('hidden');
+                }
             }
         } catch (err) {
-            console.error('NLP Intent Resolution failed, falling back to Maharashtra heuristic:', err);
-            const qLower = q.toLowerCase();
-            if (qLower.includes('pune') || qLower.includes('pmc')) {
-                await this.loadTaskAndRoute('task-pune-restaurant');
-            } else if (qLower.includes('7/12') || qLower.includes('satbara') || qLower.includes('mutation') || qLower.includes('ferfar')) {
-                await this.loadTaskAndRoute('task-mah-712-mutation');
-            } else if (qLower.includes('water') || qLower.includes('pani') || qLower.includes('nal')) {
-                await this.loadTaskAndRoute('task-mum-water-connection');
-            } else if (qLower.includes('certificate') || qLower.includes('dakhla') || qLower.includes('aaple sarkar') || qLower.includes('income')) {
-                await this.loadTaskAndRoute('task-mah-rts-certificates');
-            } else if (qLower.includes('construction') || qLower.includes('autodcr') || qLower.includes('building')) {
-                await this.loadTaskAndRoute('task-mum-construction');
-            } else if (qLower.includes('bakery') || qLower.includes('bandra')) {
-                await this.loadTaskAndRoute('task-mum-bakery');
-            } else {
-                await this.loadTaskAndRoute('task-mah-small-biz');
-            }
+            console.error('NLP Intent Resolution error:', err);
+            alert('Unable to connect to civic service catalog. Please try again.');
         } finally {
             if (btnSubmit) {
                 btnSubmit.disabled = false;
@@ -2080,111 +2057,78 @@ class CivicApp {
     }
 
     renderNlpResolutionFeedback(data) {
+        const banner = document.getElementById('nlp-intent-banner');
         const container = document.getElementById('nlp-search-feedback');
-        if (!container) return;
+        if (!banner || !container) return;
 
-        if (!data || !data.matches || data.matches.length === 0) {
-            container.classList.add('hidden');
+        if (!data) {
+            banner.classList.add('hidden');
             return;
         }
 
-        container.classList.remove('hidden');
         const isMr = (this.currentLang === 'mr');
 
-        let disambiguationBannerHtml = '';
-        if (data.needs_disambiguation && data.matches.length >= 2) {
-            const optA = data.matches[0];
-            const optB = data.matches[1];
-            const optATitle = (isMr && window.TASK_TRANSLATIONS?.[optA.task_id]?.title) || optA.title;
-            const optBTitle = (isMr && window.TASK_TRANSLATIONS?.[optB.task_id]?.title) || optB.title;
-            disambiguationBannerHtml = `
-                <div class="p-4 bg-amber-50 border-2 border-amber-500 rounded shadow-xs mb-3 space-y-3">
+        // Case 1: Missing Municipal / Statutory Data
+        if (data.is_missing_data || (data.synthesis && data.synthesis.missing_data)) {
+            banner.classList.remove('hidden');
+            const msg = data.synthesis?.message || data.intent_summary || 'The requested service data is not currently present in the municipal / statutory repository.';
+            container.innerHTML = `
+                <div class="p-4 bg-amber-50 border-2 border-amber-400 rounded-xl shadow-xs space-y-2 text-slate-800 w-full">
+                    <div class="flex items-center gap-2 text-amber-900 font-bold text-sm">
+                        <span class="material-symbols-outlined text-amber-600">info</span>
+                        <span>${isMr ? 'माहिती उपलब्ध नाही' : 'Service Data Unavailable in Repository'}</span>
+                    </div>
+                    <p class="text-xs text-amber-900 leading-relaxed font-sans">${msg}</p>
+                    <div class="text-[11px] text-amber-800/80 pt-1 border-t border-amber-200">
+                        ${isMr ? 'सध्याचे अधिकारक्षेत्र: मुंबई (BMC), पुणे (PMC), नाशिक (NMC), आणि महाराष्ट्र राज्य (आपले सरकार).' : 'Supported project scope: Mumbai (BMC), Pune (PMC), Nashik (NMC), and Maharashtra Statewide (Aaple Sarkar).'}
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        // Case 2: Multi-candidate Disambiguation
+        if (data.needs_disambiguation && data.matches && data.matches.length >= 2) {
+            banner.classList.remove('hidden');
+            const options = data.disambiguation_options || data.matches.slice(0, 3).map(m => ({
+                service_id: m.task_id,
+                service_name: m.title,
+                department: m.municipality
+            }));
+
+            const optionsHtml = options.map(opt => `
+                <button onclick="window.app.loadTaskAndRoute('${opt.service_id}')" 
+                        class="flex items-center justify-between p-3 bg-white border border-amber-300 hover:border-slate-900 hover:bg-amber-50/50 text-left transition-all rounded-lg shadow-2xs group">
+                    <div>
+                        <div class="font-heading text-xs font-bold text-slate-900 group-hover:text-amber-900">${opt.service_name}</div>
+                        <div class="font-sans text-[11px] text-slate-500 mt-0.5">${opt.department || 'Maharashtra Statutory'}</div>
+                    </div>
+                    <span class="material-symbols-outlined text-slate-400 group-hover:text-slate-900 text-sm">arrow_forward</span>
+                </button>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="p-4 bg-amber-50 border-2 border-amber-400 rounded-xl shadow-xs space-y-3 text-slate-800 w-full">
                     <div class="flex items-center gap-2 text-amber-900 font-bold text-sm">
                         <span class="material-symbols-outlined text-amber-600">help_outline</span>
-                        <span>${isMr ? 'कृपया वैधानिक हेतू स्पष्ट करा (अस्पष्ट शोध पर्याय):' : 'Ambiguous Statutory Intent — Please Clarify Your Request:'}</span>
+                        <span>${isMr ? 'कृपया वैधानिक पर्याय निवडा:' : 'Please Select Intended Civic Procedure:'}</span>
                     </div>
-                    <p class="text-xs text-amber-800">
+                    <p class="text-xs text-amber-900">
                         ${isMr 
-                            ? `आपला शोध एकापेक्षा जास्त अधिकृत प्रक्रियेशी जवळपास समान पातळीवर जुळत आहे. कृपया आपला अचूक पर्याय निवडा:` 
-                            : `Your query closely matches multiple distinct civic workflows. Please select your intended procedure:`}
+                            ? 'आपला शोध एकापेक्षा जास्त अधिकृत प्रक्रियेशी जुळत आहे. कृपया आपला अचूक पर्याय निवडा:' 
+                            : 'Your query matches multiple distinct procedures in the database. Please select your specific requirement:'}
                     </p>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                        <button onclick="window.app.loadTaskAndRoute('${optA.task_id}')" 
-                                class="flex items-center justify-between p-3 bg-white border border-amber-300 hover:border-primary hover:bg-amber-100/40 text-left transition-all rounded shadow-2xs group">
-                            <div>
-                                <span class="font-bold text-xs text-primary block group-hover:underline">Option A: ${optATitle}</span>
-                                <span class="text-[11px] text-gray-500">${optA.municipality} • ${optA.category}</span>
-                            </div>
-                            <span class="material-symbols-outlined text-[18px] text-primary shrink-0 ml-2 group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-                        </button>
-                        <button onclick="window.app.loadTaskAndRoute('${optB.task_id}')" 
-                                class="flex items-center justify-between p-3 bg-white border border-amber-300 hover:border-primary hover:bg-amber-100/40 text-left transition-all rounded shadow-2xs group">
-                            <div>
-                                <span class="font-bold text-xs text-primary block group-hover:underline">Option B: ${optBTitle}</span>
-                                <span class="text-[11px] text-gray-500">${optB.municipality} • ${optB.category}</span>
-                            </div>
-                            <span class="material-symbols-outlined text-[18px] text-primary shrink-0 ml-2 group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
-                        </button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        ${optionsHtml}
                     </div>
                 </div>
             `;
+            return;
         }
 
-        let hinglishBadgeHtml = '';
-        if (data.hinglish_detected) {
-            hinglishBadgeHtml = `
-                <div class="flex items-center gap-2 p-2 bg-amber-50 border border-amber-300 text-amber-900 rounded-none text-xs">
-                    <span class="material-symbols-outlined text-[16px] text-amber-700">translate</span>
-                    <span><strong>${isMr ? 'स्थानिक व बोलीभाषा शब्द शोधले:' : 'Hinglish / Regional Terms Detected:'}</strong> ${isMr ? 'या संदर्भात अर्थ लावला:' : 'Interpreted as:'} <em class="font-code text-[11px] font-semibold">${data.normalized_query}</em></span>
-                </div>
-            `;
-        }
-
-        const matchCardsHtml = data.matches.slice(0, 3).map((m) => {
-            const isSynth = m.match_type === 'synthesized';
-            const pct = Math.round(m.confidence * 100);
-            const badgeClass = isSynth
-                ? 'bg-purple-100 text-purple-900 border border-purple-300'
-                : (pct >= 70 ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-blue-100 text-blue-900 border border-blue-300');
-            const typeLabel = isSynth 
-                ? (isMr ? 'एआय थेट संश्लेषण' : 'AI Zero-Shot Synthesis') 
-                : `${pct}% ${isMr ? 'जुळणारे परिणाम' : 'Semantic Match'}`;
-
-            const taskTrans = (window.TASK_TRANSLATIONS && window.TASK_TRANSLATIONS[m.task_id]) || {};
-            const title = (isMr && taskTrans.title) ? taskTrans.title : m.title;
-            const muni = (isMr && (taskTrans.municipality || window.MUNI_TRANSLATIONS?.[m.municipality])) ? (taskTrans.municipality || window.MUNI_TRANSLATIONS?.[m.municipality]) : m.municipality;
-            const cat = (isMr && taskTrans.category) ? taskTrans.category : m.category;
-            const btnText = isMr ? 'मार्ग पहा' : 'Load Route';
-
-            return `
-                <div class="p-2.5 bg-surface-container-lowest border border-outline-variant hover:border-primary transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                    <div class="space-y-0.5">
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <span class="font-code text-[10px] px-1.5 py-0.5 font-bold ${badgeClass}">${typeLabel}</span>
-                            <span class="text-xs font-semibold text-primary">${title}</span>
-                        </div>
-                        <p class="text-[11px] text-on-surface-variant line-clamp-1">${muni} • ${cat}</p>
-                    </div>
-                    <button class="bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold px-3 py-1.5 transition-colors shrink-0 flex items-center gap-1"
-                            onclick="window.app.loadTaskAndRoute('${m.task_id}')">
-                        <span>${btnText}</span>
-                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-                    </button>
-                </div>
-            `;
-        }).join('');
-
-        const headerLabel = isMr ? `वैधानिक प्रक्रिया शोधली (${data.matches.length} परिणाम):` : `Statutory Intent Resolved (${data.matches.length} matches):`;
-        container.innerHTML = `
-            ${disambiguationBannerHtml}
-            ${hinglishBadgeHtml}
-            <div class="font-headline text-[11px] font-semibold text-secondary uppercase tracking-wider">
-                ${headerLabel}
-            </div>
-            <div class="space-y-1.5">
-                ${matchCardsHtml}
-            </div>
-        `;
+        // Default: hide feedback banner when cleanly resolving
+        banner.classList.add('hidden');
+        container.innerHTML = '';
     }
 
     // -------------------------------------------------------------------------

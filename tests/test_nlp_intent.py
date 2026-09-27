@@ -145,7 +145,7 @@ class TestNLPIntentEngine(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         data = resp.json()
         self.assertNotEqual(data["top_task_id"], "task-pune-restaurant")
-        self.assertTrue(data["top_task_id"] in ["task-mah-rts-certificates", "task-synth-domicile-cert", "task-synth-rts-dakhla"])
+        self.assertTrue(data["top_task_id"] in ["task-mah-rts-certificates", "task-synth-domicile-cert", "task-synth-rts-dakhla", "task-domicile-certificate"])
 
     def test_regional_baramati_non_creamy_layer_not_pet_clinic(self):
         resp = self.client.post("/api/tasks/resolve-intent", json={
@@ -155,7 +155,7 @@ class TestNLPIntentEngine(unittest.TestCase):
         data = resp.json()
         self.assertNotEqual(data["top_task_id"], "task-synth-bmc-pet-clinic")
         self.assertTrue("pet" not in data["top_task_id"])
-        self.assertTrue("ncl" in data["top_task_id"] or "rts" in data["top_task_id"] or "caste" in data["top_task_id"])
+        self.assertTrue("ncl" in data["top_task_id"] or "rts" in data["top_task_id"] or "caste" in data["top_task_id"] or "1286" in data["top_task_id"])
 
     def test_regional_thane_property_tax_mutation_not_712(self):
         resp = self.client.post("/api/tasks/resolve-intent", json={

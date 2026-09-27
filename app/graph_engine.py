@@ -139,6 +139,31 @@ class CivicGraphEngine:
         unlocked_count = 0
         completed_count = len(completed)
 
+        # Determine verified official portal URL
+        official_portal_url = None
+        for s in self.task.steps:
+            if s.verification_source and s.verification_source.url and s.verification_source.url.startswith("http"):
+                official_portal_url = s.verification_source.url
+                break
+            if s.department and s.department.portal_url and s.department.portal_url.startswith("http"):
+                official_portal_url = s.department.portal_url
+                break
+
+        if not official_portal_url:
+            muni_str = (self.task.municipality or "").lower()
+            if "mumbai" in muni_str or "bmc" in muni_str or "mcgm" in muni_str:
+                official_portal_url = "https://portal.mcgm.gov.in"
+            elif "pune" in muni_str or "pmc" in muni_str:
+                official_portal_url = "https://pmc.gov.in"
+            elif "nashik" in muni_str or "nmc" in muni_str:
+                official_portal_url = "https://nmc.gov.in"
+            elif self.task.state == "Maharashtra" or "statewide" in muni_str:
+                official_portal_url = "https://aaplesarkar.mahaonline.gov.in"
+
+        # Check if task already has an explicit 'Visit Official' step
+        has_explicit_visit_step = any("visit official" in s.title.lower() for s in self.task.steps)
+        add_portal_start_node = bool(official_portal_url and not has_explicit_visit_step)
+
         for lvl, step_ids in sorted(level_buckets.items()):
             n_in_lvl = len(step_ids)
             total_height = (n_in_lvl - 1) * y_spacing
@@ -160,8 +185,15 @@ class CivicGraphEngine:
                     else:
                         status = StepStatus.LOCKED
 
-                x = lvl * x_spacing + 80
+                node_lvl = lvl + 1 if add_portal_start_node else lvl
+                x = node_lvl * x_spacing + 80
                 y = start_y + (i * y_spacing) + 260
+
+                step_official_url = (
+                    (step.verification_source.url if step.verification_source and step.verification_source.url else None) or
+                    (step.department.portal_url if step.department and step.department.portal_url else None) or
+                    official_portal_url
+                )
 
                 nodes.append(GraphNode(
                     id=step.id,
@@ -173,12 +205,13 @@ class CivicGraphEngine:
                     fee_amount=step.fee_amount,
                     status=status,
                     is_critical_path=(sid in critical_set),
-                    phase_index=lvl,
+                    phase_index=node_lvl,
                     x=round(x, 1),
                     y=round(y, 1),
                     prerequisites=step.prerequisites,
-                    has_official_source=bool(step.verification_source.url),
-                    confidence_score=step.verification_source.confidence_score
+                    has_official_source=bool(step_official_url),
+                    confidence_score=step.verification_source.confidence_score if step.verification_source else 0.95,
+                    official_url=step_official_url
                 ))
 
         # Build Edges
@@ -195,12 +228,56 @@ class CivicGraphEngine:
                         dependency_type="Mandatory"
                     ))
 
+        # Add "Visit Official Website" starting node if verified portal URL exists
+        if add_portal_start_node:
+            start_node_id = f"{self.task.id}-portal-start"
+            dept_name = self.task.steps[0].department.name if self.task.steps else (self.task.municipality or "Citizen Services Portal")
+            start_node = GraphNode(
+                id=start_node_id,
+                step_number=0,
+                title="Visit Official Website",
+                department_name=dept_name,
+                submission_mode="Online",
+                estimated_days=0,
+                fee_amount=0.0,
+                status=StepStatus.READY,
+                is_critical_path=bool(critical_set),
+                phase_index=0,
+                x=80.0,
+                y=260.0,
+                prerequisites=[],
+                has_official_source=True,
+                confidence_score=1.0,
+                official_url=official_portal_url
+            )
+            nodes.insert(0, start_node)
+
+            # Connect start_node to initial root steps (where prerequisites == [])
+            for step in self.task.steps:
+                if not step.prerequisites:
+                    edges.insert(0, GraphEdge(
+                        id=f"edge-{start_node_id}-{step.id}",
+                        source=start_node_id,
+                        target=step.id,
+                        is_critical=(step.id in critical_set),
+                        dependency_type="Official Portal Access"
+                    ))
+
         # Build Phases
         phases: List[GraphPhase] = []
-        for lvl in sorted(level_buckets.keys()):
-            title, desc = phase_names.get(lvl, (f"Phase {lvl+1}: Statutory Step", "Departmental procedure sequence."))
+        if add_portal_start_node:
             phases.append(GraphPhase(
-                phase_index=lvl,
+                phase_index=0,
+                title="Phase 1: Official Portal Access",
+                description="Direct citizen access to verified official government portal.",
+                step_ids=[f"{self.task.id}-portal-start"]
+            ))
+
+        for lvl in sorted(level_buckets.keys()):
+            p_idx = lvl + 1 if add_portal_start_node else lvl
+            title, desc = phase_names.get(lvl, (f"Phase {p_idx+1}: Statutory Step", "Departmental procedure sequence."))
+            phases.append(GraphPhase(
+                phase_index=p_idx,
                 title=title,
                 description=desc,
                 step_ids=level_buckets[lvl]

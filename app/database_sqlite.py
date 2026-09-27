@@ -424,4 +424,147 @@ class CivicSQLiteDB:
             """, (q, q, q, limit))
             return [dict(r) for r in cursor.fetchall()]
 
+    def get_aaple_sarkar_service(self, service_id: str) -> Optional[Dict[str, Any]]:
+        """Retrieves raw Aaple Sarkar official service record by service_id."""
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("""
+            SELECT * FROM aaple_sarkar_services WHERE service_id = ?;
+            """, (str(service_id),))
+            row = cursor.fetchone()
+            if row:
+                return dict(row)
+            return None
+
+    def load_all_tasks(self) -> Dict[str, Any]:
+        """Loads and reconstructs all curated CivicTasks with steps, docs, and forms from SQLite."""
+        from app.models import (
+            CivicTask, TaskStep, DepartmentInfo, DocumentRequirement,
+            FormRequirement, VerificationSource, SubmissionMode
+        )
+
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            # 1. Load departments
+            cursor.execute("SELECT * FROM departments;")
+            depts = {}
+            for row in cursor.fetchall():
+                depts[row["id"]] = DepartmentInfo(
+                    id=row["id"],
+                    name=row["name"],
+                    jurisdiction=row["jurisdiction"],
+                    office_address=row["office_address"] or "",
+                    contact_phone=row["contact_phone"],
+                    contact_email=row["contact_email"],
+                    working_hours=row["working_hours"] or "Mon-Fri 10:00 AM - 5:00 PM",
+                    portal_url=row["portal_url"]
+                )
+
+            # 2. Load tasks
+            cursor.execute("SELECT * FROM tasks;")
+            task_rows = cursor.fetchall()
+
+            loaded: Dict[str, CivicTask] = {}
+            for t in task_rows:
+                task_id = t["id"]
+                # 3. Load steps for this task
+                cursor.execute("SELECT * FROM steps WHERE task_id = ? ORDER BY step_number ASC;", (task_id,))
+                step_rows = cursor.fetchall()
+
+                steps = []
+                for s in step_rows:
+                    step_id = s["id"]
+                    # Load documents
+                    cursor.execute("SELECT * FROM documents WHERE step_id = ?;", (step_id,))
+                    doc_rows = cursor.fetchall()
+                    docs = [
+                        DocumentRequirement(
+                            id=d["id"],
+                            name=d["name"],
+                            description=d["description"] or "",
+                            is_mandatory=bool(d["is_mandatory"]),
+                            category=d["category"] or "General",
+                            sample_template_url=d["sample_template_url"]
+                        )
+                        for d in doc_rows
+                    ]
+
+                    # Load forms
+                    cursor.execute("SELECT * FROM forms WHERE step_id = ?;", (step_id,))
+                    form_rows = cursor.fetchall()
+                    forms = [
+                        FormRequirement(
+                            form_code=f["form_code"],
+                            title=f["title"],
+                            download_url=f["download_url"],
+                            fill_online_url=f["fill_online_url"],
+                            instructions=f["instructions"]
+                        )
+                        for f in form_rows
+                    ]
+
+                    dept_id = s["department_id"]
+                    dept = depts.get(dept_id, DepartmentInfo(
+                        id=dept_id,
+                        name="Maharashtra Municipal Department",
+                        jurisdiction=t["municipality"],
+                        office_address=""
+                    ))
+
+                    v_src_raw = json.loads(s["verification_source"]) if s["verification_source"] else {}
+                    v_src = VerificationSource(
+                        url=v_src_raw.get("url", "https://aaplesarkar.mahaonline.gov.in"),
+                        page_title=v_src_raw.get("page_title", "Government Portal"),
+                        last_scraped_at=v_src_raw.get("last_scraped_at", "2026-09-26T15:30:00Z"),
+                        confidence_score=float(v_src_raw.get("confidence_score", 0.95)),
+                        is_admin_verified=bool(s["is_admin_verified"]),
+                        gazette_ref=v_src_raw.get("gazette_ref"),
+                        portal_section=v_src_raw.get("portal_section")
+                    )
+
+                    prereqs = json.loads(s["prerequisites"]) if s["prerequisites"] else []
+                    fee_breakdown = json.loads(s["fee_breakdown"]) if s["fee_breakdown"] else {}
+
+                    sub_mode = SubmissionMode.ONLINE
+                    if s["submission_mode"] in [e.value for e in SubmissionMode]:
+                        sub_mode = SubmissionMode(s["submission_mode"])
+
+                    step = TaskStep(
+                        id=step_id,
+                        task_id=task_id,
+                        step_number=s["step_number"],
+                        title=s["title"],
+                        description=s["description"] or "",
+                        department=dept,
+                        submission_mode=sub_mode,
+                        estimated_days=s["estimated_days"] or 7,
+                        fee_amount=float(s["fee_amount"] or 0.0),
+                        fee_breakdown=fee_breakdown,
+                        prerequisites=prereqs,
+                        documents=docs,
+                        forms=forms,
+                        verification_source=v_src,
+                        tips_and_pitfalls=s["tips_and_pitfalls"],
+                        anti_tout_advisory=s["anti_tout_advisory"],
+                        statutory_payment_channel=s["statutory_payment_channel"],
+                        community_verifications=s["community_verifications"] or 0,
+                        official_receipt_mandate=s["official_receipt_mandate"],
+                        last_gazette_notification=s["last_gazette_notification"],
+                        is_critical_path=bool(s["is_critical_path"])
+                    )
+                    steps.append(step)
+
+                tags = json.loads(t["tags"]) if t["tags"] else []
+                loaded[task_id] = CivicTask(
+                    id=task_id,
+                    title=t["title"],
+                    category=t["category"],
+                    municipality=t["municipality"],
+                    state=t["state"],
+                    description=t["description"] or "",
+                    tags=tags,
+                    steps=steps
+                )
+            return loaded
+
 sqlite_db = CivicSQLiteDB()

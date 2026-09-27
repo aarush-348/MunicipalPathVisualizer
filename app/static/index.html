@@ -237,15 +237,11 @@
         <!-- Active Municipal Jurisdiction Selector -->
         <div class="hidden 2xl:flex items-center pl-3 border-l border-slate-200">
           <div class="relative">
-            <select id="select-jurisdiction" class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 py-1 pl-2.5 pr-6 cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-slate-900 max-w-[170px] truncate">
-              <option value="Mumbai (MCGM / BMC)" selected>Brihanmumbai (BMC)</option>
-              <option value="Pune (PMC / PMRDA)">Pune (PMC)</option>
-              <option value="Thane (TMC)">Thane (TMC)</option>
-              <option value="Navi Mumbai (NMMC)">Navi Mumbai (NMMC)</option>
-              <option value="Pimpri Chinchwad (PCMC)">Pimpri Chinchwad (PCMC)</option>
-              <option value="Nagpur (NMC)">Nagpur (NMC)</option>
+            <select id="select-jurisdiction" class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 py-1 pl-2.5 pr-6 cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-slate-900 max-w-[220px] truncate">
+              <option value="Mumbai (BMC / MCGM)">Mumbai (BMC / MCGM)</option>
+              <option value="Pune (PMC)">Pune (PMC)</option>
               <option value="Nashik (NMC)">Nashik (NMC)</option>
-              <option value="Maharashtra Statewide (Aaple Sarkar RTS)">Aaple Sarkar Statewide</option>
+              <option value="Maharashtra Statewide (Aaple Sarkar)" selected>Maharashtra Statewide (Aaple Sarkar)</option>
             </select>
             <span class="material-symbols-outlined absolute right-1.5 top-1.5 text-[14px] text-slate-400 pointer-events-none">unfold_more</span>
           </div>
@@ -336,7 +332,7 @@
                       <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-slate-400 text-[20px] pointer-events-none group-focus-within:text-slate-900 transition-colors">
                         travel_explore
                       </span>
-                      <input class="w-full pl-11 pr-10 py-3 bg-slate-50/60 hover:bg-slate-50 focus:bg-white text-slate-900 text-sm sm:text-base font-medium rounded-xl border border-slate-200 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all placeholder:text-slate-400" id="taskQuery" name="query" placeholder="e.g. I want to register a small business, or Apply for 7/12 land extract" type="text" value="I want to register a small business"/>
+                      <input class="w-full pl-11 pr-10 py-3 bg-slate-50/60 hover:bg-slate-50 focus:bg-white text-slate-900 text-sm sm:text-base font-medium rounded-xl border border-slate-200 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all placeholder:text-slate-400" id="taskQuery" name="query" placeholder="e.g. How to get water connection?, or How to register a business?" type="text" value=""/>
                       <button class="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-700 transition-colors" onclick="document.getElementById('taskQuery').value=''; document.getElementById('taskQuery').focus();" type="button" title="Clear query">
                         <span class="material-symbols-outlined text-[18px]">cancel</span>
                       </button>
@@ -355,13 +351,11 @@
                       </label>
                       <div class="relative">
                         <select class="w-full bg-transparent font-sans text-xs font-semibold text-slate-800 border-0 p-0 focus:ring-0 cursor-pointer pr-4 appearance-none" id="jurisdictionSelect">
-                          <option value="all">All Maharashtra Municipalities & Districts</option>
-                          <option value="Mumbai (MCGM / BMC)">Brihanmumbai (BMC / MCGM) — Mumbai</option>
-                          <option value="Pune (PMC / PMRDA)">Pune Municipal Corporation (PMC)</option>
-                          <option value="Thane (TMC)">Thane Municipal Corporation (TMC)</option>
-                          <option value="Navi Mumbai (NMMC)">Navi Mumbai Municipal Corporation</option>
-                          <option value="Nagpur (NMC)">Nagpur Municipal Corporation (NMC)</option>
-                          <option value="Maharashtra Statewide (Aaple Sarkar RTS)" selected>Aaple Sarkar Statewide RTS</option>
+                          <option value="all" selected>All Jurisdictions / Auto-detect</option>
+                          <option value="Mumbai (BMC / MCGM)">Mumbai (BMC / MCGM)</option>
+                          <option value="Pune (PMC)">Pune (PMC)</option>
+                          <option value="Nashik (NMC)">Nashik (NMC)</option>
+                          <option value="Maharashtra Statewide (Aaple Sarkar)">Maharashtra Statewide (Aaple Sarkar)</option>
                         </select>
                         <span class="material-symbols-outlined absolute right-0 top-0.5 pointer-events-none text-slate-400 text-[18px]">unfold_more</span>
                       </div>
@@ -404,20 +398,20 @@
                   <!-- Popular Quick Suggestion Pills -->
                   <div class="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
                     <span class="text-slate-400 font-medium text-[11px] uppercase tracking-wider mr-1" data-i18n="popular_label">Popular:</span>
-                    <button type="button" onclick="window.app.fillQuery('I want to register a small business')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      Small Business Gumasta
+                    <button type="button" onclick="window.app.fillQuery('How to register a small business or retail enterprise?')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                      Small Business (Shops Act)
+                    </button>
+                    <button type="button" onclick="window.app.fillQuery('How to get water connection?')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                      Water Connection
+                    </button>
+                    <button type="button" onclick="window.app.fillQuery('How to get caste certificate?')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                      Caste Certificate
                     </button>
                     <button type="button" onclick="window.app.fillQuery('Commercial Bakery Bandra Mumbai')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       Bakery / F&B Bandra
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('Apply for Domicile in Haveli Taluka, Pune')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      Domicile / RTS Certificates
-                    </button>
-                    <button type="button" onclick="window.app.fillQuery('7/12 extract online digitally signed satbara')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      7/12 Satbara Mutation
-                    </button>
-                    <button type="button" onclick="window.app.fillQuery('PMC Pune peth area property tax assessment and rebate claim')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      Pune Property Tax
+                    <button type="button" onclick="window.app.fillQuery('How to pay property tax?')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                      Property Tax
                     </button>
                   </div>
 
@@ -428,7 +422,7 @@
                       <span>Statutory Guarantee: Maharashtra Right to Public Services Act (RTS 2015)</span>
                     </div>
                     <button id="btn-generate-roadmap" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-sm active:scale-[0.99]" onclick="window.app.performSearch()" type="button">
-                      <span>Generate Compliance Roadmap</span>
+                      <span>Generate Compliance Graph</span>
                       <span class="material-symbols-outlined text-[17px]">arrow_forward</span>
                     </button>
                   </div>
@@ -757,10 +751,7 @@
                 <span data-i18n="share_route">Share</span>
               </button>
               <div class="flex bg-slate-100 rounded-lg border border-slate-200/80 p-0.5 text-xs">
-                <button id="btn-mode-subway" class="px-2.5 py-1.5 rounded-md font-semibold bg-slate-900 text-white shadow-xs" onclick="window.app.toggleWayfindingView('subway')">
-                  <span data-i18n="btn_subway">🚇 Subway Map</span>
-                </button>
-                <button id="btn-mode-dag" class="px-2.5 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900" onclick="window.app.toggleWayfindingView('dag')">
+                <button id="btn-mode-dag" class="px-2.5 py-1.5 rounded-md font-semibold bg-slate-900 text-white shadow-xs" onclick="window.app.toggleWayfindingView('dag')">
                   <span data-i18n="btn_dag">🕸️ DAG Topology</span>
                 </button>
               </div>
@@ -801,24 +792,8 @@
           </div>
         </div>
 
-        <!-- Optional Collapsible Subway SVG Diagram View -->
-        <div id="subway-diagram-wrapper" class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-5 overflow-x-auto mb-6 relative" style="display:none;">
-          <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[18px] text-slate-700">route</span>
-              <span class="font-heading text-xs font-bold text-slate-900 uppercase" id="subway-network-label" data-i18n="subway_line_title">Inter-Agency Transit Spine</span>
-            </div>
-            <div class="flex items-center gap-3 font-mono text-xs text-slate-400">
-              <span id="subway-interagency-code" data-i18n="subway_line_sub">SCALE: 1 STOP = 1 PREREQUISITE STAGE</span>
-            </div>
-          </div>
-          <div class="min-w-[860px] py-4 relative select-none">
-            <svg class="w-full h-auto text-slate-900" viewBox="0 0 940 380" xmlns="http://www.w3.org/2000/svg" id="subway-transit-svg"></svg>
-          </div>
-        </div>
-
-        <!-- Optional Collapsible DAG Canvas View -->
-        <div id="dag-canvas-wrapper" class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-4 relative mb-6" style="display:none; height: 420px;">
+        <!-- Single Graph View: Verified DAG Topology Canvas -->
+        <div id="dag-canvas-wrapper" class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-4 relative mb-6" style="display:block; height: 420px;">
           <div class="absolute top-3 right-3 z-10 flex bg-slate-100 rounded-lg border border-slate-200/80 p-0.5 text-xs">
             <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-zoom-in" title="Zoom In">+</button>
             <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-zoom-out" title="Zoom Out">-</button>
@@ -839,9 +814,9 @@
                 Complete these stages in sequence. Click "View Details & Apply" to access the official portal links, offline PDF forms, and statutory proof requirements.
               </p>
             </div>
-            <button onclick="window.app.toggleWayfindingView(window.app.wayfindingMode === 'subway' ? 'cards' : 'subway')" class="text-xs font-sans font-medium text-slate-700 hover:text-slate-900 flex items-center gap-1 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-lg border border-slate-200/80 transition-colors">
-              <span class="material-symbols-outlined text-[16px]">map</span>
-              <span data-i18n="toggle_subway_btn">Toggle Transit Map</span>
+            <button onclick="window.app.toggleWayfindingView(window.app.wayfindingMode === 'dag' ? 'cards' : 'dag')" class="text-xs font-sans font-medium text-slate-700 hover:text-slate-900 flex items-center gap-1 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-lg border border-slate-200/80 transition-colors">
+              <span class="material-symbols-outlined text-[16px]">account_tree</span>
+              <span>Toggle DAG Graph</span>
             </button>
           </div>
 

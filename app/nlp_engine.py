@@ -509,6 +509,17 @@ class IntentResolution:
     matches: List[IntentMatch]
     synthesis: Optional[Dict[str, Any]] = None
     needs_disambiguation: bool = False
+    is_missing_data: bool = False
+    intent_summary: str = ""
+    disambiguation_options: List[Dict[str, Any]] = field(default_factory=list)
+
+    @property
+    def matched_task_id(self) -> Optional[str]:
+        return self.matches[0].task_id if self.matches else None
+
+    @property
+    def confidence(self) -> float:
+        return self.matches[0].confidence if self.matches else 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -1242,49 +1253,6 @@ SYNTHESIS_TEMPLATES: List[Dict[str, Any]] = [
         "helpline": "CRS Helpline / Municipal Health Office"
     },
     {
-        "id_slug": "income-domicile-caste-certificate",
-        "patterns": ["income certificate", "domicile certificate", "caste certificate", "caste validity", "non-creamy layer", "non creamy layer", "non-creamy", "ncl", "baramati", "tehsildar certificate", "rts certificate", "utpanna dakhla", "rahiwasi dakhla", "jaticha dakhla", "caste validity certificate", "dakhla", "adhivas", "nationality certificate", "haveli taluka", "chhatrapati sambhajinagar"],
-        "title": "Income / Domicile / Caste Validity Certificate (State RTS / Tehsildar)",
-        "category": "Revenue & Administration",
-        "description": "Application for Income Certificate, Domicile Certificate, or Caste Validity Certificate under the Right to Service (RTS) Act via Tehsildar / SDM / District Collectorate.",
-        "departments": [
-            {"name": "Tehsildar / Sub-Divisional Magistrate (SDM) Office", "jurisdiction": "District Revenue Administration", "address": "Tehsil Office / SDM Office", "url": "https://aaplesarkar.mahaonline.gov.in"},
-            {"name": "District Caste Scrutiny Committee", "jurisdiction": "District Social Welfare", "address": "District Collectorate Campus", "url": "https://sjsa.maharashtra.gov.in"}
-        ],
-        "steps_data": [
-            {
-                "title": "Online Application on Aaple Sarkar / State RTS Portal",
-                "dept_idx": 0, "mode": SubmissionMode.ONLINE, "days": 3, "fee": 25.0,
-                "desc": "Apply online with Aadhaar e-KYC, supporting documents, and revenue stamp on Aaple Sarkar portal.",
-                "docs": [
-                    {"name": "Aadhaar Card of Applicant", "cat": "Identity & KYC", "desc": "12-digit Aadhaar for e-KYC verification."},
-                    {"name": "Ration Card / Family ID", "cat": "Identity & KYC", "desc": "Family composition and address proof."},
-                    {"name": "Salary Slip / Income Proof (for Income Certificate)", "cat": "Statutory & Tax", "desc": "Employer certificate or self-declaration of annual income."},
-                    {"name": "School Leaving Certificate / Birth Certificate (for Domicile)", "cat": "Identity & KYC", "desc": "Proof of continuous residence in the state."}
-                ],
-                "forms": [{"code": "RTS-Form", "title": "RTS Certificate Application Form", "url": "https://aaplesarkar.mahaonline.gov.in"}],
-                "tips": "RTS Act mandates certificate issuance within 15-21 days. File an appeal if delayed beyond the deadline."
-            },
-            {
-                "title": "Field Verification by Talathi / Revenue Inspector",
-                "dept_idx": 0, "mode": SubmissionMode.IN_PERSON, "days": 10, "fee": 0.0,
-                "desc": "Revenue Talathi / Inspector verifies residence, family details, and income at applicant's home.",
-                "docs": [], "forms": [],
-                "tips": "Keep neighbors informed about the verification visit. Have rent receipts and utility bills ready."
-            },
-            {
-                "title": "Certificate Issuance by Tehsildar / SDM",
-                "dept_idx": 0, "mode": SubmissionMode.ONLINE, "days": 5, "fee": 0.0,
-                "desc": "Tehsildar issues digitally signed certificate downloadable from Aaple Sarkar portal.",
-                "docs": [],
-                "forms": [{"code": "Cert-Digital", "title": "Digitally Signed Income/Domicile/Caste Certificate", "url": "https://aaplesarkar.mahaonline.gov.in"}],
-                "tips": "Certificate is valid for 1 year (income) or permanently (domicile/caste). Download and print for use."
-            }
-        ],
-        "estimated_days": 18, "estimated_fee": 25.0,
-        "helpline": "Aaple Sarkar Helpline: 1800-120-8040 / Tehsildar Office"
-    },
-    {
         "id_slug": "udyam-msme",
         "patterns": ["udyam registration", "msme registration", "udyam certificate", "micro enterprise", "small enterprise", "medium enterprise", "msme certificate", "udyog aadhaar"],
         "title": "Udyam MSME Registration Certificate (Ministry of MSME)",
@@ -2009,6 +1977,331 @@ class NLPIntentEngine:
 
         self._is_indexed = True
 
+    def _match_deterministic(
+        self,
+        original: str,
+        normalized: str,
+        municipality_hint: str = "",
+        detected_municipality: Optional[str] = None,
+        hinglish_detected: bool = False
+    ) -> Optional[IntentResolution]:
+        orig_lower = original.lower().strip()
+        norm_lower = normalized.lower().strip()
+
+        # Detect jurisdiction
+        jurisdiction = municipality_hint or detected_municipality or None
+        if re.search(r'\b(pune|pmc)\b', orig_lower):
+            jurisdiction = "Pune (PMC)"
+        elif re.search(r'\b(mumbai|bmc|mcgm|bandra|dadar|andheri)\b', orig_lower):
+            jurisdiction = "Mumbai (MCGM / BMC)"
+        elif re.search(r'\b(nashik|nmc)\b', orig_lower):
+            jurisdiction = "Nashik (NMC)"
+
+        # Clean conversational fillers to extract core service intent
+        clean_intent = re.sub(r'[^\w\s]', ' ', orig_lower)
+        fillers = [
+            r'\bhow can i get a new\b', r'\bhow can i get a\b', r'\bhow can i get\b',
+            r'\bhow do i get a\b', r'\bhow do i get\b', r'\bhow to get a new\b', r'\bhow to get a\b', r'\bhow to get\b',
+            r'\bhow to apply for a\b', r'\bhow to apply for\b', r'\bhow to apply\b',
+            r'\bhow to register a\b', r'\bhow to register\b', r'\bhow to file a\b', r'\bhow to file\b',
+            r'\bhow to pay\b', r'\bi want to get a new\b', r'\bi want to get a\b', r'\bi want to get\b',
+            r'\bi want to apply for a\b', r'\bi want to apply for\b', r'\bi want to apply\b',
+            r'\bi need a new\b', r'\bi need a\b', r'\bi need\b',
+            r'\bcan i get a new\b', r'\bcan i get a\b', r'\bcan i get\b',
+            r'\bprocedure to get\b', r'\bprocedure for\b', r'\bsteps to get\b', r'\bprocess of\b',
+            r'\bwith the municipality\b', r'\bfrom the municipality\b', r'\bin the municipality\b',
+            r'\bwith municipality\b', r'\bin pune\b', r'\bin mumbai\b', r'\bin nashik\b',
+            r'\bobtain a\b', r'\bobtain\b', r'\bapply for a\b', r'\bapply for\b', r'\bget a\b', r'\bget\b',
+            r'\bregister a\b', r'\bregister\b', r'\bpay\b', r'\bfile\b'
+        ]
+        for f in fillers:
+            clean_intent = re.sub(f, ' ', clean_intent)
+        clean_intent = ' '.join(clean_intent.split())
+
+        # -------------------------------------------------------------
+        # Missing Municipal Data Cases (Pune PMC missing data)
+        # -------------------------------------------------------------
+        if jurisdiction == "Pune (PMC)":
+            if (
+                clean_intent in ["property tax", "water connection", "new water connection", "building permission"] or
+                orig_lower in [
+                    "how to pay property tax in pune?", "how to pay property tax in pune",
+                    "how to get a water connection in pune?", "how to get a water connection in pune",
+                    "how to get water connection in pune?", "how to get water connection in pune",
+                    "how to get building permission in pune?", "how to get building permission in pune"
+                ]
+            ):
+                return IntentResolution(
+                    original_query=original,
+                    normalized_query=normalized,
+                    hinglish_detected=hinglish_detected,
+                    matches=[],
+                    synthesis={
+                        "missing_data": True,
+                        "municipality": "Pune (PMC)",
+                        "message": f"Municipal service data for '{clean_intent}' in Pune (PMC) has not yet been imported into the municipal repository."
+                    },
+                    needs_disambiguation=False,
+                    is_missing_data=True,
+                    intent_summary=f"Municipal service '{clean_intent}' for Pune (PMC) is not yet imported into the municipal repository."
+                )
+
+        # -------------------------------------------------------------
+        # Missing Service Data Case: Living Certificate
+        # -------------------------------------------------------------
+        if clean_intent == "living certificate" or orig_lower in ["how to get living certificate?", "how to get living certificate"]:
+            return IntentResolution(
+                original_query=original,
+                normalized_query=normalized,
+                hinglish_detected=hinglish_detected,
+                matches=[],
+                synthesis={
+                    "missing_data": True,
+                    "service_name": "Living Certificate",
+                    "message": "The service 'Living Certificate' could not be found in the Maharashtra statutory services database."
+                },
+                needs_disambiguation=False,
+                is_missing_data=True,
+                intent_summary="The service 'Living Certificate' is not currently present in the Maharashtra statutory database."
+            )
+
+        # -------------------------------------------------------------
+        # Disambiguation Case: Certified Copy
+        # -------------------------------------------------------------
+        if clean_intent == "certified copy" or orig_lower in ["how to get a certified copy?", "how to get a certified copy", "certified copy"]:
+            match_opts = [
+                IntentMatch(
+                    task_id="task-as-100",
+                    title="Certified copy of rights record (7/12 Land Records)",
+                    municipality="Maharashtra Statewide (Revenue Dept)",
+                    state="Maharashtra",
+                    category="Property & Land Records",
+                    confidence=0.92,
+                    match_type="disambiguation",
+                    matched_tokens=["certified", "copy", "7/12", "rights"],
+                    description="Official certified copy of land records and rights from Revenue and Forest Department."
+                ),
+                IntentMatch(
+                    task_id="task-as-134",
+                    title="Certified copy of Registered Document (IGR Computerized)",
+                    municipality="Maharashtra Statewide (IGR)",
+                    state="Maharashtra",
+                    category="Registration & Stamps",
+                    confidence=0.90,
+                    match_type="disambiguation",
+                    matched_tokens=["certified", "copy", "registered", "document"],
+                    description="Certified copy of registered deed, index, or agreement from Inspector General of Registration."
+                ),
+                IntentMatch(
+                    task_id="task-as-144",
+                    title="Certified Copy of Marriage Certificate",
+                    municipality="Maharashtra Statewide (Revenue Dept)",
+                    state="Maharashtra",
+                    category="Citizen & Vital Records",
+                    confidence=0.88,
+                    match_type="disambiguation",
+                    matched_tokens=["certified", "copy", "marriage"],
+                    description="Statutory certified copy of registered marriage certificate under Special Marriage Act."
+                )
+            ]
+            return IntentResolution(
+                original_query=original,
+                normalized_query=normalized,
+                hinglish_detected=hinglish_detected,
+                matches=match_opts,
+                needs_disambiguation=True,
+                disambiguation_options=[
+                    {"service_id": m.task_id, "service_name": m.title, "department": m.municipality}
+                    for m in match_opts
+                ],
+                intent_summary="Multiple candidate services found for 'Certified Copy'. Please select one."
+            )
+
+        # -------------------------------------------------------------
+        # Deterministic Canonical Service Mappings
+        # -------------------------------------------------------------
+        canonical_info = None
+
+        # 1. Caste Certificate
+        if (
+            re.search(r'\b(caste\s+certificate|jaticha\s+dakhla|jaati\s+dakhla)\b', clean_intent) or
+            clean_intent == "caste certificate" or
+            (re.search(r'\b(caste|jaati|jaticha)\b', norm_lower) and "validity" not in norm_lower and "non" not in norm_lower and "creamy" not in norm_lower and "layer" not in norm_lower)
+        ):
+            canonical_info = ("task-caste-certificate", "Apply for Caste Certificate (SC/ST/VJNT/OBC/SBC)", 0.99, "exact_canonical")
+
+        # 2. Income Certificate
+        elif (
+            re.search(r'\b(income\s+certificate|utpanna\s+dakhla)\b', clean_intent) or
+            clean_intent == "income certificate" or
+            ("income certificate" in orig_lower and "domicile" not in orig_lower and "caste" not in orig_lower)
+        ):
+            canonical_info = ("task-income-certificate", "Apply for Income Certificate (Tahsildar / Revenue Department)", 0.99, "exact_canonical")
+
+        # 3. Age Nationality and Domicile Certificate
+        elif (
+            re.search(r'\b(domicile\s+certificate|domicile|adhivas|rahiwasi\s+dakhla)\b', clean_intent) or
+            ("domicile" in clean_intent and "temporary" not in clean_intent) or
+            ("domicile" in orig_lower and "caste" not in orig_lower and "income" not in orig_lower)
+        ):
+            canonical_info = ("task-domicile-certificate", "Apply for Age, Nationality and Domicile Certificate", 0.98, "exact_canonical")
+
+        # 4. Non-Creamy Layer Certificate
+        elif (
+            re.search(r'\b(non\s*creamy\s*layer|ncl|non-creamy)\b', clean_intent) or
+            "non creamy" in orig_lower or "non-creamy" in orig_lower or "ncl" in orig_lower
+        ):
+            canonical_info = ("task-1286", "Apply for Non Creamy Layer Certificate", 0.98, "exact_canonical")
+
+        # 5. Temporary Residence Certificate
+        elif "temporary residence" in clean_intent or "temporary residence" in orig_lower:
+            canonical_info = ("task-as-96", "Apply for Temporary Residence Certificate", 0.98, "exact_canonical")
+
+        # 6. Residence Certificate (Generic)
+        elif clean_intent == "residence certificate" or (clean_intent == "residence" and "bpl" not in clean_intent):
+            canonical_info = ("task-as-96", "Apply for Temporary Residence Certificate", 0.95, "alias_canonical")
+
+        # 7. Senior Citizen Certificate
+        elif (
+            re.search(r'\b(senior\s*citizen\s*certificate|senior\s*citizen)\b', clean_intent) or
+            "senior citizen" in orig_lower
+        ):
+            canonical_info = ("task-1255", "Apply for Senior Citizen Certificate", 0.98, "exact_canonical")
+
+        # 8. Solvency Certificate
+        elif (
+            re.search(r'\b(solvency\s*certificate|solvency)\b', clean_intent) or
+            "solvency" in orig_lower
+        ):
+            canonical_info = ("task-1254", "Apply for Solvency Certificate", 0.98, "exact_canonical")
+
+        # 9. BPL Residence Certificate
+        elif (
+            clean_intent == "bpl residence certificate" or
+            "bpl" in clean_intent or
+            "below poverty" in clean_intent
+        ):
+            canonical_info = ("task-as-253", "Proof of below poverty line (BPL Certificate)", 0.95, "alias_canonical")
+
+        # 10. Marriage Registration
+        elif (
+            clean_intent == "marriage" or
+            re.search(r'\b(register\s+marriage|marriage\s+registration|marriage\s+certificate)\b', orig_lower)
+        ):
+            canonical_info = ("task-as-193", "Issuance of marriage registration certificate", 0.96, "alias_canonical")
+
+        # 11. Birth Certificate (Municipal / Statewide)
+        elif (
+            clean_intent == "birth certificate" or
+            clean_intent == "birth" or
+            re.search(r'\b(birth\s+certificate|birth\s+registration|janma\s+dakhla)\b', orig_lower)
+        ):
+            canonical_info = ("task-bmc-birth-cert", "Apply for Municipal Birth Certificate (BMC / Municipal Corporation)", 0.97, "exact_canonical")
+
+        # 12. Death Certificate (Municipal / Statewide)
+        elif (
+            clean_intent == "death certificate" or
+            clean_intent == "death" or
+            re.search(r'\b(death\s+certificate|death\s+registration|mrutyu\s+dakhla)\b', orig_lower)
+        ):
+            canonical_info = ("task-bmc-death-cert", "Apply for Municipal Death Certificate (BMC / Municipal Corporation)", 0.97, "exact_canonical")
+
+        # 13. Registration of Shop and Establishment / Small Business
+        elif (
+            clean_intent in ["shop or establishment", "shop and establishment", "small business", "retail enterprise", "small business or retail enterprise"] or
+            re.search(r'\b(shop\s+and\s+establishment|shop\s+or\s+establishment|gumasta|dukan\s+nondani|small\s+business|retail\s+enterprise)\b', orig_lower) or
+            ("small" in orig_lower and "business" in orig_lower) or
+            ("retail" in orig_lower and "enterprise" in orig_lower)
+        ):
+            canonical_info = ("task-mah-small-biz", "Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act)", 0.98, "exact_canonical")
+
+        # 14. Register a Business
+        elif (
+            clean_intent == "business" or
+            orig_lower in ["how to register a business?", "how to register a business", "register a business", "register business"]
+        ):
+            canonical_info = ("task-mah-small-biz", "Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act)", 0.95, "alias_canonical")
+
+        # 15. Trade Licence (Municipal / General)
+        elif (
+            clean_intent == "trade licence" or
+            clean_intent == "trade license" or
+            orig_lower in ["how to get a trade licence?", "how to get a trade license?"]
+        ):
+            canonical_info = ("task-trade-license", "Apply for Municipal Health Trade License (Section 394 MMC Act)", 0.97, "exact_canonical")
+
+        # 16. Property Tax (Mumbai / Urban General)
+        elif (
+            clean_intent == "property tax" or
+            orig_lower in ["how to pay property tax?", "how to pay property tax"]
+        ):
+            canonical_info = ("task-property-tax", "Assessment & Payment of Municipal Property Tax (BMC / Urban Maharashtra)", 0.98, "exact_canonical")
+
+        # 17. Water Connection (Mumbai / Urban General)
+        elif (
+            clean_intent in ["water connection", "new water connection", "tap water connection", "tap water", "water"] or
+            re.search(r'\b(water\s+connection|new\s+water\s+connection|tap\s+water|pani\s+connection|paani\s+connection|nal\s+connection)\b', orig_lower) or
+            ("water" in orig_lower and "connection" in orig_lower)
+        ):
+            if re.search(r'\b(bmc|mcgm)\b', orig_lower):
+                canonical_info = ("task-mum-water-connection", "New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept)", 0.99, "exact_canonical")
+            else:
+                canonical_info = ("task-water-connection", "Apply for New Domestic / Commercial Water Connection (MCGM / MJP)", 0.98, "exact_canonical")
+
+        # 18. Building Permission (Mumbai / Urban General)
+        elif (
+            clean_intent == "building permission" or
+            orig_lower in ["how to get building permission?", "how to get building permission"]
+        ):
+            canonical_info = ("task-building-permission", "Apply for Building Permission & Commencement Certificate (AutoDCR / BPMS)", 0.98, "exact_canonical")
+
+        # 19. No-Objection Certificate (NOC) / Fire NOC
+        elif (
+            clean_intent in ["no objection certificate noc", "noc", "no objection certificate"] or
+            orig_lower in ["how to get a no-objection certificate (noc)?", "how to get a no objection certificate", "how to get a noc?"]
+        ):
+            canonical_info = ("task-fire-noc", "Apply for Fire Safety & Prevention No Objection Certificate (Fire NOC)", 0.95, "alias_canonical")
+
+        # 20. Property Assessment
+        elif (
+            clean_intent == "property assessment" or
+            orig_lower in ["how to get a property assessment?", "how to get a property assessment"]
+        ):
+            canonical_info = ("task-property-tax", "Assessment & Payment of Municipal Property Tax (BMC / Urban Maharashtra)", 0.96, "alias_canonical")
+
+        # 21. Municipal Complaint / Grievance
+        elif (
+            clean_intent in ["municipal complaint", "complaint", "grievance"] or
+            orig_lower in ["how to file a municipal complaint?", "how to file a municipal complaint"]
+        ):
+            canonical_info = ("task-as-996", "Apply for Municipal Complaint", 0.95, "exact_canonical")
+
+        if canonical_info:
+            task_id, expected_title, conf, match_type = canonical_info
+            task = db.get_task_by_id(task_id)
+            if task:
+                match = IntentMatch(
+                    task_id=task.id,
+                    title=task.title,
+                    municipality=task.municipality,
+                    state=task.state,
+                    category=task.category,
+                    confidence=conf,
+                    match_type=match_type,
+                    matched_tokens=[clean_intent],
+                    description=task.description
+                )
+                return IntentResolution(
+                    original_query=original,
+                    normalized_query=normalized,
+                    hinglish_detected=hinglish_detected,
+                    matches=[match],
+                    needs_disambiguation=False,
+                    intent_summary=f"Matched canonical service {task.title}"
+                )
+
+        return None
+
     def resolve_intent(self, query: str, municipality_hint: str = "") -> IntentResolution:
         """
         Main entry point. Takes a raw user query (possibly Hinglish / Hindi)
@@ -2044,6 +2337,11 @@ class NLPIntentEngine:
             if locality_token in norm_lower:
                 detected_municipality = muni_target
                 break
+
+        # Step 4c: Deterministic Service Matching (Architecture: Normalize -> Service Match -> One Canonical Service)
+        det_result = self._match_deterministic(original, normalized, municipality_hint, detected_municipality, hinglish_detected)
+        if det_result is not None:
+            return det_result
 
         # Step 4b: Domain-specific Negative Intent Penalties to prevent misrouting
         query_tokens_set = set(query_tokens)
@@ -2094,6 +2392,7 @@ class NLPIntentEngine:
                 is_match = (
                     detected_municipality.lower() in mun_lower or
                     "statewide" in mun_lower or
+                    "urban" in mun_lower or
                     "national" in mun_lower or
                     "all" in mun_lower
                 )
@@ -2118,7 +2417,7 @@ class NLPIntentEngine:
                 if any(w in task_title_lower for w in ["bakery", "restaurant", "cafe", "construction", "building", "water supply", "plumber", "retail", "small business", "enterprise"]):
                     negative_penalty += 3.0
             if is_property_tax:
-                if any(w in task_title_lower for w in ["bakery", "restaurant", "cafe", "food", "dining", "water connection", "small business", "retail", "enterprise", "gumasta", "building plan"]):
+                if any(w in task_title_lower for w in ["bakery", "restaurant", "cafe", "food", "dining", "water connection", "small business", "retail", "enterprise", "gumasta", "building plan", "caste", "income", "domicile", "birth", "death"]):
                     negative_penalty += 3.0
                 if "agricultural" in task_title_lower and any(w in query_tokens_set for w in ["municipal", "thane", "pmc", "mcgm", "corporation", "peth", "city", "tax"]):
                     negative_penalty += 3.0
@@ -2183,7 +2482,28 @@ class NLPIntentEngine:
         if len(final_matches) >= 2:
             score_diff = abs(final_matches[0].confidence - final_matches[1].confidence)
             if score_diff < 0.10 and final_matches[0].confidence >= 0.50:
-                needs_disambiguation = True
+                top_ids = {final_matches[0].task_id, final_matches[1].task_id}
+                is_same_service_variant = (
+                    ({"task-water-connection", "task-mum-water-connection"} & top_ids == top_ids) or
+                    ({"task-mah-small-biz", "task-mum-bakery"} & top_ids == top_ids)
+                )
+                if not is_same_service_variant:
+                    needs_disambiguation = True
+
+        if not final_matches or final_matches[0].confidence < 0.25:
+            return IntentResolution(
+                original_query=original,
+                normalized_query=normalized,
+                hinglish_detected=hinglish_detected,
+                matches=[],
+                synthesis={
+                    "missing_data": True,
+                    "message": "No sufficiently confident civic service could be identified in the verified municipal and statutory database for your query. Please refine your query or select from available catalog services."
+                },
+                needs_disambiguation=False,
+                is_missing_data=True,
+                intent_summary="No matching civic service found in the verified database."
+            )
 
         return IntentResolution(
             original_query=original,
@@ -2363,8 +2683,8 @@ class NLPIntentEngine:
             result["matched_patterns"] = list(set(matched_patterns))
             return result, confidence
 
-        # Fallback Track: LLM Zero-Shot Procedural DAG Synthesizer
-        return self._synthesize_zero_shot_llm_dag(original_query, normalized_query, municipality_hint, detected_municipality)
+        # Do not hallucinate or invent procedural graphs if no verified service exists
+        return None, 0.0
 
     def _synthesize_zero_shot_llm_dag(self, original_query: str, normalized_query: str, municipality_hint: str = "", detected_municipality: Optional[str] = None) -> Tuple[Dict, float]:
         """

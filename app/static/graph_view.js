@@ -283,6 +283,55 @@ class CivicGraphVisualizer {
             const slaStr = isMr ? `⏱ ${node.estimated_days} दिवस` : `⏱ ${node.estimated_days} Days`;
             const sealText = isMr ? '✓ वैधानिक शिक्का' : '✓ STATUTORY SEAL';
 
+            if (node.step_number === 0 || node.id.endsWith('-portal-start')) {
+                // Official Portal Starting Node
+                g.innerHTML = `
+                    <!-- Background Paper Container -->
+                    <rect class="node-bg cursor-pointer" width="${this.nodeWidth}" height="${this.nodeHeight}" rx="4" 
+                          fill="#f8fafc" stroke="#2563eb" stroke-width="1.5" filter="url(#civic-card-shadow)"/>
+                    
+                    <!-- Left Structural Color Spine -->
+                    <rect x="0" y="0" width="5" height="${this.nodeHeight}" rx="2" fill="#2563eb"/>
+
+                    <!-- Header: Portal Step 0 Badge -->
+                    <circle cx="26" cy="24" r="11" fill="#1d4ed8"/>
+                    <text x="26" y="28" fill="#ffffff" font-family="'IBM Plex Sans'" font-size="10" font-weight="700" text-anchor="middle">0</text>
+
+                    <!-- Official Portal Pill -->
+                    <rect x="46" y="15" width="125" height="18" rx="2" fill="#dbeafe" stroke="#93c5fd" stroke-width="0.5"/>
+                    <text x="52" y="27" fill="#1e40af" font-family="'IBM Plex Sans'" font-size="9" font-weight="700">🏛 OFFICIAL PORTAL</text>
+
+                    <!-- Verified Provenance Badge -->
+                    <rect x="${this.nodeWidth - 110}" y="15" width="98" height="18" rx="2" fill="#edf6f0" stroke="#2f6848" stroke-width="0.5"/>
+                    <text x="${this.nodeWidth - 61}" y="27" fill="#1d4a32" font-family="'IBM Plex Sans'" font-size="9" font-weight="700" text-anchor="middle">✓ VERIFIED SOURCE</text>
+
+                    <!-- Node Title -->
+                    <text x="16" y="58" fill="#1e3a8a" font-family="'IBM Plex Sans'" font-size="13" font-weight="700">Visit Official Website</text>
+
+                    <!-- Department Name / Authority -->
+                    <text x="16" y="76" fill="#475569" font-family="'Source Serif 4'" font-size="11.5">${truncatedDept}</text>
+
+                    <!-- Horizontal Divider Line -->
+                    <line x1="12" y1="90" x2="${this.nodeWidth - 12}" y2="90" stroke="#cbd5e1" stroke-width="1"/>
+
+                    <!-- Clickable Link Action Button inside SVG -->
+                    <rect x="14" y="98" width="${this.nodeWidth - 28}" height="28" rx="4" fill="#2563eb" class="hover:fill-blue-700 cursor-pointer"/>
+                    <text x="${this.nodeWidth / 2}" y="116" fill="#ffffff" font-family="'IBM Plex Sans'" font-size="11" font-weight="700" text-anchor="middle" pointer-events="none">Visit Official Website ↗</text>
+                `;
+
+                g.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (node.official_url) {
+                        window.open(node.official_url, '_blank', 'noopener,noreferrer');
+                    } else {
+                        this.selectNode(node.id);
+                    }
+                });
+
+                this.nodesLayer.appendChild(g);
+                return;
+            }
+
             g.innerHTML = `
                 <!-- Background Paper Container -->
                 <rect class="node-bg" width="${this.nodeWidth}" height="${this.nodeHeight}" rx="4" 

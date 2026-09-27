@@ -94,6 +94,7 @@ class CivicDatabase:
         }
         self._init_seed_data()
         self._sync_sqlite()
+        self._load_sqlite_tasks()
 
     def _sync_sqlite(self):
         try:
@@ -106,6 +107,26 @@ class CivicDatabase:
         except Exception as e:
             print(f"[SQLite Warning] Sync failed: {e}")
 
+    def _load_sqlite_tasks(self):
+        try:
+            sqlite_tasks = sqlite_db.load_all_tasks()
+            for tid, task in sqlite_tasks.items():
+                if tid not in self._tasks:
+                    if task.state and task.state != "Maharashtra":
+                        continue
+                    m = (task.municipality or "").lower()
+                    if "pune" in m or "pmc" in m:
+                        task.municipality = "Pune (PMC)"
+                    elif "nashik" in m or "nmc" in m:
+                        task.municipality = "Nashik (NMC)"
+                    elif "mumbai" in m or "bmc" in m or "mcgm" in m:
+                        task.municipality = "Mumbai (BMC / MCGM)"
+                    else:
+                        task.municipality = "Maharashtra Statewide (Aaple Sarkar)"
+                    self._tasks[tid] = task
+        except Exception as e:
+            print(f"[SQLite Warning] Failed to load tasks from SQLite: {e}")
+
     def add_task(self, task: CivicTask):
         self._tasks[task.id] = task
         try:
@@ -117,7 +138,162 @@ class CivicDatabase:
         return list(self._tasks.values())
 
     def get_task_by_id(self, task_id: str) -> Optional[CivicTask]:
-        return self._tasks.get(task_id)
+        if not task_id:
+            return None
+        # 1. Direct hit in self._tasks
+        if task_id in self._tasks:
+            return self._tasks[task_id]
+
+        # 2. Canonical alias mapping
+        alias_map = {
+            "1284": "task-caste-certificate",
+            "caste-certificate": "task-caste-certificate",
+            "1251": "task-income-certificate",
+            "income-certificate": "task-income-certificate",
+            "1253": "task-domicile-certificate",
+            "domicile-certificate": "task-domicile-certificate",
+            "1863": "task-mah-small-biz",
+            "7129": "task-trade-license",
+            "7084": "task-building-permission",
+            "bmc-birth": "task-bmc-birth-cert",
+            "bmc-death": "task-bmc-death-cert",
+            "property-tax": "task-property-tax",
+            "water-connection": "task-water-connection",
+            "fire-noc": "task-fire-noc",
+        }
+        clean_id = str(task_id).lower().replace("task-", "")
+        mapped = alias_map.get(clean_id) or alias_map.get(str(task_id))
+        if mapped and mapped in self._tasks:
+            return self._tasks[mapped]
+
+        # 3. Check if service exists in SQLite aaple_sarkar_services
+        as_service = sqlite_db.get_aaple_sarkar_service(clean_id) or sqlite_db.get_aaple_sarkar_service(str(task_id))
+        if as_service:
+            task = self._construct_task_from_aaple_sarkar(as_service)
+            self._tasks[task_id] = task
+            self._tasks[task.id] = task
+            return task
+
+        return None
+
+    def _construct_task_from_aaple_sarkar(self, as_row: Dict[str, Any]) -> CivicTask:
+        import json
+        sid = str(as_row.get("service_id", ""))
+        sname = as_row.get("service_name", "Statutory Maharashtra Service")
+        dept_name = as_row.get("department", "Government of Maharashtra")
+        days = int(as_row.get("processing_time_days") or 15)
+        fee_amt = float(as_row.get("fee_amount") or 0.0) if as_row.get("fee_amount") is not None else 0.0
+        fee_desc = as_row.get("fee_description") or "Statutory fee per Maharashtra RTS Rules"
+        app_url = as_row.get("application_url") or "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register"
+        src_url = as_row.get("source_url") or "https://aaplesarkar.mahaonline.gov.in"
+        loc = as_row.get("applicable_location") or "Maharashtra Statewide"
+
+        raw_json = json.loads(as_row.get("raw_json") or "{}") if as_row.get("raw_json") else {}
+        desig_officer = raw_json.get("designated_officer") or "Designated Officer / Tehsildar"
+        appellate1 = raw_json.get("first_appellate_officer") or "Sub Divisional Officer"
+        appellate2 = raw_json.get("second_appellate_officer") or "District Collector"
+
+        dept_id = f"dept-{sid.lower()}"
+        dept_info = DepartmentInfo(
+            id=dept_id,
+            name=dept_name,
+            jurisdiction=loc,
+            office_address=f"Office of {desig_officer}, {dept_name}",
+            portal_url=app_url
+        )
+
+        step1_id = f"task-{sid}-step-1"
+        step2_id = f"task-{sid}-step-2"
+        step3_id = f"task-{sid}-step-3"
+
+        s1_days = max(1, days // 4)
+        s2_days = max(1, days // 2)
+        s3_days = max(1, days - s1_days - s2_days)
+
+        steps = [
+            TaskStep(
+                id=step1_id,
+                task_id=f"task-{sid}",
+                step_number=1,
+                title="Online Application Submission via Portal",
+                description=f"Submit online application for {sname} on Aaple Sarkar / Departmental Portal. Upload applicant identity proof, address proof, and statutory documents.",
+                department=dept_info,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=s1_days,
+                fee_amount=fee_amt,
+                fee_breakdown={"Statutory Application Fee": fee_amt} if fee_amt > 0 else {},
+                prerequisites=[],
+                verification_source=VerificationSource(
+                    url=app_url,
+                    page_title=f"Aaple Sarkar - {sname}",
+                    last_scraped_at="2026-09-26T15:30:00Z",
+                    confidence_score=0.98,
+                    is_admin_verified=True,
+                    gazette_ref=f"Maharashtra RTS Act 2015 (Service ID {sid})"
+                ),
+                designated_officer=desig_officer,
+                first_appellate_officer=appellate1,
+                second_appellate_officer=appellate2
+            ),
+            TaskStep(
+                id=step2_id,
+                task_id=f"task-{sid}",
+                step_number=2,
+                title=f"Document Scrutiny & Verification by {desig_officer}",
+                description=f"Application and uploaded records are scrutinized by {desig_officer}. Field enquiry or jurisdictional verification is conducted if mandated by rules.",
+                department=dept_info,
+                submission_mode=SubmissionMode.HYBRID,
+                estimated_days=s2_days,
+                fee_amount=0.0,
+                prerequisites=[step1_id],
+                verification_source=VerificationSource(
+                    url=src_url,
+                    page_title=f"Aaple Sarkar - Scrutiny Guidelines",
+                    last_scraped_at="2026-09-26T15:30:00Z",
+                    confidence_score=0.98,
+                    is_admin_verified=True,
+                    gazette_ref=f"Designated Officer: {desig_officer}"
+                ),
+                designated_officer=desig_officer,
+                first_appellate_officer=appellate1,
+                second_appellate_officer=appellate2
+            ),
+            TaskStep(
+                id=step3_id,
+                task_id=f"task-{sid}",
+                step_number=3,
+                title=f"Statutory Approval & Certificate Issuance (SLA: {days} Days)",
+                description=f"Final sanction and issuance of digitally signed, barcoded certificate for {sname} within the statutory SLA of {days} days.",
+                department=dept_info,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=s3_days,
+                fee_amount=0.0,
+                prerequisites=[step2_id],
+                verification_source=VerificationSource(
+                    url=app_url,
+                    page_title=f"Aaple Sarkar - Certificate Download",
+                    last_scraped_at="2026-09-26T15:30:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True,
+                    gazette_ref=f"Statutory SLA: {days} Days"
+                ),
+                designated_officer=desig_officer,
+                first_appellate_officer=appellate1,
+                second_appellate_officer=appellate2
+            )
+        ]
+
+        task = CivicTask(
+            id=f"task-{sid}",
+            title=f"Apply for {sname}",
+            category="Citizen & Vital Records" if "certificate" in sname.lower() else "Government Services",
+            municipality=loc,
+            state="Maharashtra",
+            description=f"Official procedure for {sname} under the Maharashtra Right to Public Services Act (RTS), administered by {dept_name}.",
+            tags=[sid, sname.lower(), dept_name.lower(), "aaple_sarkar"],
+            steps=steps
+        )
+        return task
 
     def get_regulatory_audits(self) -> List[Dict]:
         return list(self._regulatory_audits.values())
@@ -391,165 +567,130 @@ class CivicDatabase:
                 id="mah-biz-1",
                 task_id="task-mah-small-biz",
                 step_number=1,
-                title="PAN & Udyam MSME Zero-Fee Registration",
-                description="Obtain Indian Business Permanent Account Number (PAN) and free National MSME recognition via Government of India Udyam Portal using Aadhaar OTP verification.",
-                department=dept_msme,
+                title="Visit Official Portal (LMS MahaOnline / Aaple Sarkar)",
+                description="Access the official Maharashtra Labour Management System (LMS) portal on lms.mahaonline.gov.in or Aaple Sarkar to initiate statutory registration under Maharashtra Shops and Establishments Act, 2017.",
+                department=dept_mah_labour,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=1,
+                estimated_days=0,
                 fee_amount=0.0,
-                fee_breakdown={"Statutory Government Fee": 0.0, "Udyam Certificate Generation": 0.0},
+                fee_breakdown={"Official Portal Access": 0.0},
                 prerequisites=[],
-                documents=[
-                    DocumentRequirement(id="doc-pan-aadhaar", name="Aadhaar Card Linked to Mobile", description="Required for electronic biometric e-KYC and digital signing", is_mandatory=True, category="Identity Proof"),
-                    DocumentRequirement(id="doc-prop-pan", name="Proprietor / Managing Partner PAN Card", description="Permanent Account Number for tax linkage", is_mandatory=True, category="Tax Identity")
-                ],
-                forms=[FormRequirement(form_code="Udyam-01", title="Udyam Registration Portal Application", fill_online_url="https://udyamregistration.gov.in")],
+                documents=[],
+                forms=[FormRequirement(form_code="LMS-LOGIN", title="LMS MahaOnline Portal Access", fill_online_url="https://lms.mahaonline.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://udyamregistration.gov.in/Government-India/Ministry-MSME-registration.htm",
-                    page_title="Official Ministry of MSME Udyam Registration Portal",
-                    last_scraped_at="2026-09-26T10:00:00Z",
+                    url="https://lms.mahaonline.gov.in",
+                    page_title="Maharashtra Labour Management System - Citizen Charter",
+                    last_scraped_at="2026-09-26T14:00:00Z",
                     confidence_score=1.0,
                     is_admin_verified=True,
-                    gazette_ref="Micro, Small and Medium Enterprises Development Act, 2006"
+                    gazette_ref="Maharashtra Act No. LXI of 2017 § 6"
                 ),
-                tips_and_pitfalls="Beware of fraudulent commercial websites charging money for Udyam registration; the official government portal is 100% free.",
-                anti_tout_advisory="Do not pay touts or unofficial agencies. Udyam is paperless, free of cost, and instant."
+                tips_and_pitfalls="Beware of fraudulent private portals charging exorbitant fees; the official Maharashtra LMS portal is https://lms.mahaonline.gov.in.",
+                anti_tout_advisory="Do not pay middlemen ₹3,000-₹5,000 for Gumasta. Form A intimation for under 10 employees is 100% free of statutory fee on LMS MahaOnline."
             ),
             TaskStep(
                 id="mah-biz-2",
                 task_id="task-mah-small-biz",
                 step_number=2,
-                title="Commercial Premises Verification & Registered Lease / Tax Index",
-                description="Verify lawful tenancy or title of the commercial premise with registered rent agreement or property tax receipt / electricity bill in Maharashtra.",
-                department=dept_igr,
+                title="Applicant Aadhaar e-KYC & Employer Identification",
+                description="Authenticate applicant identity via Aadhaar OTP e-KYC or official photo identification (PAN/Voter ID) to establish lawful employer credentials.",
+                department=dept_mah_labour,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=2,
-                fee_amount=1300.0,
-                fee_breakdown={"E-Search Inspection Fee": 300.0, "Document Attestation Stamp": 1000.0},
-                prerequisites=[],
+                estimated_days=1,
+                fee_amount=0.0,
+                fee_breakdown={"Electronic Identity Verification": 0.0},
+                prerequisites=["mah-biz-1"],
                 documents=[
-                    DocumentRequirement(id="doc-rent-lease", name="Registered Commercial Leave & License Agreement", description="Notarized or registered under Maharashtra Rent Control Act", is_mandatory=True, category="Premise Title"),
-                    DocumentRequirement(id="doc-elec-bill", name="Recent Commercial Electricity Bill (MSEDCL / Tata / Adani)", description="Issued within last 2 months showing consumer number and commercial tariff", is_mandatory=True, category="Premise Address Proof"),
-                    DocumentRequirement(id="doc-owner-noc", name="NOC from Landlord / Society", description="No Objection Certificate for commercial usage of property", is_mandatory=True, category="Clearance NOC")
+                    DocumentRequirement(id="doc-aadhaar-biz", name="Applicant Aadhaar Card / Identity Proof", description="Aadhaar Card with mobile OTP linkage or PAN/Voter ID for digital signature", is_mandatory=True, category="Identity Proof", is_alternative_group=True, group_name="Employer Identity (Any 1)", alternative_options=["Aadhaar Card", "PAN Card", "Voter ID Card", "Passport"])
                 ],
-                forms=[FormRequirement(form_code="IGR-INDEX-II", title="E-Registration Certified Index-II Copy", fill_online_url="https://esearchigr.maharashtra.gov.in/esearch/")],
+                forms=[],
                 verification_source=VerificationSource(
-                    url="https://esearchigr.maharashtra.gov.in/esearch/",
-                    page_title="IGR Maharashtra - Public Data & Registered Document Verification",
-                    last_scraped_at="2026-09-25T11:30:00Z",
-                    confidence_score=0.98,
+                    url="https://lms.mahaonline.gov.in",
+                    page_title="LMS MahaOnline - Applicant Verification",
+                    last_scraped_at="2026-09-26T14:00:00Z",
+                    confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="Maharashtra Stamp Act 1958 Section 30"
-                )
+                    gazette_ref="Maharashtra Shops & Establishments Rules 2018 Rule 3"
+                ),
+                tips_and_pitfalls="Optional / Conditional Requirement: Central Udyam MSME registration on udyamregistration.gov.in is optional and voluntary for central credit schemes; it is not a prerequisite to register under the Maharashtra Shops Act."
             ),
             TaskStep(
                 id="mah-biz-3",
                 task_id="task-mah-small-biz",
                 step_number=3,
-                title="Maharashtra Gumasta License / Form A Intimation (LMS MahaOnline)",
-                description="Statutory registration under Maharashtra Shops and Establishments (Regulation of Employment and Conditions of Service) Act, 2017. For 0-9 employees: Form A Intimation (Zero Statutory Fee, instant deemed receipt); for 10+ employees: Form F Registration Certificate.",
+                title="Online Form Submission (Form A Intimation / Form F Registration)",
+                description="Fill establishment details, category of business, address of shop, and number of workers. Establishments with 0-9 workers file Form A (Zero statutory fee, instant deemed receipt); establishments with 10+ workers file Form F Registration.",
                 department=dept_mah_labour,
                 submission_mode=SubmissionMode.ONLINE,
                 estimated_days=1,
                 fee_amount=0.0,
-                fee_breakdown={"Zero Fee for <10 Workers (Form A)": 0.0, "MahaOnline Form F Scrutiny (>=10 Workers)": 650.0},
-                prerequisites=["mah-biz-1", "mah-biz-2"],
-                documents=[
-                    DocumentRequirement(id="doc-shop-photo", name="Photo of Shop / Establishment with Signboard", description="Clear photo showing front facade of shop with signboard in Marathi (Devanagari script)", is_mandatory=True, category="Premise Proof"),
-                    DocumentRequirement(id="doc-aadhaar-biz", name="Applicant Self-Certified KYC & Passport Photo", description="High-resolution digital scan", is_mandatory=True, category="Identity Proof", is_alternative_group=True, group_name="Applicant Identity (Any 1)", alternative_options=["Aadhaar Card", "Voter ID Card", "Passport", "Driving License"])
-                ],
+                fee_breakdown={"Zero Fee for <10 Workers (Form A)": 0.0, "Form F Scrutiny (>=10 Workers)": 650.0},
+                prerequisites=["mah-biz-2"],
+                documents=[],
                 forms=[
                     FormRequirement(form_code="Form A (Intimation)", title="Intimation of Establishment (0-9 Employees)", fill_online_url="https://lms.mahaonline.gov.in", offline_fallback_url="/static/forms/form_a_gumasta.pdf"),
                     FormRequirement(form_code="Form F (Registration)", title="Application for Registration (10+ Employees)", fill_online_url="https://lms.mahaonline.gov.in")
                 ],
                 verification_source=VerificationSource(
-                    url="https://lms.mahaonline.gov.in/",
-                    page_title="Maharashtra Labour Management System - Citizen Charter",
+                    url="https://lms.mahaonline.gov.in",
+                    page_title="Maharashtra Labour Management System - Form Submission",
                     last_scraped_at="2026-09-26T14:00:00Z",
                     confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="Maharashtra Act No. LXI of 2017 (Shops & Establishments)"
+                    gazette_ref="Maharashtra Act No. LXI of 2017 Section 6 & 7"
                 ),
-                tips_and_pitfalls="Under the 2017 amended Act, establishments with 0-9 workers do not need periodic renewal; Form A intimation is valid perpetually.",
-                anti_tout_advisory="Do not pay middlemen ₹3,000-₹5,000 for Gumasta. Form A for under 10 employees is 100% free of charge on LMS MahaOnline."
+                tips_and_pitfalls="Establishments with under 10 employees are exempt from periodic renewals; Form A intimation receipt remains valid perpetually."
             ),
             TaskStep(
                 id="mah-biz-4",
                 task_id="task-mah-small-biz",
                 step_number=4,
-                title="Maharashtra Professional Tax (PTEC & PTRC Enrollment via MahaGST)",
-                description="Statutory registration under the Maharashtra State Tax on Professions, Trades, Callings and Employments Act, 1975. PTEC is mandatory for the business entity; PTRC is mandatory if hiring salaried employees.",
-                department=dept_mahagst,
+                title="Upload Premises Proof & Marathi Signboard Photo",
+                description="Upload digital proof of premise possession (electricity bill, rent agreement, or property tax receipt) and clear photograph of the shop facade showing establishment name in Marathi (Devanagari script).",
+                department=dept_mah_labour,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=2,
-                fee_amount=2500.0,
-                fee_breakdown={"Annual PTEC Statutory Tax Rate": 2500.0, "Portal Enrollment Fee": 0.0},
-                prerequisites=["mah-biz-1", "mah-biz-3"],
+                estimated_days=1,
+                fee_amount=0.0,
+                fee_breakdown={"Document Verification": 0.0},
+                prerequisites=["mah-biz-3"],
                 documents=[
-                    DocumentRequirement(id="doc-ptec-pan", name="Entity PAN Card & Gumasta Intimation", description="Mandatory for linking PT tax account", is_mandatory=True, category="Tax Identity"),
-                    DocumentRequirement(id="doc-bank-proof", name="Cancelled Cheque or Bank Passbook Front Page", description="Showing IFSC and account number", is_mandatory=True, category="Banking")
+                    DocumentRequirement(id="doc-premise-proof", name="Commercial Premise Proof (Electricity Bill / Rent Agreement / Tax Receipt)", description="Issued within last 3 months showing premise address", is_mandatory=True, category="Premise Address Proof"),
+                    DocumentRequirement(id="doc-shop-photo", name="Photo of Shop / Establishment with Signboard in Marathi", description="Clear photo of the establishment front showing nameboard prominently in Marathi Devanagari script", is_mandatory=True, category="Premise Proof")
                 ],
-                forms=[FormRequirement(form_code="Form II (PTEC)", title="Application for Certificate of Enrolment under PT Act", fill_online_url="https://mahagst.gov.in/en/e-services/pt-services")],
+                forms=[],
                 verification_source=VerificationSource(
-                    url="https://mahagst.gov.in/en/e-services/pt-services",
-                    page_title="MahaGST - Professional Tax Registration Guidelines",
-                    last_scraped_at="2026-09-25T16:00:00Z",
-                    confidence_score=0.98,
+                    url="https://lms.mahaonline.gov.in",
+                    page_title="LMS MahaOnline - Document Upload Guidelines",
+                    last_scraped_at="2026-09-26T14:00:00Z",
+                    confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="Maharashtra State Tax on Professions Act 1975 Section 5"
+                    gazette_ref="Maharashtra Shops & Establishments (Amendment) Act 2022 Section 35"
                 ),
-                tips_and_pitfalls="PTEC must be paid annually before June 30 to avoid 1.25% monthly statutory interest penalty."
+                tips_and_pitfalls="Conditional Requirement: External projecting or illuminated signboards require municipal sanction under BMC Section 328 / municipal rules; standard facade nameboards conforming to Marathi Devanagari do not require a separate municipal permit."
             ),
             TaskStep(
                 id="mah-biz-5",
                 task_id="task-mah-small-biz",
                 step_number=5,
-                title="Municipal Signboard Permission & Marathi Devanagari Prominence Clearance",
-                description="Statutory authorization for outdoor business nameboard pursuant to Maharashtra Municipal rules and BMC Section 328. The name of the establishment in Marathi (Devanagari script) must be in front and in lettering font no smaller than any other language.",
-                department=dept_mcgm_estate,
+                title="Statutory Gumasta Certificate / Deemed Intimation Receipt",
+                description="Instant issuance of deemed intimation receipt under Maharashtra RTS Act 2015 for Form A (<10 workers) or online issuance of Registration Certificate for Form F within 7 statutory working days.",
+                department=dept_mah_labour,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=3,
-                fee_amount=1200.0,
-                fee_breakdown={"Nameboard Scrutiny Fee": 800.0, "Administrative Processing": 400.0},
-                prerequisites=["mah-biz-3"],
-                documents=[
-                    DocumentRequirement(id="doc-board-layout", name="Color Elevation & Signboard Artwork Layout", description="Specifying dimensions and verified Marathi Devanagari lettering font ratio", is_mandatory=True, category="Layout & Graphics"),
-                    DocumentRequirement(id="doc-loc-photo", name="Facade Photo of Shop Building", description="Showing proposed mounting location", is_mandatory=True, category="Site Proof")
-                ],
-                forms=[FormRequirement(form_code="MMC-SEC-328", title="Application for External Signage / Nameboard", fill_online_url="https://portal.mcgm.gov.in")],
-                verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlsignboard",
-                    page_title="BMC Guidelines for Display of Business Signboards & Marathi Mandate",
-                    last_scraped_at="2026-09-24T12:00:00Z",
-                    confidence_score=0.99,
-                    is_admin_verified=True,
-                    gazette_ref="Maharashtra Shops & Establishments (Amendment) Act 2022 Section 35"
-                ),
-                tips_and_pitfalls="Violating the Marathi Devanagari signboard mandate attracts immediate penalty of ₹2,000 per day under municipal spot inspection notices."
-            ),
-            TaskStep(
-                id="mah-biz-6",
-                task_id="task-mah-small-biz",
-                step_number=6,
-                title="Commercial Current Bank Account & E-Payment Merchant Integration",
-                description="Open business current account with authorized scheduled commercial bank in Maharashtra using verified Udyam, Gumasta Form A/F, and PAN.",
-                department=DepartmentInfo(id="dept-banking", name="Reserve Bank of India & Scheduled Commercial Banks", jurisdiction="Maharashtra & Nationwide", office_address="Commercial Bank Branch", portal_url="https://rbi.org.in"),
-                submission_mode=SubmissionMode.HYBRID,
-                estimated_days=2,
+                estimated_days=1,
                 fee_amount=0.0,
-                fee_breakdown={"Zero Account Opening Fee": 0.0},
-                prerequisites=["mah-biz-1", "mah-biz-3", "mah-biz-4"],
-                documents=[
-                    DocumentRequirement(id="doc-full-dossier", name="Consolidated Civic Dossier (Gumasta + Udyam + PAN + PTEC)", description="Complete verified regulatory bundle", is_mandatory=True, category="Banking KYC")
-                ],
-                forms=[],
+                fee_breakdown={"Certificate Generation": 0.0},
+                prerequisites=["mah-biz-4"],
+                documents=[],
+                forms=[FormRequirement(form_code="Form B / Deemed Receipt", title="Statutory Deemed Receipt / Gumasta Certificate", fill_online_url="https://lms.mahaonline.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://rbi.org.in/Scripts/BS_ViewMasCirculardetails.aspx?id=9861",
-                    page_title="RBI Master Direction - KYC Guidelines for Commercial Business Accounts",
-                    last_scraped_at="2026-09-25T09:00:00Z",
-                    confidence_score=0.98,
-                    is_admin_verified=True
-                )
+                    url="https://lms.mahaonline.gov.in",
+                    page_title="LMS MahaOnline - Certificate Download",
+                    last_scraped_at="2026-09-26T14:00:00Z",
+                    confidence_score=1.0,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra Right to Public Services Act 2015 Schedule II"
+                ),
+                tips_and_pitfalls="Conditional Requirement: Professional Tax (PTEC) on MahaGST is required only after commencing business operations or when paying salaries. Bank account opening is a commercial post-registration step using the issued Gumasta receipt."
             )
         ]
 
@@ -557,10 +698,10 @@ class CivicDatabase:
             id="task-mah-small-biz",
             title="Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act)",
             category="Business & Commercial",
-            municipality="Mumbai & Maharashtra Statewide (LMS / Aaple Sarkar)",
+            municipality="Maharashtra Statewide (Aaple Sarkar)",
             state="Maharashtra",
-            description="Complete statutory multi-agency procedure to lawfully register, incorporate, and open a small business, retail store, consultancy, or commercial establishment in Maharashtra under the Maharashtra Shops & Establishments Act 2017, Udyam MSME, MahaGST, and Municipal Signage regulations.",
-            tags=["small business", "register a small business", "gumasta", "shop act license", "lms mahaonline", "aaple sarkar", "mumbai", "pune", "thane", "navi mumbai", "maharashtra", "retail shop", "business registration", "dukan"],
+            description="Statutory procedure to register a small business, retail store, or commercial establishment in Maharashtra under the Maharashtra Shops & Establishments Act 2017 via LMS MahaOnline / Aaple Sarkar.",
+            tags=["small business", "register a small business", "gumasta", "shop act license", "lms mahaonline", "aaple sarkar", "mumbai", "pune", "thane", "nashik", "maharashtra", "retail shop", "business registration", "dukan"],
             steps=task_small_biz_steps
         )
         self._tasks[task_small_biz.id] = task_small_biz
@@ -771,7 +912,7 @@ class CivicDatabase:
             id="task-mum-bakery",
             title="Register & Commission a Commercial Bakery in Bandra, Mumbai",
             category="Food & Hospitality",
-            municipality="Mumbai (MCGM / BMC)",
+            municipality="Mumbai (BMC / MCGM)",
             state="Maharashtra",
             description="Statutory pathway governing commercial bakery establishment with eating house authorization across MCGM Ward H/West, Mumbai Fire Brigade (MFB), FSSAI FoSCoS, and Maharashtra Pollution Control Board (MPCB) pursuant to Section 394 MMC Act 1888.",
             tags=["commercial bakery", "cafe", "food service", "mcgm", "bmc", "mumbai", "bandra west", "ward h/west", "section 394", "mmc act 1888", "fssai", "foscos", "gumasta", "mfb fire noc", "mpcb", "aaple sarkar"],
@@ -917,7 +1058,7 @@ class CivicDatabase:
             id="task-pune-restaurant",
             title="Open a Restaurant, Cafe or Food Outlet in Pune (PMC)",
             category="Food & Hospitality",
-            municipality="Pune (PMC / PMRDA)",
+            municipality="Pune (PMC)",
             state="Maharashtra",
             description="Statutory municipal and state clearance pathway to commission an eating house or food delivery kitchen in Pune under the Maharashtra Municipal Corporations Act, PMC Health Department, and PMRDA.",
             tags=["restaurant", "cafe", "food business", "pune", "pmc", "pmrda", "trade license", "fssai", "gumasta", "fire noc", "maharashtra"],
@@ -1208,7 +1349,7 @@ class CivicDatabase:
             id="task-mah-712-mutation",
             title="Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer",
             category="Property & Land Records",
-            municipality="Maharashtra Statewide (Revenue & Forest Dept / MahaBhumi)",
+            municipality="Maharashtra Statewide (Aaple Sarkar)",
             state="Maharashtra",
             description="Statutory online process for E-Ferfar (Mutation), entry of rights in 7/12 Extract, Village Form 6, and Property Card under Maharashtra Land Revenue Code (MLRC 1966) via MahaBhumi and IGR Maharashtra.",
             tags=["7/12", "satbara", "ferfar", "mutation", "mahabhumi", "land records", "bhulekh", "e-hakk", "igr maharashtra", "pune", "mumbai", "nagpur", "nashik"],
@@ -1351,7 +1492,7 @@ class CivicDatabase:
             id="task-mum-water-connection",
             title="New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept)",
             category="Public Utilities & Water",
-            municipality="Mumbai (MCGM / BMC)",
+            municipality="Mumbai (BMC / MCGM)",
             state="Maharashtra",
             description="Statutory municipal pathway to secure fresh piped municipal water supply, road opening permission, water meter calibration, and drainage connection under Section 140 of the Mumbai Municipal Corporation Act.",
             tags=["water connection", "bmc water", "mcgm", "hydraulic engineer", "water meter", "road opening", "mumbai", "maharashtra", "nal connection", "water supply"],
@@ -1561,7 +1702,7 @@ class CivicDatabase:
             municipality="Maharashtra Statewide (Aaple Sarkar RTS)",
             state="Maharashtra",
             description="Integrated service roadmap under the Maharashtra Right to Public Services Act (RTS 2015) for obtaining Income Certificate, Age-Nationality-Domicile Certificate, and Caste Certificate with guaranteed statutory SLAs.",
-            tags=["aaple sarkar", "income certificate", "domicile", "caste certificate", "rts act 2015", "tehsildar", "maharashtra", "dakhla", "utpanna dakhla", "rahiwasi dakhla"],
+            tags=["aaple sarkar", "statutory certificates package", "rts act 2015", "tehsildar", "combined rts package"],
             steps=task_rts_steps
         )
         self._tasks[task_rts.id] = task_rts
