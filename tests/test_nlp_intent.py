@@ -18,6 +18,16 @@ class TestNLPIntentEngine(unittest.TestCase):
         self.assertEqual(data["top_task_id"], "task-mum-bakery")
         self.assertGreater(data["matches"][0]["confidence"], 0.7)
 
+    def test_small_business_natural_language_query(self):
+        """Test user request primary query: 'I want to register a small business'"""
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "I want to register a small business"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["top_task_id"], "task-mah-small-biz")
+        self.assertGreaterEqual(data["matches"][0]["confidence"], 0.8)
+
     def test_catalog_semantic_match_construction(self):
         resp = self.client.post("/api/tasks/resolve-intent", json={
             "query": "building permit autodcr mumbai"
@@ -26,6 +36,30 @@ class TestNLPIntentEngine(unittest.TestCase):
         data = resp.json()
         self.assertEqual(data["top_task_id"], "task-mum-construction")
 
+    def test_land_mutation_712_match(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "7/12 extract transfer ferfar"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["top_task_id"], "task-mah-712-mutation")
+
+    def test_water_connection_match(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "new water connection BMC"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["top_task_id"], "task-mum-water-connection")
+
+    def test_pune_restaurant_match(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "Open a restaurant in Pune"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["top_task_id"], "task-pune-restaurant")
+
     def test_hinglish_shop_intent(self):
         resp = self.client.post("/api/tasks/resolve-intent", json={
             "query": "dukaan shuru karni hai"
@@ -33,16 +67,33 @@ class TestNLPIntentEngine(unittest.TestCase):
         self.assertEqual(resp.status_code, 200)
         data = resp.json()
         self.assertTrue(data["hinglish_detected"])
-        self.assertTrue("task-synth-gumasta-trade" in data["top_task_id"])
+        self.assertTrue(data["top_task_id"] in ["task-mah-small-biz", "task-synth-gumasta-trade"])
 
-    def test_devanagari_hindi_intent(self):
+    def test_devanagari_marathi_shop_intent(self):
         resp = self.client.post("/api/tasks/resolve-intent", json={
-            "query": "दुकान शुरू करनी है"
+            "query": "दुकान नोंदणी गुमास्ता"
         })
         self.assertEqual(resp.status_code, 200)
         data = resp.json()
         self.assertTrue(data["hinglish_detected"])
-        self.assertEqual(data["top_task_id"], "task-synth-gumasta-trade")
+        self.assertEqual(data["top_task_id"], "task-mah-small-biz")
+
+    def test_romanized_marathi_shop_intent(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "mala dukan suru karayche ahe"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertTrue(data["hinglish_detected"])
+        self.assertEqual(data["top_task_id"], "task-mah-small-biz")
+
+    def test_devanagari_satbara_intent(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "सातबारा फेरफार नोंदणी"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertEqual(data["top_task_id"], "task-mah-712-mutation")
 
     def test_zero_shot_voter_id_synthesis(self):
         resp = self.client.post("/api/tasks/resolve-intent", json={

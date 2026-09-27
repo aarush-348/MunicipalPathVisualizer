@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-primary-fixed-variant":"#3a475f","secondary-fixed":"#d5e4f6","on-tertiary-container":"#b1811f","inverse-surface":"#2e3130","on-background":"#191c1b","surface-dim":"#d9dad8","surface-variant":"#e2e3e1","surface-container-low":"#f3f4f2","on-error-container":"#93000a","on-tertiary":"#ffffff","background":"#f9faf8","outline":"#75777e","surface-container-high":"#e7e8e6","on-surface-variant":"#44474d","secondary-fixed-dim":"#b9c8d9","surface-bright":"#f9faf8","primary-fixed":"#d7e3ff","on-secondary-fixed":"#0e1d29","error-container":"#ffdad6","surface-container-highest":"#e2e3e1","primary":"#000b21","secondary-container":"#d2e1f3","surface-tint":"#525f78","on-surface":"#191c1b","on-secondary-container":"#556473","on-tertiary-fixed-variant":"#5f4100","tertiary-container":"#301f00","surface-container-lowest":"#ffffff","on-secondary-fixed-variant":"#3a4856","inverse-primary":"#bac7e4","error":"#ba1a1a","tertiary-fixed-dim":"#f5bd58","secondary":"#51606f","primary-container":"#152238","on-error":"#ffffff","on-primary-fixed":"#0e1c31","on-primary-container":"#7d89a4","surface-container":"#edeeec","outline-variant":"#c5c6cd","tertiary":"#130a00","primary-fixed-dim":"#bac7e4","on-primary":"#ffffff","tertiary-fixed":"#ffdeaa","on-tertiary-fixed":"#271900","surface":"#f9faf8","on-secondary":"#ffffff","inverse-on-surface":"#f0f1ef"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"1rem","margin":"2rem","space-xs":"0.25rem","space-lg":"1.5rem","gutter":"1.5rem","gutter-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","margin-mobile":"1rem"},"fontFamily":{"body-md":["\"Source Serif 4\""],"body-sm":["\"Source Serif 4\""],"headline-lg-mobile":["IBM Plex Sans"],"headline-xl":["IBM Plex Sans"],"label-sm":["IBM Plex Sans"],"body-lg":["\"Source Serif 4\""],"headline-xl-mobile":["IBM Plex Sans"],"code":["JetBrains Mono"],"headline-lg":["IBM Plex Sans"],"headline-md":["IBM Plex Sans"],"headline-sm":["IBM Plex Sans"],"label-lg":["IBM Plex Sans"],"label-md":["IBM Plex Sans"]},"fontSize":{"body-md":["15px",{"lineHeight":"24px","fontWeight":"400"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"code":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant"><div class="bg-primary text-on-primary px-margin border-b border-primary-container"><div class="max-w-[1200px] mx-auto h-8 flex items-center justify-between font-label-sm text-label-sm"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span><span class="font-code text-code text-primary-fixed">STATUS:</span><span>Ledger Live &amp; Synchronized — Municipal Feeds Active</span></div><span class="text-outline-variant">|</span><div class="flex items-center gap-space-xs"><span class="text-primary-fixed-dim">FEED LATENCY:</span><span class="font-code text-code">14ms</span></div></div><div class="flex items-center gap-space-lg"><div class="hidden md:flex items-center gap-space-sm text-primary-fixed-dim"><span class="font-code text-code bg-primary-container px-1.5 py-0.5 border border-on-primary-fixed-variant rounded">/</span><span>Search</span><span class="font-code text-code bg-primary-container px-1.5 py-0.5 border border-on-primary-fixed-variant rounded ml-space-xs">ESC</span><span>Close</span></div><div class="w-5 h-5 rounded-full bg-primary-container border border-on-primary-fixed-variant flex items-center justify-center"><span class="material-symbols-outlined text-primary-fixed text-[14px]">account_balance</span></div></div></div></div><div class="h-20 bg-surface-container-lowest"><div class="max-w-[1200px] mx-auto h-20 px-margin flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-md pr-space-lg border-r border-outline-variant"><div class="w-11 h-11 bg-primary text-on-primary flex items-center justify-center border border-primary"><span class="material-symbols-outlined text-[24px]">verified</span></div><div><div class="font-headline-sm text-headline-sm text-primary uppercase tracking-tight">Civic Task Navigator</div><div class="font-label-sm text-label-sm text-secondary">Public Municipal Utility &amp; Docket System</div></div></div><div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase">Jurisdiction</span><button class="flex items-center gap-space-xs font-label-md text-label-md text-primary font-semibold hover:text-secondary-container transition-colors"><span class="material-symbols-outlined text-[16px] text-secondary">location_on</span><span>Brihanmumbai Municipal Corporation (BMC / MCGM) — Ward H/West (Bandra West)</span><span class="material-symbols-outlined text-[14px] text-outline">arrow_drop_down</span></button></div></div><nav class="flex items-stretch h-full" data-active-classes="border-b-2 border-primary text-primary font-semibold bg-surface-container-low"><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="task-lookup" href="#">Task Lookup</a><a aria-current="page" class="flex items-center px-space-md transition-colors border-b-2 border-primary text-primary font-semibold bg-surface-container-low" data-path="roadmap-and-route" href="#">Roadmap &amp; Route</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="step-dossier" href="#">Step Dossier</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="citizen-ledger" href="#">Citizen Ledger</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="registry-admin" href="#">Registry Admin</a></nav><div class="flex items-center gap-space-md pl-space-md border-l border-outline-variant"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="flex-1 w-full pt-28 bg-background"><div class="max-w-[1200px] mx-auto px-margin py-space-lg"><div class="flex flex-col w-full">
+<!-- Route Header & Administrative Metadata -->
+<section class="bg-surface-container-lowest p-space-lg rounded-lg shadow-sm mb-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-md pb-space-md">
+<div class="space-y-space-xs max-w-3xl">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="bg-primary text-on-primary font-code text-code px-2 py-0.5 rounded tracking-wide">ROUTE #MCGM-EODB-2024-8842</span>
+<span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-2 py-0.5 rounded font-semibold uppercase">Food &amp; Beverage Establishment</span>
+<span class="font-code text-code text-secondary flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span>
+            ACTIVE COMPLIANCE MANIFEST
+          </span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-primary tracking-tight">Route Map: Register &amp; Commission a Commercial Bakery in Bandra, Mumbai</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Brihanmumbai Municipal Corporation (MCGM) &amp; Maharashtra Single Window Procedural Working Group. Statutory pathway governing commercial food business operations with outdoor customer seating.
+        </p>
+</div>
+<!-- Action Group -->
+<div class="flex items-center gap-space-sm flex-wrap">
+<button class="bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md px-3 py-2 rounded flex items-center gap-1.5 transition-colors" id="btn-toggle-critical" onclick="toggleCriticalPath()">
+<span class="material-symbols-outlined text-[16px]">alt_route</span>
+<span id="txt-critical">Show Critical Path Only</span>
+</button>
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-4 py-2 rounded flex items-center gap-1.5 transition-colors shadow-sm" onclick="window.print()">
+<span class="material-symbols-outlined text-[16px]">print</span>
+<span>Print Route Sheet</span>
+</button>
+</div>
+</div>
+<!-- Administrative Summary Ribbon -->
+<div class="bg-surface-container-low p-space-md rounded grid grid-cols-2 sm:grid-cols-4 gap-space-md">
+<div class="space-y-1">
+<div class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Total Estimated Timeline</div>
+<div class="font-headline-sm text-headline-sm text-primary flex items-baseline gap-1">
+<span>45–65</span>
+<span class="font-label-sm text-label-sm text-secondary">Working Days</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Statutory Fees</div>
+<div class="font-headline-sm text-headline-sm text-primary flex items-baseline gap-1">
+<span>₹52,400</span>
+<span class="font-label-sm text-label-sm text-secondary">INR</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Station Progress</div>
+<div class="font-headline-sm text-headline-sm text-primary flex items-baseline gap-1">
+<span>2 / 6</span>
+<span class="font-label-sm text-label-sm text-secondary">Milestones Cleared</span>
+</div>
+</div>
+<div class="space-y-1">
+<div class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Current Stoppage / Blocker</div>
+<div class="font-label-md text-label-md text-primary font-semibold truncate flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span>
+          MFB Fire Safety NOC Inspection
+        </div>
+</div>
+</div>
+</section>
+<!-- Main Wayfinding Canvas Area -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-xl">
+<!-- Left 9 Columns: The Wayfinding Transit Line Diagram -->
+<div class="lg:col-span-9 flex flex-col space-y-space-md">
+<!-- Diagram Board -->
+<div class="bg-surface-container-lowest p-space-lg rounded-lg shadow-sm overflow-x-auto relative">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm">
+<div class="flex items-center gap-space-md">
+<div class="font-label-md text-label-md font-bold tracking-wider text-primary uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">hub</span>
+<span>Inter-Agency Transit Spine</span>
+</div>
+<div class="hidden sm:flex items-center gap-space-sm font-code text-code text-secondary">
+<span class="inline-flex items-center gap-1"><span class="w-3 h-1 bg-emerald-700 inline-block rounded"></span>Cleared Segment</span>
+<span class="inline-flex items-center gap-1"><span class="w-3 h-1 bg-amber-500 inline-block rounded"></span>Active Interchange</span>
+<span class="inline-flex items-center gap-1"><span class="w-3 h-1 bg-slate-400 inline-block rounded"></span>Upcoming Trunk</span>
+</div>
+</div>
+<div class="font-code text-code text-outline">SCALE: 1 STOP = 1 PREREQUISITE STAGE</div>
+</div>
+<!-- SVG TRANSIT DIAGRAM (True Subway Map Precision) -->
+<div class="min-w-[860px] py-4 relative select-none">
+<svg class="w-full h-auto text-primary" viewbox="0 0 940 380" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Subway Track Outer casing -->
+<filter height="110%" id="subway-shadow" width="110%" x="-5%" y="-5%">
+<fedropshadow dx="0" dy="2" flood-opacity="0.12" stddeviation="1"></fedropshadow>
+</filter>
+</defs>
+<!-- TRACK LINES (Multi-Path Subway Graph) -->
+<!-- Background structural grid marks -->
+<g stroke="#e2e3e1" stroke-dasharray="2,6" stroke-width="1">
+<line x1="80" x2="80" y1="20" y2="360"></line>
+<line x1="220" x2="220" y1="20" y2="360"></line>
+<line x1="380" x2="380" y1="20" y2="360"></line>
+<line x1="530" x2="530" y1="20" y2="360"></line>
+<line x1="680" x2="680" y1="20" y2="360"></line>
+<line x1="860" x2="860" y1="20" y2="360"></line>
+</g>
+<!-- 1. COMPLETED MAIN TRUNK: Stop 1 -> Stop 2 -> Stop 3 (Navy Casing with Green Core) -->
+<!-- Main Trunk Track Casing -->
+<path d="M 80 180 L 380 180" fill="none" stroke="#152238" stroke-linecap="round" stroke-width="12"></path>
+<path d="M 80 180 L 380 180" fill="none" stroke="#2F6848" stroke-linecap="round" stroke-width="6"></path>
+<!-- 2. ACTIVE / BRANCH FORK: Stop 3 Splits to 3A and 3B Concurrent Paths -->
+<!-- Branch 3A (Upward to FSSAI) -->
+<path d="M 380 180 C 430 180, 450 90, 530 90" fill="none" id="branch-3a-casing" stroke="#152238" stroke-width="10"></path>
+<path d="M 380 180 C 430 180, 450 90, 530 90" fill="none" id="branch-3a-line" stroke="#D9A441" stroke-dasharray="6,4" stroke-width="4"></path>
+<!-- Branch 3B (Downward to MPCB) -->
+<path d="M 380 180 C 430 180, 450 270, 530 270" fill="none" id="branch-3b-casing" stroke="#152238" stroke-width="10"></path>
+<path d="M 380 180 C 430 180, 450 270, 530 270" fill="none" id="branch-3b-line" stroke="#D9A441" stroke-dasharray="6,4" stroke-width="4"></path>
+<!-- Convergence Tracks into Stop 4 (BMC Health License) -->
+<path d="M 530 90 C 610 90, 620 180, 680 180" fill="none" id="converge-3a-casing" stroke="#152238" stroke-width="10"></path>
+<path d="M 530 90 C 610 90, 620 180, 680 180" fill="none" id="converge-3a-line" stroke="#94A3B8" stroke-width="4"></path>
+<path d="M 530 270 C 610 270, 620 180, 680 180" fill="none" id="converge-3b-casing" stroke="#152238" stroke-width="10"></path>
+<path d="M 530 270 C 610 270, 620 180, 680 180" fill="none" id="converge-3b-line" stroke="#94A3B8" stroke-width="4"></path>
+<!-- 3. REMAINING UPCOMING TRUNK: Stop 4 -> Stop 5 -> Stop 6 -->
+<path d="M 680 180 L 860 180" fill="none" stroke="#152238" stroke-linecap="round" stroke-width="12"></path>
+<path d="M 680 180 L 860 180" fill="none" stroke="#CBD5E1" stroke-linecap="round" stroke-width="6"></path>
+<!-- TRACK LABELS -->
+<text fill="#51606f" font-family="'JetBrains Mono'" font-size="10" font-weight="600" x="320" y="162">MAIN TRUNK LINE</text>
+<text fill="#D9A441" font-family="'JetBrains Mono'" font-size="10" font-weight="600" x="430" y="70">TRANSFER BRANCH 3A [FSSAI]</text>
+<text fill="#D9A441" font-family="'JetBrains Mono'" font-size="10" font-weight="600" x="430" y="300">TRANSFER BRANCH 3B [MPCB]</text>
+<text fill="#75777e" font-family="'JetBrains Mono'" font-size="10" font-weight="600" x="730" y="162">FINAL CLEARANCE TRACK</text>
+<!-- STATIONS / STOP NODES -->
+<!-- STOP 01: MCA COI & PAN (Completed) -->
+<g class="cursor-pointer group" onclick="focusStation('stop-01')">
+<circle cx="80" cy="180" fill="#152238" r="16"></circle>
+<circle cx="80" cy="180" fill="#2F6848" r="12"></circle>
+<!-- White Check Icon -->
+<path d="M 74 180 L 78 184 L 86 175" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<text fill="#152238" font-family="'IBM Plex Sans'" font-size="12" font-weight="600" text-anchor="middle" x="80" y="215">01. MCA COI &amp; PAN</text>
+<text fill="#2F6848" font-family="'JetBrains Mono'" font-size="10" text-anchor="middle" x="80" y="230">CLEARED 12 AUG</text>
+</g>
+<!-- STOP 02: LEASE & GUMASTA (Completed) -->
+<g class="cursor-pointer group" onclick="focusStation('stop-02')">
+<circle cx="220" cy="180" fill="#152238" r="16"></circle>
+<circle cx="220" cy="180" fill="#2F6848" r="12"></circle>
+<path d="M 214 180 L 218 184 L 226 175" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<text fill="#152238" font-family="'IBM Plex Sans'" font-size="12" font-weight="600" text-anchor="middle" x="220" y="215">02. LEASE &amp; GUMASTA</text>
+<text fill="#2F6848" font-family="'JetBrains Mono'" font-size="10" text-anchor="middle" x="220" y="230">CLEARED 28 AUG</text>
+</g>
+<!-- STOP 03: MFB FIRE NOC & KITCHEN EXHAUST (ACTIVE INTERCHANGE) -->
+<g class="cursor-pointer group" onclick="focusStation('stop-03')">
+<!-- Pulse ring animation around active station -->
+<circle class="animate-pulse" cx="380" cy="180" fill="#D9A441" fill-opacity="0.25" r="22"></circle>
+<circle cx="380" cy="180" fill="#152238" r="18"></circle>
+<circle cx="380" cy="180" fill="#FFFFFF" r="13"></circle>
+<circle cx="380" cy="180" fill="#D9A441" r="8"></circle>
+<text fill="#152238" font-family="'IBM Plex Sans'" font-size="13" font-weight="700" text-anchor="middle" x="380" y="145">03. MFB FIRE NOC &amp; KITCHEN EXHAUST</text>
+<text fill="#8A5800" font-family="'JetBrains Mono'" font-size="10" font-weight="600" text-anchor="middle" x="380" y="130">IN PROGRESS (ACTIVE)</text>
+<rect fill="#FDF3E7" height="18" rx="2" stroke="#D9A441" stroke-width="1" width="60" x="350" y="206"></rect>
+<text fill="#8A5800" font-family="'JetBrains Mono'" font-size="10" font-weight="600" text-anchor="middle" x="380" y="219">15-21 DAYS</text>
+</g>
+<!-- STOP 03A: FSSAI STATE LICENSE (Parallel Branch) -->
+<g class="cursor-pointer group" id="node-3a" onclick="focusStation('stop-03a')">
+<rect fill="#152238" height="32" rx="4" width="32" x="514" y="74"></rect>
+<rect fill="#FFFFFF" height="26" rx="2" width="26" x="517" y="77"></rect>
+<circle cx="530" cy="90" fill="#D9A441" r="6"></circle>
+<text fill="#152238" font-family="'IBM Plex Sans'" font-size="12" font-weight="600" text-anchor="middle" x="530" y="55">03A. FSSAI STATE LICENSE</text>
+<text fill="#51606f" font-family="'JetBrains Mono'" font-size="9" text-anchor="middle" x="530" y="122">CONCURRENT TRACK</text>
+</g>
+<!-- STOP 03B: MPCB POLLUTION CONSENT (Parallel Branch) -->
+<g class="cursor-pointer group" id="node-3b" onclick="focusStation('stop-03b')">
+<rect fill="#152238" height="32" rx="4" width="32" x="514" y="254"></rect>
+<rect fill="#FFFFFF" height="26" rx="2" width="26" x="517" y="257"></rect>
+<circle cx="530" cy="270" fill="#D9A441" r="6"></circle>
+<text fill="#152238" font-family="'IBM Plex Sans'" font-size="12" font-weight="600" text-anchor="middle" x="530" y="305">03B. MPCB POLLUTION CONSENT</text>
+<text fill="#51606f" font-family="'JetBrains Mono'" font-size="9" text-anchor="middle" x="530" y="320">CONCURRENT TRACK</text>
+</g>
+<!-- STOP 04: BMC HEALTH TRADE LICENSE (§ 394 MMC ACT) (Upcoming Convergence) -->
+<g class="cursor-pointer group" onclick="focusStation('stop-04')">
+<circle cx="680" cy="180" fill="#152238" r="16"></circle>
+<circle cx="680" cy="180" fill="#FFFFFF" r="12"></circle>
+<circle cx="680" cy="180" fill="#5C6B7A" r="6"></circle>
+<text fill="#152238" font-family="'IBM Plex Sans'" font-size="12" font-weight="600" text-anchor="middle" x="680" y="215">04. BMC HEALTH TRADE LICENSE (§ 394 MMC ACT)</text>
+<text fill="#75777e" font-family="'JetBrains Mono'" font-size="10" text-anchor="middle" x="680" y="230">LOCKED (PENDING FIRE NOC)</text>
+</g>
+<!-- STOP 05: EATING HOUSE REGISTRATION & POLICE NOC (Upcoming) -->
+<g class="cursor-pointer group" onclick="focusStation('stop-05')">
+<circle cx="780" cy="180" fill="#152238" r="14"></circle>
+<circle cx="780" cy="180" fill="#FFFFFF" r="10"></circle>
+<circle cx="780" cy="180" fill="#5C6B7A" r="5"></circle>
+<text fill="#152238" font-family="'IBM Plex Sans'" font-size="11" font-weight="600" text-anchor="middle" x="780" y="150">05. EATING HOUSE &amp; POLICE NOC</text>
+<text fill="#75777e" font-family="'JetBrains Mono'" font-size="9" text-anchor="middle" x="780" y="215">UPCOMING</text>
+</g>
+<!-- STOP 06: Terminus / FINAL TRADE PERMIT & MUNICIPAL SEAL -->
+<g class="cursor-pointer group" onclick="focusStation('stop-06')">
+<circle cx="860" cy="180" fill="#152238" r="18"></circle>
+<circle cx="860" cy="180" fill="#FFFFFF" r="14"></circle>
+<circle cx="860" cy="180" fill="#152238" r="10"></circle>
+<circle cx="860" cy="180" fill="#D7E3FF" r="5"></circle>
+<text fill="#152238" font-family="'IBM Plex Sans'" font-size="12" font-weight="700" text-anchor="middle" x="860" y="215">06. FINAL TRADE PERMIT &amp; MUNICIPAL SEAL</text>
+<text fill="#152238" font-family="'JetBrains Mono'" font-size="10" text-anchor="middle" x="860" y="230">TERMINUS</text>
+</g>
+</svg>
+</div>
+<div class="bg-surface-container-low px-space-md py-space-sm rounded font-label-sm text-label-sm text-on-surface-variant flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">info</span>
+<span>Click any transit station node or station stop card below to view detailed requirements and evidence records.</span>
+</div>
+<span class="font-code text-code text-outline">INTER-AGENCY CODE: MMC-ACT-1888-MAHA</span>
+</div>
+</div>
+<!-- ACTIVE STATION DOSSIER & DETAILED STOP CARDS -->
+<div class="space-y-space-md">
+<!-- CARD 03: THE ACTIVE FOCUS (Mumbai Fire Brigade Fire NOC & Kitchen Exhaust) -->
+<article class="bg-surface-container-lowest rounded-lg p-space-lg shadow-sm border-l-4 border-amber-500 relative" id="stop-03">
+<!-- Card Header / Provenance Bar -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-sm mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="bg-primary text-on-primary font-code text-code px-2 py-0.5 rounded font-bold">STOP 03 / MAIN TRUNK</span>
+<span class="bg-amber-100 text-amber-900 font-label-sm text-label-sm px-2.5 py-0.5 rounded font-bold uppercase flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-amber-600 animate-ping"></span>
+                In Progress
+              </span>
+<span class="bg-surface-container text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded font-medium">Agency: Mumbai Fire Brigade (Chief Fire Officer)</span>
+</div>
+<div class="font-code text-code text-secondary">
+              DOCKET REF: MFB-NOC-2024-MUM-77192
+            </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<div class="md:col-span-2 space-y-space-sm">
+<h2 class="font-headline-md text-headline-md text-primary">Obtain MFB Fire Safety Compliance &amp; Commercial Kitchen NOC</h2>
+<p class="font-body-md text-body-md text-on-surface">
+                Mandatory fire protection installation, Class-K commercial exhaust hood duct suppression, LPG pipeline safety valve certificate, and dual emergency escape audit pursuant to Maharashtra Fire Prevention and Life Safety Measures Act 2006.
+              </p>
+<!-- Prerequisite Checklist within active card -->
+<div class="bg-surface-container-low p-space-md rounded space-y-space-xs mt-space-sm">
+<div class="font-label-sm text-label-sm uppercase font-semibold text-primary">Mandatory Evidence &amp; Filings Needed for Stop Clearance:</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm pt-space-xs">
+<label class="flex items-start gap-space-xs font-body-sm text-body-sm text-on-surface cursor-pointer">
+<span class="material-symbols-outlined text-emerald-700 text-[18px]">check_box</span>
+<span>Form A Application under Maharashtra Fire Act</span>
+</label>
+<label class="flex items-start gap-space-xs font-body-sm text-body-sm text-on-surface cursor-pointer">
+<span class="material-symbols-outlined text-emerald-700 text-[18px]">check_box</span>
+<span>Registered Lease &amp; Gumasta Registration (From Stop 02)</span>
+</label>
+<label class="flex items-start gap-space-xs font-body-sm text-body-sm text-on-surface cursor-pointer">
+<span class="material-symbols-outlined text-amber-600 text-[18px]">indeterminate_check_box</span>
+<span>Structural Layout with Exhaust Duct Routing (In Review)</span>
+</label>
+<label class="flex items-start gap-space-xs font-body-sm text-body-sm text-on-surface cursor-pointer">
+<span class="material-symbols-outlined text-outline text-[18px]">check_box_outline_blank</span>
+<span>Licensed Fire Agency Form B &amp; Hydrant Certificate</span>
+</label>
+</div>
+</div>
+</div>
+<!-- Stop Metrics Side Panel -->
+<div class="bg-surface-container p-space-md rounded flex flex-col justify-between space-y-space-md">
+<div class="space-y-space-xs">
+<div class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Statutory Service Standards</div>
+<div class="flex justify-between items-center py-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Est. Processing:</span>
+<span class="font-code text-code font-bold text-primary">15–21 Days</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Statutory Fee:</span>
+<span class="font-code text-code font-bold text-primary">₹18,500</span>
+</div>
+<div class="flex justify-between items-center py-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Prior Dependency:</span>
+<span class="font-label-sm text-label-sm font-semibold text-emerald-700 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span> Stop 02 Cleared
+                  </span>
+</div>
+</div>
+<div class="space-y-space-xs pt-space-xs">
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md py-2 px-3 rounded flex items-center justify-center gap-2 transition-colors">
+<span>Open MCGM EoDB Fire Safety Portal</span>
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</button>
+<div class="text-center font-label-sm text-label-sm text-secondary">
+                  Last updated Oct 24, 2024 via Municipal Gateway
+                </div>
+</div>
+</div>
+</div>
+</article>
+<!-- PARALLEL INTERCHANGE CARDS (BRANCH 3A & 3B) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- STOP 3A: FSSAI -->
+<article class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm border-l-4 border-amber-400" id="stop-03a">
+<div class="flex items-center justify-between pb-space-xs mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="bg-secondary text-on-secondary font-code text-code px-1.5 py-0.5 rounded">STOP 03A</span>
+<span class="font-label-sm text-label-sm text-amber-800 bg-amber-50 px-2 py-0.5 rounded font-semibold uppercase">Concurrent Track</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-medium">FSSAI MAHARASHTRA</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-space-xs">FSSAI State Food Business License</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+              Mandatory Food Safety and Standards Authority of India (FSSAI) state operating license for commercial baking and food handling. Concurrent filing alongside MFB Fire audit.
+            </p>
+<div class="flex items-center justify-between font-label-sm text-label-sm pt-space-xs text-secondary">
+<span>Fee: <strong class="text-primary font-code">₹7,500</strong></span>
+<span>Window: <strong class="text-primary font-code">10–14 Days</strong></span>
+<span class="text-primary font-semibold hover:underline cursor-pointer">View Dossier</span>
+</div>
+</article>
+<!-- STOP 3B: MPCB -->
+<article class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm border-l-4 border-amber-400" id="stop-03b">
+<div class="flex items-center justify-between pb-space-xs mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="bg-secondary text-on-secondary font-code text-code px-1.5 py-0.5 rounded">STOP 03B</span>
+<span class="font-label-sm text-label-sm text-amber-800 bg-amber-50 px-2 py-0.5 rounded font-semibold uppercase">Concurrent Track</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-medium">MPCB REGIONAL</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-space-xs">MPCB Pollution Consent (Green/Orange)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+              Maharashtra Pollution Control Board Consent to Establish and Operate. Effluent treatment discharge standards and grease interceptor approval for bakery washing sinks.
+            </p>
+<div class="flex items-center justify-between font-label-sm text-label-sm pt-space-xs text-secondary">
+<span>Fee: <strong class="text-primary font-code">₹6,200</strong></span>
+<span>Window: <strong class="text-primary font-code">7–12 Days</strong></span>
+<span class="text-primary font-semibold hover:underline cursor-pointer">View Dossier</span>
+</div>
+</article>
+</div>
+<!-- UPCOMING MILESTONES (STOPS 4, 5, 6) -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<div class="font-label-md text-label-md font-bold uppercase text-primary mb-space-sm tracking-wide">
+            Downstream Stations (Locked Until Fire &amp; State Compliance Clearance)
+          </div>
+<div class="divide-y divide-surface-container">
+<!-- Stop 04 -->
+<div class="py-space-sm flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm" id="stop-04">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-code text-code font-bold shrink-0">
+                  04
+                </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-primary">Pre-Operational Health Inspection (MOH)</span>
+<span class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm px-1.5 py-0.5 rounded">BMC MOH Ward H/W</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Physical on-site health inspection of food storage temperatures, hand-washing basins, pestproofing, and municipal water testing under § 394 of Mumbai Municipal Corporation Act.
+                  </p>
+</div>
+</div>
+<div class="text-right shrink-0">
+<div class="font-label-sm text-label-sm text-outline uppercase font-semibold">Prerequisites</div>
+<div class="font-code text-code text-secondary">Stops 03, 03A, 03B</div>
+</div>
+</div>
+<!-- Stop 05 -->
+<div class="py-space-sm flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm" id="stop-05">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-code text-code font-bold shrink-0">
+                  05
+                </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-primary">Eating House License &amp; Outdoor Seating Permission</span>
+<span class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm px-1.5 py-0.5 rounded">MCGM / Mumbai Police</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Pedestrian clear-path verification and Mumbai Police Licensing Branch NOC for commercial premises and exterior customer seating.
+                  </p>
+</div>
+</div>
+<div class="text-right shrink-0">
+<div class="font-label-sm text-label-sm text-outline uppercase font-semibold">Prerequisites</div>
+<div class="font-code text-code text-secondary">Stop 02, Stop 04</div>
+</div>
+</div>
+<!-- Stop 06 -->
+<div class="py-space-sm flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm" id="stop-06">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-code text-code font-bold shrink-0">
+                  06
+                </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">Final Municipal Trade Ledger Inscription &amp; Digital QR Seal</span>
+<span class="bg-primary text-on-primary font-label-sm text-label-sm px-1.5 py-0.5 rounded uppercase">Terminus</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    Unified municipal permit issuance granting full commercial operational standing and retail food service authorization with encrypted digital QR seal.
+                  </p>
+</div>
+</div>
+<div class="text-right shrink-0">
+<div class="font-label-sm text-label-sm text-outline uppercase font-semibold">Statutory Standing</div>
+<div class="font-code text-code text-primary font-bold">Final Registry</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right 3 Columns: Side Utility & Immediate Action Fast Rail -->
+<aside class="lg:col-span-3 flex flex-col space-y-space-md">
+<!-- Next Blocker Alert Card -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm border-t-4 border-error">
+<div class="flex items-center gap-space-xs text-error mb-space-xs">
+<span class="material-symbols-outlined text-[18px]">notification_important</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">Next Blocker to Clear</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-primary mb-space-xs">
+          MFB Ward Inspection &amp; Duct Clearance Objection
+        </div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
+          Plan examiner and MFB sub-officer issued compliance objection regarding duct termination clearance during preliminary site visit.
+        </p>
+<div class="bg-error-container p-space-xs rounded text-on-error-container font-code text-code mb-space-sm">
+          Objection Notice: Sec 3(1) of Maharashtra Fire Act 2006 - Minimum 1.5m clearance between commercial exhaust termination and adjacent residential balcony.
+        </div>
+<button class="w-full bg-surface-container hover:bg-surface-container-high text-primary font-label-sm text-label-sm py-2 px-3 rounded flex items-center justify-center gap-1.5 transition-colors font-semibold">
+<span class="material-symbols-outlined text-[16px]">assignment_late</span>
+<span>Submit Revised Duct Layout to CFO</span>
+</button>
+</div>
+<!-- Physical Counter Desk & Working Hours -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm">
+<div class="flex items-center gap-space-xs text-primary mb-space-xs">
+<span class="material-symbols-outlined text-[18px]">business</span>
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">Agency Counter &amp; Desk</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-primary mb-space-xs">
+          MCGM Ward H/West Municipal Office
+        </div>
+<div class="font-body-sm text-body-sm text-on-surface-variant space-y-1">
+<p>Plot No. 89, Waterfield Road, Bandra (West), Mumbai 400050<br/>Counter Window 3 (Health &amp; Fire NOC Facilitation)</p>
+<p class="font-semibold text-primary pt-1">Counter Hours:</p>
+<p class="font-code text-code text-secondary">Monday – Friday<br/>10:30 AM – 3:30 PM IST</p>
+</div>
+<div class="mt-space-md pt-space-sm">
+<div class="w-full h-32 bg-cover bg-center rounded relative overflow-hidden" data-location="Plot No. 89, Waterfield Road, Bandra West, Mumbai 400050" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCD0UYqlcPauaxGVgDchY6qm1rxCP7I6Jc_1RAmzBT9SSlQIhRGROmx-PtXkm76D8ETEFzLlc3hww7wbf8gR_pnBPPJ61qPdIKfYtYkNP7TlOJcbu8bBv5JLG63cw7tbh6zXXqTDUbBlZZC4etKhEXtbshwq8FetW93G-rjaCa0EwhUXmXAlsfRrZ5dK4HRMx0gSH4FkdYTFC3timGai9FEskLRJtlk8rOIrZYXasXc4curfAve4W3JIw')">
+<div class="absolute inset-0 bg-primary/20"></div>
+<div class="absolute bottom-2 left-2 bg-surface-container-lowest/90 px-2 py-0.5 rounded font-code text-code text-primary font-semibold">
+              MCGM H/West Ward Office, Bandra
+            </div>
+</div>
+</div>
+</div>
+<!-- Quick Action Manifest & Provenance Document -->
+<div class="bg-surface-container-lowest p-space-md rounded-lg shadow-sm space-y-space-sm">
+<div class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-secondary">
+          Official Dossier Manifest
+        </div>
+<div class="space-y-space-xs">
+<div class="flex justify-between items-center text-body-sm font-body-sm py-1">
+<span class="text-on-surface">Route Initiated:</span>
+<span class="font-code text-code text-primary">Aug 01, 2024</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-body-sm py-1">
+<span class="text-on-surface">Target Open Date:</span>
+<span class="font-code text-code text-primary">Dec 15, 2024</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-body-sm py-1">
+<span class="text-on-surface">Assigned Specialist:</span>
+<span class="font-code text-code text-primary">R. Kulkarni (MCGM EoDB)</span>
+</div>
+</div>
+<button class="w-full bg-secondary-container hover:bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md py-2 px-3 rounded flex items-center justify-center gap-1.5 transition-colors font-semibold mt-space-sm" onclick="downloadManifest()">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Download PDF Manifest</span>
+</button>
+</div>
+<!-- Station Guide / Vignelli Legend Metaphor -->
+<div class="bg-primary text-on-primary p-space-md rounded-lg shadow-sm space-y-space-sm">
+<div class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider font-semibold">
+          Navigational Legend
+        </div>
+<div class="space-y-space-xs font-label-sm text-label-sm">
+<div class="flex items-center gap-2">
+<span class="w-3.5 h-3.5 rounded-full bg-emerald-600 shrink-0"></span>
+<span>Completed Statutory Station</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3.5 h-3.5 rounded-full border-2 border-amber-400 bg-primary shrink-0"></span>
+<span>Active Prerequisite (Work in Progress)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3.5 h-3.5 rounded bg-amber-400 shrink-0"></span>
+<span>Concurrent Inter-Agency Transfer</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3.5 h-3.5 rounded-full bg-slate-400 shrink-0"></span>
+<span>Downstream Locked Station</span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<script>
+  // Interactive functions for route line diagram navigation
+  let criticalPathOnly = false;
+
+  function toggleCriticalPath() {
+    criticalPathOnly = !criticalPathOnly;
+    const btnText = document.getElementById('txt-critical');
+    const branch3aLine = document.getElementById('branch-3a-line');
+    const branch3bLine = document.getElementById('branch-3b-line');
+    const branch3aCasing = document.getElementById('branch-3a-casing');
+    const branch3bCasing = document.getElementById('branch-3b-casing');
+    const node3a = document.getElementById('node-3a');
+    const node3b = document.getElementById('node-3b');
+
+    if (criticalPathOnly) {
+      btnText.innerText = 'Show Full Inter-Agency Graph';
+      // Mute concurrent branch 3B (MPCB is not on the primary critical path delay)
+      branch3bLine.setAttribute('stroke-opacity', '0.2');
+      branch3bCasing.setAttribute('stroke-opacity', '0.2');
+      node3b.setAttribute('opacity', '0.35');
+    } else {
+      btnText.innerText = 'Show Critical Path Only';
+      branch3bLine.setAttribute('stroke-opacity', '1');
+      branch3bCasing.setAttribute('stroke-opacity', '1');
+      node3b.setAttribute('opacity', '1');
+    }
+  }
+
+  function focusStation(stationId) {
+    const el = document.getElementById(stationId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('ring-2', 'ring-primary');
+      setTimeout(() => {
+        el.classList.remove('ring-2', 'ring-primary');
+      }, 1500);
+    }
+  }
+
+  function downloadManifest() {
+    const manifestBlob = new Blob([
+      "MUNICIPAL ROUTE MANIFEST\nDocket: #MCGM-EODB-2024-8842\nTask: Register & Commission a Commercial Bakery in Bandra, Mumbai\nJurisdiction: MCGM Ward H/West (Bandra West)\nStatus: Stop 03 Active (MFB Fire NOC & Kitchen Exhaust)\nTotal Statutory Fees: ₹52,400 INR\nCertified Hash: 0x9f82c4e18b42cd"
+    ], { type: 'text/plain' });
+    const url = URL.createObjectURL(manifestBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "MCGM_Route_Manifest_EODB_8842.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+</script></div></main><footer class="w-full bg-surface-container border-t border-outline-variant mt-auto"><div class="max-w-[1200px] mx-auto px-margin py-space-lg"><div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg pb-space-lg border-b border-outline-variant"><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Jurisdictional Notice</div><p class="font-body-sm text-body-sm text-on-surface-variant">Maintained under the authority of the Mumbai Municipal Corporation Act (MMC Act 1888) and Maharashtra Fire Prevention &amp; Life Safety Measures Act 2006. Filings recorded through this portal establish binding procedural standing across participating municipal divisions.</p></div><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Public Records &amp; Transparency</div><p class="font-body-sm text-body-sm text-on-surface-variant">All statutory deadlines, prerequisite dependencies, fee schedules, and ledger entries conform to Maharashtra Right to Public Services Act (RTSA) and Open Municipal Data Mandates. Certified receipts carry SHA-256 verification hashes.</p></div><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Ledger Provenance</div><div class="bg-surface-container-lowest p-space-sm border border-outline-variant"><div class="font-label-sm text-label-sm text-outline">VERIFICATION TIMESTAMP</div><div class="font-code text-code text-primary font-medium">2024-10-24 16:42:09 UTC [NODE MUM-H/W-002]</div><div class="font-label-sm text-label-sm text-outline mt-space-xs">HASH RECORD</div><div class="font-code text-code text-secondary truncate">0x9f82c4...e18b42cd</div></div></div></div><div class="pt-space-md flex flex-col md:flex-row items-center justify-between text-secondary font-label-sm text-label-sm"><div class="flex items-center gap-space-sm"><span>© Municipal Corporation of Greater Mumbai (MCGM / BMC). Public Trust Division.</span><span>•</span><span>Form Docket CTN-2024-MH</span></div><div class="flex items-center gap-space-lg mt-space-sm md:mt-0"><a class="hover:text-primary transition-colors" href="#">Statutory Terms</a><a class="hover:text-primary transition-colors" href="#">Accessibility Standards (GIGW Compliant)</a><a class="hover:text-primary transition-colors" href="#">System Diagnostics</a></div></div></div></footer></body></html>

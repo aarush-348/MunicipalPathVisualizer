@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-primary-fixed-variant":"#3a475f","secondary-fixed":"#d5e4f6","on-tertiary-container":"#b1811f","inverse-surface":"#2e3130","on-background":"#191c1b","surface-dim":"#d9dad8","surface-variant":"#e2e3e1","surface-container-low":"#f3f4f2","on-error-container":"#93000a","on-tertiary":"#ffffff","background":"#f9faf8","outline":"#75777e","surface-container-high":"#e7e8e6","on-surface-variant":"#44474d","secondary-fixed-dim":"#b9c8d9","surface-bright":"#f9faf8","primary-fixed":"#d7e3ff","on-secondary-fixed":"#0e1d29","error-container":"#ffdad6","surface-container-highest":"#e2e3e1","primary":"#000b21","secondary-container":"#d2e1f3","surface-tint":"#525f78","on-surface":"#191c1b","on-secondary-container":"#556473","on-tertiary-fixed-variant":"#5f4100","tertiary-container":"#301f00","surface-container-lowest":"#ffffff","on-secondary-fixed-variant":"#3a4856","inverse-primary":"#bac7e4","error":"#ba1a1a","tertiary-fixed-dim":"#f5bd58","secondary":"#51606f","primary-container":"#152238","on-error":"#ffffff","on-primary-fixed":"#0e1c31","on-primary-container":"#7d89a4","surface-container":"#edeeec","outline-variant":"#c5c6cd","tertiary":"#130a00","primary-fixed-dim":"#bac7e4","on-primary":"#ffffff","tertiary-fixed":"#ffdeaa","on-tertiary-fixed":"#271900","surface":"#f9faf8","on-secondary":"#ffffff","inverse-on-surface":"#f0f1ef"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"1rem","margin":"2rem","space-xs":"0.25rem","space-lg":"1.5rem","gutter":"1.5rem","gutter-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","margin-mobile":"1rem"},"fontFamily":{"body-md":["\"Source Serif 4\""],"body-sm":["\"Source Serif 4\""],"headline-lg-mobile":["IBM Plex Sans"],"headline-xl":["IBM Plex Sans"],"label-sm":["IBM Plex Sans"],"body-lg":["\"Source Serif 4\""],"headline-xl-mobile":["IBM Plex Sans"],"code":["JetBrains Mono"],"headline-lg":["IBM Plex Sans"],"headline-md":["IBM Plex Sans"],"headline-sm":["IBM Plex Sans"],"label-lg":["IBM Plex Sans"],"label-md":["IBM Plex Sans"]},"fontSize":{"body-md":["15px",{"lineHeight":"24px","fontWeight":"400"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"code":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant"><div class="bg-primary text-on-primary px-margin border-b border-primary-container"><div class="max-w-[1200px] mx-auto h-8 flex items-center justify-between font-label-sm text-label-sm"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span><span class="font-code text-code text-primary-fixed">STATUS:</span><span>Ledger Live &amp; Synchronized — Municipal Feeds Active</span></div><span class="text-outline-variant">|</span><div class="flex items-center gap-space-xs"><span class="text-primary-fixed-dim">FEED LATENCY:</span><span class="font-code text-code">14ms</span></div></div><div class="flex items-center gap-space-lg"><div class="hidden md:flex items-center gap-space-sm text-primary-fixed-dim"><span class="font-code text-code bg-primary-container px-1.5 py-0.5 border border-on-primary-fixed-variant rounded">/</span><span>Search</span><span class="font-code text-code bg-primary-container px-1.5 py-0.5 border border-on-primary-fixed-variant rounded ml-space-xs">ESC</span><span>Close</span></div><div class="w-5 h-5 rounded-full bg-primary-container border border-on-primary-fixed-variant flex items-center justify-center"><span class="material-symbols-outlined text-primary-fixed text-[14px]">account_balance</span></div></div></div></div><div class="h-20 bg-surface-container-lowest"><div class="max-w-[1200px] mx-auto h-20 px-margin flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-md pr-space-lg border-r border-outline-variant"><div class="w-11 h-11 bg-primary text-on-primary flex items-center justify-center border border-primary"><span class="material-symbols-outlined text-[24px]">verified</span></div><div><div class="font-headline-sm text-headline-sm text-primary uppercase tracking-tight">Civic Task Navigator</div><div class="font-label-sm text-label-sm text-secondary">Public Municipal Utility &amp; Docket System</div></div></div><div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase">Jurisdiction</span><button class="flex items-center gap-space-xs font-label-md text-label-md text-primary font-semibold hover:text-secondary-container transition-colors"><span class="material-symbols-outlined text-[16px] text-secondary">location_on</span><span>Municipal Corporation of Greater Mumbai (MCGM / BMC)</span><span class="material-symbols-outlined text-[14px] text-outline">arrow_drop_down</span></button></div></div><nav class="flex items-stretch h-full" data-active-classes="border-b-2 border-primary text-primary font-semibold bg-surface-container-low"><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="task-lookup" href="#">Task Lookup</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="roadmap-and-route" href="#">Roadmap &amp; Route</a><a aria-current="page" class="flex items-center px-space-md transition-colors border-b-2 border-primary text-primary font-semibold bg-surface-container-low" data-path="step-dossier" href="#">Step Dossier</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="citizen-ledger" href="#">Citizen Ledger</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="registry-admin" href="#">Registry Admin</a></nav><div class="flex items-center gap-space-md pl-space-md border-l border-outline-variant"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="flex-1 w-full pt-28 bg-background"><div class="max-w-[1200px] mx-auto px-margin py-space-lg"><div class="flex flex-col w-full">
+<!-- Navigational Docket Header & Path Sequence -->
+<div class="mb-space-lg flex flex-col md:flex-row md:items-center md:justify-between gap-space-sm pb-space-sm border-b border-outline-variant">
+<nav aria-label="Jurisdictional Path" class="flex items-center gap-space-xs font-label-md text-label-md text-secondary">
+<a class="hover:text-primary transition-colors" href="#">Docket Route</a>
+<span class="text-outline-variant">/</span>
+<a class="hover:text-primary transition-colors" href="#">Commercial Bakery &amp; Cafe Bandra</a>
+<span class="text-outline-variant">/</span>
+<span class="font-semibold text-primary">Stop 03 (BMC Health Trade License under Section 394 MMC Act)</span>
+</nav>
+<div class="flex items-center gap-space-sm">
+<span class="font-code text-code text-secondary">REF: MCGM-HTL-2024-W-HW-90412</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Priority Statutory Ledger</span>
+</div>
+</div>
+<!-- Primary Administrative Dossier Title Header -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-lg mb-space-lg relative overflow-hidden">
+<div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+<div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-space-lg">
+<div class="space-y-space-xs max-w-3xl">
+<div class="flex flex-wrap items-center gap-space-sm">
+<span class="font-code text-code bg-primary text-on-primary px-2 py-0.5 font-medium rounded-none">STAGE 03 / 08</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">MCGM PUBLIC HEALTH DEPARTMENT — WARD H/WEST</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-primary tracking-tight font-semibold">Step 03: Apply for BMC Health Trade License (Section 394)</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Mandatory statutory trade authorization for operating a commercial bakery and food preparation establishment pursuant to Section 394 of the Mumbai Municipal Corporation Act (MMC Act, 1888).</p>
+</div>
+<!-- Active Docket Status Badge -->
+<div class="flex flex-col items-start lg:items-end gap-space-xs bg-surface-container-low p-space-md border border-outline-variant min-w-[280px]">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase text-secondary font-semibold">Current Audit Status</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-primary font-semibold">In Progress: Awaiting CFO Fire Safety NOC &amp; Site Inspection</div>
+<span class="font-code text-code text-outline">Target Filing Window: 14 Working Days</span>
+</div>
+</div>
+<!-- Official Provenance Authority Banner -->
+<div class="mt-space-lg pt-space-md border-t border-outline-variant bg-surface-container-low -mx-space-lg -mb-space-lg px-space-lg py-space-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm text-secondary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span>Verified against Municipal Corporation of Greater Mumbai Public Health Regulations as of <strong>October 2024</strong>.</span>
+</div>
+<a class="font-code text-code text-primary underline hover:text-secondary inline-flex items-center gap-1 font-medium" href="https://portal.mcgm.gov.in/eodb-trade-license" rel="noopener noreferrer" target="_blank">
+<span>portal.mcgm.gov.in/eodb-trade-license</span>
+<span class="material-symbols-outlined text-[13px]">open_in_new</span>
+</a>
+</div>
+</div>
+<!-- Prerequisite Chain Clearance Bar -->
+<div class="bg-surface-container-low border border-outline-variant p-space-md mb-space-lg">
+<div class="flex items-center justify-between flex-wrap gap-space-sm mb-space-xs">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-primary font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px] text-emerald-700">link</span>
+<span>Prerequisite Dependency Ledger</span>
+</div>
+<span class="font-code text-code text-secondary">CHAIN STATUS: 2/2 SATISFIED</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+<div class="bg-surface-container-lowest p-space-sm border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-emerald-800 text-on-primary flex items-center justify-center font-code text-[11px] font-bold">✓</span>
+<div>
+<div class="font-label-md text-label-md text-primary font-semibold">Stop 01: MCA Incorporation &amp; GSTIN Registration</div>
+<div class="font-code text-code text-secondary">CIN: U15100MH2024PTC392810 • Verified RoC Mumbai</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded-none font-semibold">Cleared</span>
+</div>
+<div class="bg-surface-container-lowest p-space-sm border border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="w-5 h-5 rounded-full bg-emerald-800 text-on-primary flex items-center justify-center font-code text-[11px] font-bold">✓</span>
+<div>
+<div class="font-label-md text-label-md text-primary font-semibold">Stop 02: Maharashtra Shops &amp; Establishments Gumasta</div>
+<div class="font-code text-code text-secondary">Registration #MH-MUM-HW-2024-44109 • Verified Aaple Sarkar</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded-none font-semibold">Cleared</span>
+</div>
+</div>
+</div>
+<!-- Primary 12-Column Split: 8 Col Evidence & Specifications / 4 Col Action & Municipal Counter -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- LEFT 8 COLUMNS: Statutory Mandates, Forms, Evidence Checklists & Fees -->
+<div class="lg:col-span-8 space-y-space-lg">
+<!-- Section 1: Required Statutory Forms -->
+<section class="bg-surface-container-lowest border border-outline-variant">
+<div class="bg-surface-container-low px-space-md py-space-sm border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">description</span>
+<span>1. Mandatory Statutory Forms</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">3 Prescribed Instruments</span>
+</div>
+<div class="p-space-md divide-y divide-outline-variant">
+<!-- Item 1.1: FORM HTL-1 -->
+<div class="py-space-md first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-space-xs max-w-xl">
+<div class="flex items-center gap-space-sm">
+<span class="font-code text-code font-semibold bg-surface-container px-2 py-0.5 border border-outline-variant text-primary">FORM HTL-1</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Application for Health Trade License under Section 394 (MMC Act 1888)</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Prescribed composite application covering trade premises, water connection assessment, trade refuse charges, and power load (HP) sanction.</p>
+<div class="font-code text-code text-secondary">MMC Act 1888 • Required Original Signatures &amp; Ward H/West Attestation</div>
+</div>
+<a class="inline-flex items-center justify-center gap-space-xs bg-surface-container-lowest text-primary border border-outline hover:bg-surface-container-low px-space-md py-2 font-label-md text-label-md font-semibold transition-colors shrink-0" href="#">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Official PDF (740 KB)</span>
+</a>
+</div>
+<!-- Item 1.2: FORM FSSAI-B -->
+<div class="py-space-md last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-space-xs max-w-xl">
+<div class="flex items-center gap-space-sm">
+<span class="font-code text-code font-semibold bg-surface-container px-2 py-0.5 border border-outline-variant text-primary">FORM FSSAI-B</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Schedule 2 Form B Application for FSSAI State License</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Food safety compliance instrument specifying food categories, installed capacity (MT/day), clean water source test report, and food handler medical fitness.</p>
+<div class="font-code text-code text-secondary">Food Safety and Standards Authority of India (Maharashtra State Jurisdiction)</div>
+</div>
+<a class="inline-flex items-center justify-center gap-space-xs bg-surface-container-lowest text-primary border border-outline hover:bg-surface-container-low px-space-md py-2 font-label-md text-label-md font-semibold transition-colors shrink-0" href="#">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Official PDF (510 KB)</span>
+</a>
+</div>
+<!-- Item 1.3: ANNEXURE C -->
+<div class="py-space-md last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-space-xs max-w-xl">
+<div class="flex items-center gap-space-sm">
+<span class="font-code text-code font-semibold bg-surface-container px-2 py-0.5 border border-outline-variant text-primary">ANNEXURE C</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Mumbai Fire Brigade (MFB) Fire Safety &amp; Kitchen Ventilation Declaration</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Architectural layout showing grease filters, chimney height (3m above roof parapet), LPG manifold manifold clearance, and Class-K wet chemical fire system.</p>
+<div class="font-code text-code text-secondary">Must Comply with Maharashtra Fire Prevention and Life Safety Measures Act</div>
+</div>
+<a class="inline-flex items-center justify-center gap-space-xs bg-surface-container-lowest text-primary border border-outline hover:bg-surface-container-low px-space-md py-2 font-label-md text-label-md font-semibold transition-colors shrink-0" href="#">
+<span class="material-symbols-outlined text-[16px]">download</span>
+<span>Official PDF (480 KB)</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Section 2: Mandatory Documentation & Evidence Ledger -->
+<section class="bg-surface-container-lowest border border-outline-variant">
+<div class="bg-surface-container-low px-space-md py-space-sm border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+<span>2. Mandatory Evidence &amp; Sealed Filings</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">3 Evidence Criteria</span>
+</div>
+<div class="p-space-md space-y-space-md">
+<!-- Evidence 1 -->
+<div class="p-space-md bg-surface-container-lowest border border-outline-variant flex flex-col md:flex-row items-start justify-between gap-space-md">
+<div class="space-y-space-xs max-w-xl">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-amber-700 text-[20px]">pending</span>
+<span class="font-headline-sm text-headline-sm text-primary">Sealed Architectural Layout &amp; MEP Drawing</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Prepared and stamped by a licensed architect / MCGM registered structural engineer. Showing customer seating, bakery oven zoning, refuse disposal, and fire exit doors.</p>
+<div class="font-code text-code text-outline">CRITERIA: Title block must reference CTS Number, Bandra West Ward H/West</div>
+</div>
+<div class="shrink-0 flex flex-col items-start md:items-end gap-space-xs">
+<span class="font-label-sm text-label-sm bg-amber-50 text-amber-900 border border-amber-300 px-2 py-0.5 font-semibold">Action Required</span>
+<button class="font-label-sm text-label-sm text-primary underline hover:text-secondary font-medium mt-1">Upload Encrypted CAD/PDF</button>
+</div>
+</div>
+<!-- Evidence 2 -->
+<div class="p-space-md bg-surface-container-lowest border border-outline-variant flex flex-col md:flex-row items-start justify-between gap-space-md">
+<div class="space-y-space-xs max-w-xl">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-emerald-800 text-[20px]">check_circle</span>
+<span class="font-headline-sm text-headline-sm text-primary">MPCB Consent to Establish (Green/Orange Category)</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Pollution board authorization for commercial bakery baking equipment, effluent treatment for kitchen sink wash, and noise attenuation.</p>
+<div class="font-code text-code text-emerald-800 font-medium">MPCB ID: #MPCB-CONSENT-MUM-2024-9182 • Logged &amp; Cryptographically Tied</div>
+</div>
+<div class="shrink-0 flex flex-col items-start md:items-end gap-space-xs">
+<span class="font-label-sm text-label-sm bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 font-semibold">Verified on File</span>
+<span class="font-code text-code text-secondary">Verified Oct 14, 2024</span>
+</div>
+</div>
+<!-- Evidence 3 -->
+<div class="p-space-md bg-surface-container-lowest border border-outline-variant flex flex-col md:flex-row items-start justify-between gap-space-md">
+<div class="space-y-space-xs max-w-xl">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-emerald-800 text-[20px]">check_circle</span>
+<span class="font-headline-sm text-headline-sm text-primary">Pest Control Contract &amp; Water Potability Certificate</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Certified contract with government-approved pest control operator and BMC bacteriological water test report from Municipal Laboratory, Dadar.</p>
+<div class="font-code text-code text-secondary">Statutory Compliance: MMC Act § 394 &amp; BMC Health By-Laws</div>
+</div>
+<div class="shrink-0 flex flex-col items-start md:items-end gap-space-xs">
+<span class="font-label-sm text-label-sm bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 font-semibold">Notice Drafted</span>
+<span class="font-code text-code text-secondary">Certificate Ready</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Statutory Municipal Fee Breakdown Ledger -->
+<section class="bg-surface-container-lowest border border-outline-variant">
+<div class="bg-surface-container-low px-space-md py-space-sm border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+<span>3. Statutory Municipal Fee Breakdown</span>
+</div>
+<span class="font-code text-code text-secondary">MMC ACT &amp; MFB SCHEDULE</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low font-label-sm text-label-sm text-primary uppercase border-b border-outline-variant">
+<th class="py-space-sm px-space-md">Administrative Line Item</th>
+<th class="py-space-sm px-space-md">Statutory Basis</th>
+<th class="py-space-sm px-space-md text-right">Calculation Factor</th>
+<th class="py-space-sm px-space-md text-right">Amount (INR ₹)</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-lowest">
+<td class="py-space-sm px-space-md font-semibold text-primary">Section 394 Trade License Fee (Bakery with Power)</td>
+<td class="py-space-sm px-space-md text-secondary">MMC Act § 394 Schedule M</td>
+<td class="py-space-sm px-space-md text-right font-code text-code">Commercial Food Prep Base</td>
+<td class="py-space-sm px-space-md text-right font-code text-code font-semibold text-primary">₹14,500.00</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest">
+<td class="py-space-sm px-space-md font-semibold text-primary">Trade Refuse Charge (TRC) Annual Assessment</td>
+<td class="py-space-sm px-space-md text-secondary">MCGM Solid Waste Mgmt Rules 2016</td>
+<td class="py-space-sm px-space-md text-right font-code text-code">Commercial Wet/Dry Waste Levy</td>
+<td class="py-space-sm px-space-md text-right font-code text-code font-semibold text-primary">₹8,400.00</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest">
+<td class="py-space-sm px-space-md font-semibold text-primary">Fire Safety Compliance &amp; Inspection Surcharge</td>
+<td class="py-space-sm px-space-md text-secondary">Maharashtra Fire Act § 13</td>
+<td class="py-space-sm px-space-md text-right font-code text-code">MFB Kitchen Inspection Assessment</td>
+<td class="py-space-sm px-space-md text-right font-code text-code font-semibold text-primary">₹6,200.00</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest">
+<td class="py-space-sm px-space-md font-semibold text-primary">Factory / Power Machinery Inspection (5 HP Baking Deck)</td>
+<td class="py-space-sm px-space-md text-secondary">BMC Industrial Power Schedule</td>
+<td class="py-space-sm px-space-md text-right font-code text-code">5 HP Load Assessment</td>
+<td class="py-space-sm px-space-md text-right font-code text-code font-semibold text-primary">₹3,800.00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="bg-surface-container-low font-label-md text-label-md border-t-2 border-primary">
+<td class="py-space-sm px-space-md font-bold text-primary text-right uppercase tracking-wider" colspan="3">
+                  Total Municipal Fee Payable to BMC Collector:
+                </td>
+<td class="py-space-sm px-space-md text-right font-code text-headline-sm font-bold text-primary">
+                  ₹32,900.00
+                </td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div class="p-space-sm bg-surface-container text-secondary font-label-sm text-label-sm border-t border-outline-variant flex items-center justify-between">
+<span>Acceptable Tender: MCGM Citizen Portal Online Payment, NetBanking (SBI/HDFC), or Treasury Challan at Ward H/West Citizen Facilitation Centre (CFC).</span>
+<span class="font-code text-code">NO CASH OVER ₹10,000</span>
+</div>
+</section>
+<!-- Section 4: Statutory Legal Notes and Standard Operating Guidelines -->
+<section class="border border-outline-variant bg-surface-container-lowest p-space-md space-y-space-xs">
+<h4 class="font-label-sm text-label-sm uppercase font-semibold tracking-wider text-secondary">Statutory Operating Directive: Mechanical Kitchen Exhaust &amp; Fire Norms</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Pursuant to Section 394 of the Mumbai Municipal Corporation Act and Mumbai Fire Brigade directives, commercial bakery installations utilizing ovens or frying assemblies emitting grease or heat must maintain a dedicated stainless steel hood ducted directly to 3 meters above the building parapet. Clearances from adjoining tenements and residential window openings must conform to MCGM Health By-laws. Failure to provide endorsed MEP drawings and MFB CFO clearance will cause immediate rejection of the health trade docket.
+        </p>
+</section>
+</div>
+<!-- RIGHT 4 COLUMNS: Action Execution Box, Physical Counter Wayfinding, Ombudsman -->
+<div class="lg:col-span-4 space-y-space-lg">
+<!-- Action Center Dossier Box (High Priority Action Card) -->
+<div class="bg-surface-container-lowest border-2 border-primary shadow-[4px_4px_0px_0px_rgba(21,34,56,0.15)] p-space-md">
+<div class="flex items-center justify-between pb-space-xs border-b border-outline-variant mb-space-md">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-primary">Docket Action Portal</span>
+<span class="w-2 h-2 bg-emerald-600 rounded-full"></span>
+</div>
+<div class="space-y-space-md">
+<div>
+<label class="block font-label-md text-label-md text-primary font-semibold mb-1" for="mcgm-app-num">
+              MCGM Citizen File / Application Number
+            </label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline px-space-md py-2 font-code text-code text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent rounded-none" id="mcgm-app-num" maxlength="10" placeholder="e.g. 7204918204" type="text"/>
+<button class="absolute right-2 top-2 text-outline hover:text-primary" title="Search MCGM Citizen Portal Database">
+<span class="material-symbols-outlined text-[18px]">search</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-secondary mt-1 italic">Enter the 10-digit MCGM citizen portal application number from your preliminary filing acknowledgement.</p>
+</div>
+<div class="pt-space-xs space-y-space-sm">
+<button class="w-full bg-primary text-on-primary hover:bg-primary-container px-space-md py-3 font-label-lg text-label-lg font-semibold tracking-wide border border-primary transition-colors flex items-center justify-center gap-space-xs" id="btn-advance-route">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span>Mark Step Complete &amp; Advance</span>
+</button>
+<button class="w-full bg-surface-container-lowest text-primary hover:bg-surface-container-low px-space-md py-2.5 font-label-md text-label-md font-semibold border border-outline transition-colors flex items-center justify-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">upload_file</span>
+<span>Upload Municipal CFC Challan Receipt</span>
+</button>
+</div>
+<div class="pt-space-sm border-t border-outline-variant">
+<div class="flex items-start gap-space-xs text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-amber-700 shrink-0 mt-0.5">info</span>
+<span>Making a false declaration or operating without a valid Section 394 license attracts prosecution under Section 471 of MMC Act 1888.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Physical Municipal Counter & Agency Wayfinding -->
+<div class="bg-surface-container-lowest border border-outline-variant">
+<div class="bg-surface-container-low px-space-md py-space-sm border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-primary font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">domain</span>
+<span>Public Window &amp; Ward Office</span>
+</div>
+<span class="font-code text-code text-secondary">WARD H/WEST</span>
+</div>
+<div class="p-space-md space-y-space-md">
+<div class="space-y-space-xs">
+<div class="font-label-sm text-label-sm text-outline uppercase font-semibold">Physical Filing Address</div>
+<div class="font-headline-sm text-headline-sm text-primary">MCGM Ward H/West Office (Bandra West)</div>
+<div class="font-body-md text-body-md text-on-surface-variant">CFC Window 4 (Health Trade &amp; License Wing)</div>
+<div class="font-code text-code text-secondary">Saint Martin Road, Behind Bandra Police Station, Bandra West, Mumbai, Maharashtra 400050</div>
+</div>
+<div class="border-t border-outline-variant pt-space-sm space-y-space-xs">
+<div class="font-label-sm text-label-sm text-outline uppercase font-semibold">Public Counter Hours</div>
+<div class="font-label-md text-label-md text-primary font-semibold">Monday – Friday: 10:00 AM – 2:30 PM IST</div>
+<div class="font-body-sm text-body-sm text-error font-medium">Strict Notice: No token issuance after 1:30 PM.</div>
+</div>
+<div class="border-t border-outline-variant pt-space-sm space-y-space-xs">
+<div class="font-label-sm text-label-sm text-outline uppercase font-semibold">Mandatory In-Person Intake Protocol</div>
+<ul class="font-body-sm text-body-sm text-on-surface-variant space-y-1">
+<li class="flex items-start gap-2">
+<span class="text-primary font-bold">•</span>
+<span>Bring <strong>2 hard copies of verified plan sets</strong> signed by MCGM Registered Architect.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-primary font-bold">•</span>
+<span>1 Pen Drive with digital <strong>PDF files</strong> (&lt;25MB each).</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="text-primary font-bold">•</span>
+<span>Director KYC/Aadhaar cards and entity commercial lease agreement.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Direct Assistance & Agency Ombudsman -->
+<div class="bg-surface-container-low border border-outline-variant p-space-md space-y-space-sm">
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-primary font-semibold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+<span>MCGM Industry &amp; Trade Facilitation Cell</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+          Dedicated MCGM ease of doing business officers assist food operators with health inspection protocols and online application scrutinies.
+        </p>
+<div class="bg-surface-container-lowest p-space-sm border border-outline-variant space-y-1">
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-secondary">Direct Telephone:</span>
+<span class="font-code text-code font-semibold text-primary">(022) 2642-2311</span>
+</div>
+<div class="flex items-center justify-between font-label-sm text-label-sm">
+<span class="text-secondary">Expedited Email:</span>
+<span class="font-code text-code text-primary underline truncate ml-2">eodb.support@mcgm.gov.in</span>
+</div>
+</div>
+<div class="font-code text-code text-outline text-[11px] pt-1">
+          AVERAGE INQUIRY RESOLUTION: 48 WORKING HOURS
+        </div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const advanceBtn = document.getElementById('btn-advance-route');
+    const jobInput = document.getElementById('mcgm-app-num');
+
+    if (advanceBtn && jobInput) {
+      advanceBtn.addEventListener('click', function() {
+        const val = jobInput.value.trim();
+        if (val.length === 0) {
+          alert('Procedural Notice: Please enter a valid 10-digit MCGM Citizen Application Number before marking this step complete.');
+          jobInput.focus();
+        } else if (val.length < 10 || isNaN(val)) {
+          alert('Validation Error: The application reference number must be exactly 10 numerical digits (e.g. 7204918204).');
+          jobInput.focus();
+        } else {
+          advanceBtn.classList.remove('bg-primary');
+          advanceBtn.classList.add('bg-emerald-800');
+          advanceBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">done_all</span><span>Application Verified &amp; Recorded</span>';
+          setTimeout(() => {
+            alert('Application #' + val + ' successfully audited against MCGM Portal records. Advancing to Stop 04: Fire Safety NOC & Site Inspection.');
+          }, 300);
+        }
+      });
+    }
+  })();
+</script></div></main><footer class="w-full bg-surface-container border-t border-outline-variant mt-auto"><div class="max-w-[1200px] mx-auto px-margin py-space-lg"><div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg pb-space-lg border-b border-outline-variant"><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Jurisdictional Notice</div><p class="font-body-sm text-body-sm text-on-surface-variant">Maintained under the authority of Municipal Corporation of Greater Mumbai (MCGM / BMC) and Government of Maharashtra. Filings recorded through this portal establish binding procedural standing across municipal departments.</p></div><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Public Records &amp; Transparency</div><p class="font-body-sm text-body-sm text-on-surface-variant">All statutory deadlines, prerequisite dependencies, fee schedules, and ledger entries conform to Maharashtra Right to Public Services Act. Certified receipts carry SHA-256 verification hashes.</p></div><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Ledger Provenance</div><div class="bg-surface-container-lowest p-space-sm border border-outline-variant"><div class="font-label-sm text-label-sm text-outline">VERIFICATION TIMESTAMP</div><div class="font-code text-code text-primary font-medium">2024-10-24 16:42:09 IST [NODE MUM-W-HW]</div><div class="font-label-sm text-label-sm text-outline mt-space-xs">HASH RECORD</div><div class="font-code text-code text-secondary truncate">0x9f82c4...e18b42cd</div></div></div></div><div class="pt-space-md flex flex-col md:flex-row items-center justify-between text-secondary font-label-sm text-label-sm"><div class="flex items-center gap-space-sm"><span>© Municipal Corporation of Greater Mumbai. Public Health Division.</span><span>•</span><span>Form Docket CTN-2024-MUM</span></div><div class="flex items-center gap-space-lg mt-space-sm md:mt-0"><a class="hover:text-primary transition-colors" href="#">Statutory Terms</a><a class="hover:text-primary transition-colors" href="#">RTI Act &amp; Grievance Redressal</a><a class="hover:text-primary transition-colors" href="#">System Diagnostics</a></div></div></div></footer></body></html>

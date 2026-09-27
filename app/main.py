@@ -197,6 +197,64 @@ async def get_audit_logs():
 
 
 # ---------------------------------------------------------------------------
+# Database & Knowledge Store Inspection Endpoints (SQLite & Aaple Sarkar)
+# ---------------------------------------------------------------------------
+
+@app.get("/api/db/stats")
+async def get_db_stats():
+    """
+    Returns counts and metrics of Maharashtra statutory services, tasks,
+    departments, forms, documents, and audit entries stored in SQLite.
+    """
+    from app.database_sqlite import sqlite_db
+    return sqlite_db.get_database_stats()
+
+
+@app.get("/api/db/aaple-sarkar")
+async def search_aaple_sarkar_records(
+    q: Optional[str] = Query("", description="Search term for Aaple Sarkar services"),
+    limit: int = Query(20, description="Max records to return")
+):
+    """
+    Search official Aaple Sarkar services catalog stored in SQLite.
+    """
+    from app.database_sqlite import sqlite_db
+    return sqlite_db.search_aaple_sarkar(query=q, limit=limit)
+
+
+@app.post("/api/user/progress")
+async def save_user_progress(payload: dict = Body(...)):
+    """
+    Persists citizen's task progress (completed steps and in-progress steps)
+    into SQLite database.
+    """
+    from app.database_sqlite import sqlite_db
+    session_id = payload.get("session_id", "default_citizen")
+    task_id = payload.get("task_id")
+    completed = payload.get("completed_step_ids", [])
+    in_progress = payload.get("in_progress_step_ids", [])
+    if not task_id:
+        raise HTTPException(status_code=400, detail="task_id is required")
+    sqlite_db.save_user_progress(session_id, task_id, completed, in_progress)
+    return {"status": "saved", "session_id": session_id, "task_id": task_id}
+
+
+@app.get("/api/user/progress")
+async def load_user_progress(
+    session_id: str = Query("default_citizen"),
+    task_id: str = Query(...)
+):
+    """
+    Loads saved citizen task progress from SQLite database.
+    """
+    from app.database_sqlite import sqlite_db
+    prog = sqlite_db.get_user_progress(session_id, task_id)
+    if not prog:
+        return {"completed_step_ids": [], "in_progress_step_ids": []}
+    return prog
+
+
+# ---------------------------------------------------------------------------
 # Static Web App Mount
 # ---------------------------------------------------------------------------
 

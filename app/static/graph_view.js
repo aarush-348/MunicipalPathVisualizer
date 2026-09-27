@@ -238,12 +238,14 @@ class CivicGraphVisualizer {
             g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
             g.setAttribute('data-id', node.id);
 
+            const isMr = window.app && window.app.currentLang === 'mr';
+
             // Styling tokens per Stitch design
             let borderColor = '#cbd5e1';
             let leftBarColor = '#152238';
             let statusPillBg = '#f3f4f2';
             let statusPillText = '#51606f';
-            let statusLabel = 'LOCKED';
+            let statusLabel = isMr ? 'अपेक्षित' : 'LOCKED';
             let statusIcon = '🔒';
 
             if (node.status === 'completed') {
@@ -251,21 +253,21 @@ class CivicGraphVisualizer {
                 leftBarColor = '#2f6848';
                 statusPillBg = '#edf6f0';
                 statusPillText = '#1d4a32';
-                statusLabel = 'CLEARED';
+                statusLabel = isMr ? 'पूर्ण' : 'CLEARED';
                 statusIcon = '✓';
             } else if (node.status === 'ready') {
                 borderColor = '#d9a441';
                 leftBarColor = '#d9a441';
                 statusPillBg = '#fdf3e7';
                 statusPillText = '#8a5800';
-                statusLabel = 'READY TO START';
+                statusLabel = isMr ? 'सुरू करण्यास सज्ज' : 'READY TO START';
                 statusIcon = '⚡';
             } else if (node.status === 'in_progress') {
                 borderColor = '#152238';
                 leftBarColor = '#d9a441';
                 statusPillBg = '#fdf3e7';
                 statusPillText = '#8a5800';
-                statusLabel = 'IN PROGRESS';
+                statusLabel = isMr ? 'प्रक्रियेत' : 'IN PROGRESS';
                 statusIcon = '⏳';
             }
 
@@ -273,9 +275,13 @@ class CivicGraphVisualizer {
                 borderColor = '#d9a441';
             }
 
-            const truncatedTitle = node.title.length > 36 ? node.title.substring(0, 34) + '...' : node.title;
-            const truncatedDept = node.department_name.length > 38 ? node.department_name.substring(0, 36) + '...' : node.department_name;
-            const feeStr = node.fee_amount > 0 ? `₹${node.fee_amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : 'Fee Exempt';
+            const rawTitle = (window.app && window.app.getStepTitle(node)) || node.title;
+            const rawDept = (window.app && window.app.getStepDept(node)) || node.department_name;
+            const truncatedTitle = rawTitle.length > 36 ? rawTitle.substring(0, 34) + '...' : rawTitle;
+            const truncatedDept = rawDept.length > 38 ? rawDept.substring(0, 36) + '...' : rawDept;
+            const feeStr = node.fee_amount > 0 ? (window.app ? window.app.formatINR(node.fee_amount) : `₹${node.fee_amount}`) : (isMr ? 'विनामूल्य' : 'Fee Exempt');
+            const slaStr = isMr ? `⏱ ${node.estimated_days} दिवस` : `⏱ ${node.estimated_days} Days`;
+            const sealText = isMr ? '✓ वैधानिक शिक्का' : '✓ STATUTORY SEAL';
 
             g.innerHTML = `
                 <!-- Background Paper Container -->
@@ -295,7 +301,7 @@ class CivicGraphVisualizer {
 
                 <!-- Official Verification Stamp -->
                 <rect x="${this.nodeWidth - 110}" y="15" width="98" height="18" rx="2" fill="#edf6f0" stroke="#2f6848" stroke-width="0.5"/>
-                <text x="${this.nodeWidth - 61}" y="27" fill="#1d4a32" font-family="'IBM Plex Sans'" font-size="9" font-weight="700" text-anchor="middle">✓ STATUTORY SEAL</text>
+                <text x="${this.nodeWidth - 61}" y="27" fill="#1d4a32" font-family="'IBM Plex Sans'" font-size="9" font-weight="700" text-anchor="middle">${sealText}</text>
 
                 <!-- Step Title -->
                 <text x="16" y="60" fill="#152238" font-family="'IBM Plex Sans'" font-size="13" font-weight="700">${truncatedTitle}</text>
@@ -307,7 +313,7 @@ class CivicGraphVisualizer {
                 <line x1="12" y1="94" x2="${this.nodeWidth - 12}" y2="94" stroke="#d8dfe6" stroke-width="1"/>
 
                 <!-- Bottom Metadata: SLA & Fee & Mode -->
-                <text x="16" y="117" fill="#152238" font-family="'JetBrains Mono'" font-size="10.5" font-weight="600">⏱ ${node.estimated_days} Days</text>
+                <text x="16" y="117" fill="#152238" font-family="'JetBrains Mono'" font-size="10.5" font-weight="600">${slaStr}</text>
                 <text x="110" y="117" fill="#8a5800" font-family="'JetBrains Mono'" font-size="10.5" font-weight="700">💳 ${feeStr}</text>
                 <rect x="${this.nodeWidth - 84}" y="104" width="72" height="18" rx="2" fill="#f3f4f2" stroke="#cbd5e1" stroke-width="0.5"/>
                 <text x="${this.nodeWidth - 48}" y="116" fill="#152238" font-family="'IBM Plex Sans'" font-size="9.5" font-weight="600" text-anchor="middle">${node.submission_mode}</text>
@@ -460,6 +466,8 @@ class CivicSubwayRenderer {
 
         // Station nodes
         let stationsHtml = '';
+        const isMr = window.app && window.app.currentLang === 'mr';
+
         steps.forEach((s, idx) => {
             const pos = stepPositions[s.id];
             const x = pos.x;
@@ -467,14 +475,15 @@ class CivicSubwayRenderer {
             const isDone = completedStepIds.has(s.id);
             const isSelected = selectedStationId === s.id;
             const stepNum = s.step_number < 10 ? `0${s.step_number}` : `${s.step_number}`;
-            const cleanTitle = s.title.length > 25 ? s.title.substring(0, 23) + '...' : s.title;
+            const fullTitle = (window.app && window.app.getStepTitle(s, task.id)) || s.title;
+            const cleanTitle = fullTitle.length > 25 ? fullTitle.substring(0, 23) + '...' : fullTitle;
 
             let nodeGraphics = '';
             let statusLabel = '';
             let statusColor = '#75777E';
 
             if (isDone) {
-                statusLabel = 'CLEARED';
+                statusLabel = isMr ? 'पूर्ण' : 'CLEARED';
                 statusColor = '#2F6848';
                 nodeGraphics = `
                     <circle cx="${x}" cy="${y}" r="16" fill="#152238"/>
@@ -482,7 +491,7 @@ class CivicSubwayRenderer {
                     <path d="M ${x - 5} ${y} L ${x - 1} ${y + 4} L ${x + 6} ${y - 4}" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/>
                 `;
             } else if (isSelected) {
-                statusLabel = 'ACTIVE STATION';
+                statusLabel = isMr ? 'सक्रिय स्थानक' : 'ACTIVE STATION';
                 statusColor = '#8A5800';
                 nodeGraphics = `
                     <circle class="animate-pulse" cx="${x}" cy="${y}" r="24" fill="#D9A441" fill-opacity="0.3"/>
@@ -491,7 +500,7 @@ class CivicSubwayRenderer {
                     <circle cx="${x}" cy="${y}" r="8" fill="#D9A441"/>
                 `;
             } else {
-                statusLabel = `${s.estimated_days}D • PENDING`;
+                statusLabel = isMr ? `${s.estimated_days} दिवस • प्रलंबित` : `${s.estimated_days}D • PENDING`;
                 statusColor = '#5C6B7A';
                 nodeGraphics = `
                     <circle cx="${x}" cy="${y}" r="16" fill="#152238"/>

@@ -111,43 +111,57 @@ class CivicAdminManager {
     renderModerationQueue() {
         const container = document.getElementById('moderation-queue-container') || document.getElementById('moderation-list');
         if (!container) return;
+        const isMr = this.app && this.app.currentLang === 'mr';
+
         if (!this.app.currentTask) {
-            container.innerHTML = '<p class="text-xs text-secondary">No task currently loaded for moderation.</p>';
+            container.innerHTML = isMr ? '<p class="text-xs text-secondary">पडताळणीसाठी कोणतीही प्रक्रिया लोड केलेली नाही.</p>' : '<p class="text-xs text-secondary">No task currently loaded for moderation.</p>';
             return;
         }
 
-        container.innerHTML = this.app.currentTask.steps.map(s => `
+        container.innerHTML = this.app.currentTask.steps.map(s => {
+            const stepTitle = this.app.getStepTitle(s, this.app.currentTask.id);
+            const deptName = this.app.getStepDept(s, this.app.currentTask.id);
+            const verifiedBadge = s.verification_source && s.verification_source.is_admin_verified
+                ? (isMr ? '✓ प्रमाणित स्रोत' : '✓ Verified Source')
+                : (isMr ? '⚠ स्क्रॅप केलेले (प्रलंबित)' : '⚠ Scraped (Pending)');
+            const authorityLabel = isMr ? 'प्राधिकरण स्रोत संकेतस्थळ:' : 'Authority Source:';
+            const feeLabel = isMr ? 'वैधानिक शुल्क (₹):' : 'Statutory Fee (₹):';
+            const slaLabel = isMr ? 'मुदत (दिवस):' : 'SLA Window (Days):';
+            const sealBtnLabel = isMr ? 'पडताळणी शिक्का मारा' : 'Seal & Publish Verification';
+
+            return `
             <div class="bg-surface-container-lowest border border-outline-variant p-4">
                 <div class="flex justify-between items-start gap-4 mb-2">
                     <div>
-                        <strong class="font-headline text-sm text-primary">#${s.step_number} ${s.title}</strong>
-                        <div class="font-body text-xs text-secondary">${s.department.name}</div>
+                        <strong class="font-headline text-sm text-primary">#${s.step_number} ${stepTitle}</strong>
+                        <div class="font-body text-xs text-secondary">${deptName}</div>
                     </div>
                     <div>
-                        <span class="font-headline text-[11px] px-2 py-0.5 font-semibold ${s.verification_source.is_admin_verified ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-amber-50 text-amber-900 border border-amber-300'}">
-                            ${s.verification_source.is_admin_verified ? '✓ Verified Source' : '⚠ Scraped (Pending)'}
+                        <span class="font-headline text-[11px] px-2 py-0.5 font-semibold ${s.verification_source && s.verification_source.is_admin_verified ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-amber-50 text-amber-900 border border-amber-300'}">
+                            ${verifiedBadge}
                         </span>
                     </div>
                 </div>
 
                 <div class="font-code text-xs text-on-surface-variant mb-3">
-                    Authority Source: <a href="${s.verification_source.url}" target="_blank" class="text-primary underline">${s.verification_source.url}</a>
+                    ${authorityLabel} <a href="${s.verification_source ? s.verification_source.url : '#'}" target="_blank" class="text-primary underline">${s.verification_source ? s.verification_source.url : 'portal.gov.in'}</a>
                 </div>
 
                 <div class="flex flex-wrap gap-3 items-center pt-2 border-t border-surface-container font-headline text-xs">
-                    <label class="text-secondary font-semibold">Statutory Fee (₹):</label>
+                    <label class="text-secondary font-semibold">${feeLabel}</label>
                     <input type="number" id="mod-fee-${s.id}" value="${s.fee_amount}" class="w-24 bg-surface-container-low border border-outline-variant px-2 py-1 font-code text-xs text-primary">
                     
-                    <label class="text-secondary font-semibold ml-2">SLA Window (Days):</label>
+                    <label class="text-secondary font-semibold ml-2">${slaLabel}</label>
                     <input type="number" id="mod-sla-${s.id}" value="${s.estimated_days}" class="w-20 bg-surface-container-low border border-outline-variant px-2 py-1 font-code text-xs text-primary">
 
                     <button onclick="window.adminManager.verifyStep('${s.id}', true)" class="bg-primary hover:bg-primary-container text-on-primary px-3 py-1 font-semibold ml-auto flex items-center gap-1 transition-colors">
                         <span class="material-symbols-outlined text-[14px]">verified</span>
-                        <span>Seal &amp; Publish Verification</span>
+                        <span>${sealBtnLabel}</span>
                     </button>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     async verifyStep(stepId, isVerified) {

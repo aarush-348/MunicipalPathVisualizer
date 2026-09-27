@@ -32,82 +32,152 @@ from app.database import db
 
 
 # ---------------------------------------------------------------------------
-# Devanagari Hindi → Transliterated Civic Terms Mapping
+# ---------------------------------------------------------------------------
+# Devanagari Marathi & Hindi → Transliterated Civic Terms Mapping
 # ---------------------------------------------------------------------------
 DEVANAGARI_MAP: Dict[str, str] = {
-    "दुकान": "dukaan shop business establishment gumasta",
+    # Marathi & Hindi Business & Trade
+    "दुकान": "dukaan shop business establishment gumasta small business",
     "दुकानें": "dukaan shop business establishment",
+    "व्यवसाय": "vyavasay business enterprise trade commerce small business",
+    "धंदा": "dhanda business enterprise trade commercial",
     "व्यापार": "vyapar business trade commerce",
-    "कारोबार": "karobar business enterprise",
+    "कारोबार": "karobar business enterprise trade",
+    "नोंदणी": "nondani registration register",
     "पंजीकरण": "registration register",
+    "परवाना": "parwana license permit trade license",
+    "लाइसेंस": "license driving permit trade",
+    "अर्ज": "arja application apply",
     "आवेदन": "application apply",
-    "शुरू": "start open begin commission",
+    "शुरू": "start open begin commission launch",
     "खोलना": "open start begin commission",
     "खोलनी": "open start begin commission",
+    "हॉटेल": "hotel restaurant cafe eating house food",
     "होटल": "hotel restaurant eating house",
-    "बेकरी": "bakery food cafe restaurant",
-    "रेस्टोरेंट": "restaurant eatery cafe",
+    "बेकरी": "bakery food cafe restaurant confectionery",
+    "रेस्टोरेंट": "restaurant eatery cafe food",
+    "खाद्य": "food restaurant eating house fssai",
     "खाना": "food restaurant eating house",
     "भोजन": "food meal restaurant",
+    "अन्न": "food safety fssai fda maharashtra",
+    "सुरक्षा": "safety security fire fssai",
     "मिठाई": "sweets confectionery food",
+    
+    # Property, Land & Revenue (MahaBhumi / E-Ferfar)
+    "सातबारा": "satbara 7/12 land records mutation ferfar mahabhumi",
+    "७/१२": "satbara 7/12 land records mutation ferfar mahabhumi",
+    "फेरफार": "ferfar mutation land title transfer mahabhumi",
+    "दाखला": "dakhla certificate proof document aaple sarkar",
+    "प्रमाणपत्र": "certificate proof deed",
     "घर": "house property residence",
     "मकान": "house property building",
-    "जमीन": "land property plot",
+    "जमीन": "land property plot agricultural",
     "प्लॉट": "plot land property",
     "प्रॉपर्टी": "property real estate",
     "दाखिल": "mutation khata transfer",
     "खारिज": "mutation khata transfer",
     "नामांतरण": "mutation property namantaran title transfer",
+    "मालमत्ता": "malamatta property tax assessment",
+    "कर": "tax duty municipal property tax",
+    
+    # Construction & Utilities
+    "बांधकाम": "bandhkam construction building plan permission autodcr",
+    "परवानगी": "parwangi permission sanction approval",
+    "इमारत": "building construction structure",
+    "नळ": "nal water connection municipal hydraulic supply",
+    "पाणी": "water supply connection municipal",
+    "जोडणी": "jodani connection utility water meter",
+    "बिजली": "electricity connection power discom msedcl",
+    "अग्निशमन": "fire brigade mfb noc fire safety",
+    "अग्निशामक": "fire brigade mfb noc fire safety",
+    "प्रदूषण": "pollution mpcb environmental consent",
+    
+    # Citizen Certificates & Identity (Aaple Sarkar RTS)
+    "उत्पन्न": "utpanna income certificate revenue tehsildar",
+    "आय": "income certificate tehsildar sdm",
+    "रहिवासी": "rahiwasi domicile residence certificate",
+    "अधिवास": "adhiwas domicile residence certificate",
+    "निवास": "domicile residence certificate",
+    "जाति": "caste certificate reservation",
+    "जातीचा": "caste certificate reservation social welfare",
     "राशन": "ration card pds food distribution",
     "कार्ड": "card certificate document",
     "वोटर": "voter id election epic card",
     "मतदाता": "voter election epic card",
     "पहचान": "identity card id proof",
     "पासपोर्ट": "passport seva kendra rpo",
-    "लाइसेंस": "license driving permit trade",
     "ड्राइविंग": "driving license rto parivahan",
     "जन्म": "birth certificate registration",
     "मृत्यु": "death certificate registration",
-    "प्रमाणपत्र": "certificate proof deed",
-    "आय": "income certificate tehsildar sdm",
-    "जाति": "caste certificate reservation",
-    "निवास": "domicile residence certificate",
-    "जीएसटी": "gst registration gstn tax",
-    "बिजली": "electricity connection power discom",
-    "पानी": "water supply connection municipal",
+    "विवाह": "marriage certificate registrar",
+    "शादी": "marriage certificate registrar",
+    
+    # Maharashtra Governance & Municipalities
+    "गुमास्ता": "gumasta shop establishment act lms mahaonline",
+    "महापालिका": "municipal corporation bmc pmc tmc nmmc pcmc nmc",
+    "मनपा": "municipal corporation bmc pmc",
+    "बीएमसी": "bmc mcgm mumbai maharashtra",
+    "पीएमसी": "pmc pune maharashtra",
+    "मुंबई": "mumbai bmc mcgm maharashtra",
+    "पुणे": "pune pmc maharashtra",
+    "ठाणे": "thane tmc maharashtra",
+    "नागपूर": "nagpur nmc maharashtra",
+    "नाशिक": "nashik nmc maharashtra",
+    "आपले": "aaple sarkar maharashtra portal",
+    "सरकार": "sarkar government administration aaple sarkar",
+    "जीएसटी": "gst registration gstn tax mahagst",
     "दवा": "pharmacy chemist drug license medicine",
     "फार्मेसी": "pharmacy chemist drug license",
-    "केमिस्ट": "chemist pharmacy drug license",
-    "शादी": "marriage certificate registrar",
-    "विवाह": "marriage certificate registrar",
-    "गुमास्ता": "gumasta shop establishment act",
-    "बीएमसी": "bmc mcgm mumbai maharashtra",
-    "एमसीडी": "mcd delhi",
-    "बीबीएमपी": "bbmp bengaluru karnataka",
-    "जीएचएमसी": "ghmc hyderabad telangana",
+    "केमिस्ट": "chemist pharmacy drug license"
 }
 
 # ---------------------------------------------------------------------------
-# Hinglish / Romanized Hindi → English civic concept mapping
+# Hinglish / Romanized Marathi & Hindi → English civic concept mapping
 # ---------------------------------------------------------------------------
 HINGLISH_MAP: Dict[str, List[str]] = {
-    # Business & Registration
-    "dukaan": ["shop", "store", "business", "establishment", "gumasta", "trade"],
-    "dukan": ["shop", "store", "business", "establishment", "gumasta", "trade"],
+    # Business & Registration (Marathi & Hindi)
+    "dukaan": ["shop", "store", "business", "establishment", "gumasta", "trade", "small business"],
+    "dukan": ["shop", "store", "business", "establishment", "gumasta", "trade", "small business"],
     "dukane": ["shop", "business", "establishment"],
     "vyapar": ["business", "trade", "commerce", "license"],
     "vyapaar": ["business", "trade", "commerce", "license"],
+    "vyavasay": ["business", "enterprise", "trade", "commercial", "small business"],
     "karobar": ["business", "enterprise", "trade"],
     "karobaar": ["business", "enterprise", "trade"],
-    "dhandha": ["business", "trade"],
+    "dhandha": ["business", "trade", "enterprise"],
     "kaam": ["work", "business", "employment"],
     "rojgar": ["employment", "job", "business"],
     "register": ["register", "registration"],
+    "nondani": ["registration", "register", "enrolment"],
     "panjikaran": ["registration", "register"],
     "shuru": ["start", "begin", "open", "commence", "commission"],
+    "chalu": ["start", "open", "commence", "commission"],
     "kholna": ["open", "start", "commission"],
     "kholni": ["open", "start", "commission"],
     "kholo": ["open", "start", "commission"],
+    "khol": ["open", "start", "commission"],
+    "chalana": ["run", "operate", "manage"],
+    "chalani": ["run", "operate", "manage"],
+    "karna": ["do", "perform", "apply", "register"],
+    "karni": ["do", "perform", "apply", "register"],
+    "karein": ["do", "perform", "apply", "register"],
+    "karo": ["do", "perform", "apply", "register"],
+    "karayche": ["do", "perform", "apply", "register", "want to"],
+    "karaychi": ["do", "perform", "apply", "register", "want to"],
+    "karaycha": ["do", "perform", "apply", "register", "want to"],
+    "mala": ["i", "me", "want"],
+    "navin": ["new", "fresh", "initial"],
+    "naya": ["new", "fresh"],
+    "nayi": ["new", "fresh"],
+    "naye": ["new", "fresh"],
+    "ahe": ["is", "want", "require"],
+    "kasa": ["how", "procedure"],
+    "kashi": ["how", "procedure"],
+    "kadhava": ["obtain", "get", "apply", "issue"],
+    "kadhyacha": ["obtain", "get", "apply", "issue"],
+    "kadhavi": ["obtain", "get", "apply", "issue"],
+    "ghyayche": ["take", "get", "obtain", "apply"],
+    "ghyava": ["take", "get", "obtain", "apply"],
     "khol": ["open", "start", "commission"],
     "chalana": ["run", "operate", "manage"],
     "chalani": ["run", "operate", "manage"],
@@ -290,13 +360,33 @@ HINGLISH_MAP: Dict[str, List[str]] = {
     "sewer": ["sewer", "drainage", "sewage"],
 }
 
-# Phrase-level patterns for common Hinglish civic queries
+# Phrase-level patterns for common Hinglish & Marathi civic queries
 HINGLISH_PHRASES: List[Tuple[str, str]] = [
-    (r"dukaan\s+(shuru|kholna|kholni|kholo|chalana|chalani)", "start a shop business establishment register gumasta trade license"),
-    (r"(naya|nayi|naye)\s+(dukaan|dukan|vyapar|karobar)", "new shop business register start gumasta"),
+    # Small Business & Enterprise Registration
+    (r"(register|start|open|commission)\s+(a\s+)?(small\s+)?(business|store|shop|enterprise)", "small business register enterprise gumasta shops act establishment lms mahaonline retail dukan"),
+    (r"(small\s+business)", "small business register enterprise gumasta shops act establishment lms mahaonline"),
+    (r"dukaan\s+(shuru|kholna|kholni|kholo|chalana|chalani)", "start a shop business establishment register gumasta trade license small business"),
+    (r"(naya|nayi|naye)\s+(dukaan|dukan|vyapar|karobar)", "new shop business register start gumasta small business"),
+    (r"(mala\s+.*dukan|dukan.*suru|dukan.*chalu|dukan.*nondani|vyavasay.*nondani)", "start a shop business establishment register gumasta trade license small business dukan nondani"),
+    (r"(gumasta|gumasta\s+license|shop\s+act)", "gumasta shop establishment act registration lms mahaonline small business trade license"),
+    
+    # Land & Property (7/12 & Mutation)
+    (r"(satbara|7/12|sat\s*bara|ferfar|e-ferfar|e-hakk)", "7/12 satbara ferfar mutation land records mahabhumi title transfer"),
+    (r"(property|sampatti)\s+(mutation|badalna|transfer|namantaran)", "property tax mutation transfer namantaran khata 7/12 satbara ferfar"),
+    
+    # Utilities & Public Services
+    (r"(water\s+connection|nal\s+connection|pani\s+connection|nal\s+jodani|pani\s+purwatha)", "water connection municipal hydraulic bmc mcgm meter supply water works"),
+    (r"(building\s+permission|building\s+plan|autodcr|bandhkam\s+parwangi)", "building plan sanction construction permit autodcr bmc iod cc oc"),
+    
+    # Aaple Sarkar Certificates
+    (r"(income\s+certificate|utpanna\s+dakhla|aay\s+praman)", "income certificate revenue tehsildar aaple sarkar rts"),
+    (r"(domicile\s+certificate|rahiwasi\s+dakhla|adhiwas)", "domicile certificate age nationality residence aaple sarkar rts"),
+    (r"(caste\s+certificate|jaticha\s+dakhla|jaati)", "caste certificate social welfare reservation aaple sarkar"),
+    
+    # Food & Restaurant
+    (r"(restaurant|cafe|bakery|eating\s+house|dhaba)\s+(in\s+)?(mumbai|pune|bandra)", "commercial bakery restaurant cafe food service bmc pmc fssai mpcb eating house"),
     (r"(pharmacy|medical|chemist)\s+(shuru|kholna|kholni|license)", "pharmacy retail chemist drug license form 20 21 fda"),
     (r"ghar\s+(khareedna|kharidna|banana)", "property purchase house building plan"),
-    (r"(property|sampatti)\s+(mutation|badalna|transfer|namantaran)", "property tax mutation transfer namantaran khata"),
     (r"(ration|rashan)\s+(card|patra)", "ration card pds food distribution civil supplies"),
     (r"voter\s+(id|card|pehchaan|matdata)", "voter id election registration epic nvsp"),
     (r"(driving|gaadi)\s+(license|laisens)", "driving license transport rto parivahan"),
@@ -1112,9 +1202,9 @@ class NLPIntentEngine:
         if cached:
             return cached
 
-        # Municipality assignment
-        mun = municipality_hint.strip() if municipality_hint and municipality_hint.lower() != "all" else "National / State Portal (India)"
-        state = "Central / All States"
+        # Municipality assignment - Focus strictly on Maharashtra
+        mun = municipality_hint.strip() if municipality_hint and municipality_hint.lower() not in ("all", "any", "national") else "Maharashtra Statewide (Aaple Sarkar / BMC)"
+        state = "Maharashtra"
 
         # Instantiate departments
         dept_objs = []
@@ -1123,21 +1213,21 @@ class NLPIntentEngine:
                 id=f"dept-synth-{slug}-{idx+1}",
                 name=d_info["name"],
                 jurisdiction=d_info.get("jurisdiction", mun),
-                office_address=d_info.get("address", "Official Government Office Campus"),
-                contact_phone="1800-11-4000",
-                contact_email="helpdesk.services@gov.in",
+                office_address=d_info.get("address", "Government of Maharashtra Administrative Campus"),
+                contact_phone="1800-120-8040",
+                contact_email="support.aaplesarkar@mahaonline.gov.in",
                 working_hours="Mon-Fri 09:30 AM - 05:30 PM",
-                portal_url=d_info.get("url", "https://india.gov.in")
+                portal_url=d_info.get("url", "https://aaplesarkar.mahaonline.gov.in")
             )
             dept_objs.append(dept_obj)
 
         if not dept_objs:
             dept_objs.append(DepartmentInfo(
                 id=f"dept-synth-{slug}-1",
-                name="Competent Municipal Authority",
+                name="Competent Maharashtra Municipal Authority",
                 jurisdiction=mun,
-                office_address="Municipal Corporation Citizen Centre",
-                portal_url="https://india.gov.in"
+                office_address="Municipal Citizen Facilitation Centre (CFC)",
+                portal_url="https://aaplesarkar.mahaonline.gov.in"
             ))
 
         # Build steps
@@ -1202,7 +1292,7 @@ class NLPIntentEngine:
                 verification_source=v_source,
                 tips_and_pitfalls=s.get("tips", "Ensure all dates and applicant names match identity cards precisely."),
                 anti_tout_advisory="Never pay cash to unauthorized middlemen. Every statutory fee must generate an official government e-Challan receipt.",
-                statutory_payment_channel="Official State / Central Treasury Portal (e-Challan / Bharatkosh)",
+                statutory_payment_channel="Maharashtra Government Treasury Portal (Gras MahaKosh / Aaple Sarkar Payment Gateway)",
                 community_verifications=38,
                 status=StepStatus.READY if i == 0 else StepStatus.LOCKED,
                 is_critical_path=True

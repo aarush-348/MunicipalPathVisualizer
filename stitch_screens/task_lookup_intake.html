@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-primary-fixed-variant":"#3a475f","secondary-fixed":"#d5e4f6","on-tertiary-container":"#b1811f","inverse-surface":"#2e3130","on-background":"#191c1b","surface-dim":"#d9dad8","surface-variant":"#e2e3e1","surface-container-low":"#f3f4f2","on-error-container":"#93000a","on-tertiary":"#ffffff","background":"#f9faf8","outline":"#75777e","surface-container-high":"#e7e8e6","on-surface-variant":"#44474d","secondary-fixed-dim":"#b9c8d9","surface-bright":"#f9faf8","primary-fixed":"#d7e3ff","on-secondary-fixed":"#0e1d29","error-container":"#ffdad6","surface-container-highest":"#e2e3e1","primary":"#000b21","secondary-container":"#d2e1f3","surface-tint":"#525f78","on-surface":"#191c1b","on-secondary-container":"#556473","on-tertiary-fixed-variant":"#5f4100","tertiary-container":"#301f00","surface-container-lowest":"#ffffff","on-secondary-fixed-variant":"#3a4856","inverse-primary":"#bac7e4","error":"#ba1a1a","tertiary-fixed-dim":"#f5bd58","secondary":"#51606f","primary-container":"#152238","on-error":"#ffffff","on-primary-fixed":"#0e1c31","on-primary-container":"#7d89a4","surface-container":"#edeeec","outline-variant":"#c5c6cd","tertiary":"#130a00","primary-fixed-dim":"#bac7e4","on-primary":"#ffffff","tertiary-fixed":"#ffdeaa","on-tertiary-fixed":"#271900","surface":"#f9faf8","on-secondary":"#ffffff","inverse-on-surface":"#f0f1ef"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-md":"1rem","margin":"2rem","space-xs":"0.25rem","space-lg":"1.5rem","gutter":"1.5rem","gutter-mobile":"1rem","space-xl":"2.5rem","space-sm":"0.5rem","margin-mobile":"1rem"},"fontFamily":{"body-md":["\"Source Serif 4\""],"body-sm":["\"Source Serif 4\""],"headline-lg-mobile":["IBM Plex Sans"],"headline-xl":["IBM Plex Sans"],"label-sm":["IBM Plex Sans"],"body-lg":["\"Source Serif 4\""],"headline-xl-mobile":["IBM Plex Sans"],"code":["JetBrains Mono"],"headline-lg":["IBM Plex Sans"],"headline-md":["IBM Plex Sans"],"headline-sm":["IBM Plex Sans"],"label-lg":["IBM Plex Sans"],"label-md":["IBM Plex Sans"]},"fontSize":{"body-md":["15px",{"lineHeight":"24px","fontWeight":"400"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","fontWeight":"600"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"code":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-sm":["16px",{"lineHeight":"24px","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","fontWeight":"500"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant"><div class="bg-primary text-on-primary px-margin border-b border-primary-container"><div class="max-w-[1200px] mx-auto h-8 flex items-center justify-between font-label-sm text-label-sm"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span><span class="font-code text-code text-primary-fixed">STATUS:</span><span>Ledger Live &amp; Synchronized — Municipal Feeds Active</span></div><span class="text-outline-variant">|</span><div class="flex items-center gap-space-xs"><span class="text-primary-fixed-dim">FEED LATENCY:</span><span class="font-code text-code">14ms</span></div></div><div class="flex items-center gap-space-lg"><div class="hidden md:flex items-center gap-space-sm text-primary-fixed-dim"><span class="font-code text-code bg-primary-container px-1.5 py-0.5 border border-on-primary-fixed-variant rounded">/</span><span>Search</span><span class="font-code text-code bg-primary-container px-1.5 py-0.5 border border-on-primary-fixed-variant rounded ml-space-xs">ESC</span><span>Close</span></div><div class="w-5 h-5 rounded-full bg-primary-container border border-on-primary-fixed-variant flex items-center justify-center"><span class="material-symbols-outlined text-primary-fixed text-[14px]">account_balance</span></div></div></div></div><div class="h-20 bg-surface-container-lowest"><div class="max-w-[1200px] mx-auto h-20 px-margin flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-md pr-space-lg border-r border-outline-variant"><div class="w-11 h-11 bg-primary text-on-primary flex items-center justify-center border border-primary"><span class="material-symbols-outlined text-[24px]">verified</span></div><div><div class="font-headline-sm text-headline-sm text-primary uppercase tracking-tight">Civic Task Navigator</div><div class="font-label-sm text-label-sm text-secondary">Public Municipal Utility &amp; Docket System</div></div></div><div class="flex flex-col"><span class="font-label-sm text-label-sm text-outline uppercase">Jurisdiction</span><button class="flex items-center gap-space-xs font-label-md text-label-md text-primary font-semibold hover:text-secondary-container transition-colors"><span class="material-symbols-outlined text-[16px] text-secondary">location_on</span><span>Metropolitan District / City of New York</span><span class="material-symbols-outlined text-[14px] text-outline">arrow_drop_down</span></button></div></div><nav class="flex items-stretch h-full" data-active-classes="border-b-2 border-primary text-primary font-semibold bg-surface-container-low"><a aria-current="page" class="flex items-center px-space-md transition-colors border-b-2 border-primary text-primary font-semibold bg-surface-container-low" data-path="task-lookup" href="#">Task Lookup</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="roadmap-and-route" href="#">Roadmap &amp; Route</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="step-dossier" href="#">Step Dossier</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="citizen-ledger" href="#">Citizen Ledger</a><a class="flex items-center px-space-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-lowest border-b-2 border-transparent transition-colors" data-path="registry-admin" href="#">Registry Admin</a></nav><div class="flex items-center gap-space-md pl-space-md border-l border-outline-variant"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="flex-1 w-full pt-28 bg-background"><div class="max-w-[1200px] mx-auto px-margin py-space-lg"><div class="flex flex-col w-full">
+<!-- Official Municipal Protocol Banner -->
+<section class="bg-surface-container-high text-on-surface px-space-md py-space-sm mb-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-sm shadow-sm">
+<div class="flex items-center gap-space-sm font-label-sm text-label-sm">
+<span class="bg-primary text-on-primary px-2 py-0.5 font-code text-code tracking-wider uppercase">Docket Intake</span>
+<span class="font-headline-sm text-headline-sm uppercase tracking-tight text-primary">Metropolitan Civic Task Navigator — Public Access Terminal</span>
+</div>
+<div class="flex items-center gap-space-md font-code text-code text-on-surface-variant">
+<span>NODE: <strong class="text-primary">MN-HQ-09</strong></span>
+<span>DISPATCH: <strong class="text-primary">AUTO-ROUTING ACTIVE</strong></span>
+<span class="bg-surface-container-lowest px-2 py-0.5 text-primary">SEC. 402 COMPLIANT</span>
+</div>
+</section>
+<!-- Main Administrative Inquiry Deck -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-space-xl">
+<!-- Left Column: Search & Parameter Form -->
+<div class="lg:col-span-8 flex flex-col">
+<div class="bg-surface-container-lowest p-space-lg shadow-md flex flex-col justify-between h-full">
+<div>
+<!-- Header and Instruction -->
+<div class="mb-space-lg">
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-space-xs">Statutory Compliance Discovery Portal</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight mb-space-xs">Initiate Cross-Agency Procedure Route</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              Enter any municipal procedure, permit requirement, or commercial filing to generate an ordered compliance route with statutory fees, agency jurisdictions, and verified sequencing prerequisites.
+            </p>
+</div>
+<!-- Structured Form -->
+<form class="flex flex-col gap-space-md" id="taskIntakeForm">
+<div>
+<label class="block font-label-md text-label-md text-primary mb-1" for="taskQuery">
+                What civic or municipal procedure do you need to complete?
+              </label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest text-primary font-body-md text-body-md px-4 py-3 shadow-inner focus:outline-none focus:ring-2 focus:ring-tertiary-fixed-dim" id="taskQuery" name="query" placeholder="e.g. Convert commercial loft to residential, File food service establishment permit" type="text" value="Open a sidewalk cafe &amp; bakery in Queens, NY"/>
+<button class="absolute right-3 top-3 text-secondary hover:text-primary" onclick="document.getElementById('taskQuery').value=''" type="button">
+<span class="material-symbols-outlined text-[18px]">backspace</span>
+</button>
+</div>
+<div class="mt-1 flex items-center justify-between font-label-sm text-label-sm text-secondary">
+<span class="font-body-sm text-body-sm italic text-on-surface-variant">Natural language accepted. Keywords will cross-reference administrative codes automatically.</span>
+<span class="font-code text-code">SYNTAX: UTF-8 PLAIN</span>
+</div>
+</div>
+<!-- Contextual Filters Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+<div class="bg-surface-container-low p-space-sm shadow-sm">
+<label class="block font-label-sm text-label-sm text-primary uppercase mb-1" for="jurisdictionSelect">
+                  Target Municipal Jurisdiction
+                </label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest text-primary font-label-md text-label-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="jurisdictionSelect">
+<option value="nyc-all">City of New York (All 5 Boroughs)</option>
+<option selected="" value="nyc-queens">Queens County / Borough of Queens</option>
+<option value="nyc-manhattan">New York County / Manhattan</option>
+<option value="nyc-brooklyn">Kings County / Brooklyn</option>
+<option value="nyc-bronx">Bronx County / The Bronx</option>
+<option value="nyc-statenisland">Richmond County / Staten Island</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-secondary text-[18px]">unfold_more</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-sm shadow-sm">
+<label class="block font-label-sm text-label-sm text-primary uppercase mb-1" for="entityClassification">
+                  Applicant / Entity Type
+                </label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest text-primary font-label-md text-label-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="entityClassification">
+<option value="commercial-corp">Commercial Enterprise (LLC / Inc.)</option>
+<option value="sole-prop">Sole Proprietorship / Individual Citizen</option>
+<option value="licensed-pro">Licensed Expediter / Professional Architect</option>
+<option value="non-profit">501(c)(3) Exempt Organization</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-secondary text-[18px]">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Parameters Bar -->
+<div class="bg-surface-container p-space-sm flex flex-wrap items-center justify-between gap-space-sm text-secondary font-label-sm text-label-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">policy</span>
+<span>Enforcement Year: <strong class="text-primary">2024–2025 Calendar</strong></span>
+</div>
+<div class="flex items-center gap-space-md">
+<label class="flex items-center gap-2 cursor-pointer text-primary">
+<input checked="" class="w-4 h-4 text-primary rounded-none focus:ring-0 cursor-pointer" type="checkbox"/>
+<span>Include Expedited Hearing Options</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer text-primary">
+<input checked="" class="w-4 h-4 text-primary rounded-none focus:ring-0 cursor-pointer" type="checkbox"/>
+<span>Fee Calculation Ledger</span>
+</label>
+</div>
+</div>
+<!-- Primary Action Bar -->
+<div class="pt-space-sm flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[18px] text-tertiary-fixed-dim">verified_user</span>
+<span>Statutory Authority: Metropolitan Admin Code Title 20 § 42</span>
+</div>
+<button class="w-full sm:w-auto bg-primary text-on-primary px-space-lg py-3 font-label-lg text-label-lg tracking-wide shadow-md hover:bg-primary-container focus:outline-none focus:ring-2 focus:ring-tertiary-fixed-dim transition-colors flex items-center justify-center gap-space-sm" onclick="window.location.hash='#compliance-preview'" type="button">
+<span>Generate Compliance Roadmap</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- Right Column: Municipal Dispatch Summary & Live Feed -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<!-- Active Filing Snapshot -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-center justify-between pb-space-sm mb-space-sm bg-surface-container-low -mx-space-md -mt-space-md p-space-sm px-space-md">
+<div class="font-label-sm text-label-sm font-semibold text-primary uppercase">Route Dispatch Preview</div>
+<span class="bg-primary text-on-primary font-code text-code px-1.5 py-0.5">EST. TIME: 4-6 WKS</span>
+</div>
+<div class="space-y-space-sm font-label-sm text-label-sm">
+<div class="flex justify-between items-baseline py-1">
+<span class="text-secondary">Direct Jurisdiction Count:</span>
+<span class="font-code text-code text-primary font-semibold">4 Distinct Agencies</span>
+</div>
+<div class="flex justify-between items-baseline py-1">
+<span class="text-secondary">Mandatory Sequence Steps:</span>
+<span class="font-code text-code text-primary font-semibold">7 Sequential Milestones</span>
+</div>
+<div class="flex justify-between items-baseline py-1">
+<span class="text-secondary">Statutory Municipal Fees:</span>
+<span class="font-code text-code text-primary font-semibold">$1,485.00 Total Base</span>
+</div>
+<div class="flex justify-between items-baseline py-1">
+<span class="text-secondary">Blocking Pre-requisite:</span>
+<span class="bg-error-container text-on-error-container px-1 font-semibold">DOB C-of-O Required</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm bg-surface-container p-space-sm">
+<div class="font-label-sm text-label-sm text-primary font-semibold uppercase mb-1">Mandatory Agency Sign-offs</div>
+<div class="flex flex-wrap gap-1 font-code text-code">
+<span class="bg-surface-container-lowest text-primary px-1.5 py-0.5">DOHMH (Health)</span>
+<span class="bg-surface-container-lowest text-primary px-1.5 py-0.5">DOB (Buildings)</span>
+<span class="bg-surface-container-lowest text-primary px-1.5 py-0.5">SLA (Beverage)</span>
+<span class="bg-surface-container-lowest text-primary px-1.5 py-0.5">DOT (Sidewalk)</span>
+</div>
+</div>
+</div>
+<!-- Quick Registry Check Card -->
+<div class="bg-primary text-on-primary p-space-md shadow-md flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-space-xs font-label-sm text-label-sm text-primary-fixed mb-space-xs uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">balance</span>
+<span>Administrative Guarantee</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-primary mb-space-xs">Deterministic Legal Sequences</h2>
+<p class="font-body-sm text-body-sm text-primary-fixed-dim mb-space-md">
+            Routes generated by this terminal establish official administrative standing. Timelines and sequence requirements conform to NYC Rules Title 6 &amp; NYS Alcoholic Beverage Control § 64.
+          </p>
+</div>
+<div class="pt-space-sm bg-primary-container p-space-sm flex items-center justify-between text-primary-fixed font-code text-code">
+<span>DOCKET ID GEN:</span>
+<span class="text-on-primary font-semibold">AUTONOMOUS-NY-842</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Real Civic Task Suggestion Directives (Official Ledger Table) -->
+<section class="mb-space-xl">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between mb-space-sm">
+<div>
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Procedural Index Manifest</div>
+<h2 class="font-headline-md text-headline-md text-primary">Pre-Compiled Municipal Master Directives</h2>
+</div>
+<div class="font-body-sm text-body-sm text-secondary mt-1 sm:mt-0">
+        Select a verified route to load certified prerequisites and jurisdiction trees.
+      </div>
+</div>
+<!-- Official Ledger Grid List -->
+<div class="bg-surface-container-lowest shadow-sm divide-y divide-surface-container">
+<!-- Item 1 -->
+<div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="document.getElementById('taskQuery').value='Register a Commercial Food Service Establishment (DOHMH + SLA)'">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold">
+            01
+          </div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">
+              Register a Commercial Food Service Establishment (DOHMH + SLA)
+            </div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Dual-agency registration covering primary kitchen health inspection, food handler certification, and NYS On-Premises Liquor License filing.
+            </div>
+</div>
+</div>
+<div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm">
+<div class="text-right">
+<div class="text-secondary uppercase">JURISDICTIONS</div>
+<div class="font-code text-code text-primary font-semibold">DOHMH • NYS-SLA</div>
+</div>
+<div class="text-right">
+<div class="text-secondary uppercase">EST. SCHEDULE</div>
+<div class="font-code text-code text-primary font-semibold">35–60 Days</div>
+</div>
+<button class="bg-surface-container text-primary px-3 py-1 font-label-sm text-label-sm font-semibold hover:bg-primary hover:text-on-primary transition-colors">
+            Load Route
+          </button>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="document.getElementById('taskQuery').value='Obtain Interior Alteration Type-2 Building Permit (DOB NOW)'">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold">
+            02
+          </div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">
+              Obtain Interior Alteration Type-2 Building Permit (DOB NOW)
+            </div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Architectural plan submission for commercial or residential modifications with no change in building use or egress configuration.
+            </div>
+</div>
+</div>
+<div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm">
+<div class="text-right">
+<div class="text-secondary uppercase">JURISDICTIONS</div>
+<div class="font-code text-code text-primary font-semibold">NYC DOB • FDNY</div>
+</div>
+<div class="text-right">
+<div class="text-secondary uppercase">EST. SCHEDULE</div>
+<div class="font-code text-code text-primary font-semibold">14–28 Days</div>
+</div>
+<button class="bg-surface-container text-primary px-3 py-1 font-label-sm text-label-sm font-semibold hover:bg-primary hover:text-on-primary transition-colors">
+            Load Route
+          </button>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="document.getElementById('taskQuery').value='File Certificate of Assumed Name &amp; DBA (County Clerk)'">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold">
+            03
+          </div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">
+              File Certificate of Assumed Name &amp; DBA (County Clerk)
+            </div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Statutory recording of fictitious corporate moniker under NY Gen Bus L § 130 with mandatory proof of county publication.
+            </div>
+</div>
+</div>
+<div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm">
+<div class="text-right">
+<div class="text-secondary uppercase">JURISDICTIONS</div>
+<div class="font-code text-code text-primary font-semibold">County Clerk • NYS DOS</div>
+</div>
+<div class="text-right">
+<div class="text-secondary uppercase">EST. SCHEDULE</div>
+<div class="font-code text-code text-primary font-semibold">3–5 Days</div>
+</div>
+<button class="bg-surface-container text-primary px-3 py-1 font-label-sm text-label-sm font-semibold hover:bg-primary hover:text-on-primary transition-colors">
+            Load Route
+          </button>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="document.getElementById('taskQuery').value='Apply for Curb Cut &amp; Sidewalk Vault License (DOT Operations)'">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold">
+            04
+          </div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">
+              Apply for Curb Cut &amp; Sidewalk Vault License (DOT Operations)
+            </div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Right-of-way easement permit covering street-level access modifications, structural pavement engineering, and underground utility clearance.
+            </div>
+</div>
+</div>
+<div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm">
+<div class="text-right">
+<div class="text-secondary uppercase">JURISDICTIONS</div>
+<div class="font-code text-code text-primary font-semibold">NYC DOT • DEP</div>
+</div>
+<div class="text-right">
+<div class="text-secondary uppercase">EST. SCHEDULE</div>
+<div class="font-code text-code text-primary font-semibold">45–90 Days</div>
+</div>
+<button class="bg-surface-container text-primary px-3 py-1 font-label-sm text-label-sm font-semibold hover:bg-primary hover:text-on-primary transition-colors">
+            Load Route
+          </button>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="document.getElementById('taskQuery').value='Transfer Title for Multi-Family Residential Property (ACRIS / DOF)'">
+<div class="flex items-start gap-space-md">
+<div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold">
+            05
+          </div>
+<div>
+<div class="font-headline-sm text-headline-sm text-primary">
+              Transfer Title for Multi-Family Residential Property (ACRIS / DOF)
+            </div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+              Automated City Register Information System filing including Real Property Transfer Tax (RPTT), TP-584, and HPD registration update.
+            </div>
+</div>
+</div>
+<div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm">
+<div class="text-right">
+<div class="text-secondary uppercase">JURISDICTIONS</div>
+<div class="font-code text-code text-primary font-semibold">DOF / ACRIS • HPD</div>
+</div>
+<div class="text-right">
+<div class="text-secondary uppercase">EST. SCHEDULE</div>
+<div class="font-code text-code text-primary font-semibold">7–14 Days</div>
+</div>
+<button class="bg-surface-container text-primary px-3 py-1 font-label-sm text-label-sm font-semibold hover:bg-primary hover:text-on-primary transition-colors">
+            Load Route
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- How the Navigator Reconciles Scattered Agency Rules (Civic Ledger System) -->
+<section class="mb-space-xl">
+<div class="bg-surface-container-low p-space-lg shadow-sm">
+<div class="max-w-[760px] mb-space-lg">
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-space-xs">Procedural Architecture</div>
+<h2 class="font-headline-md text-headline-md text-primary">How the Engine Reconciles Scattered Agency Mandates</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+          Municipal administrative procedures traditionally fail when an applicant attempts agency processes out of sequence. The Navigator applies deterministic graph-sorting to statutory municipal rules.
+        </p>
+</div>
+<!-- 3-Column Structured Ledger Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Step 1 -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-xs mb-space-sm bg-surface-container px-space-sm -mx-space-md -mt-space-md pt-space-xs">
+<span class="font-code text-code font-bold text-primary">01 / FEDERATION</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">input</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-space-xs">Agency Ingestion</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Extracts and synchronizes real-time regulatory requirements, statutory fees, and forms across disparate agency silos: Department of Buildings, Consumer Affairs, Health &amp; Mental Hygiene, and County Clerks.
+            </p>
+</div>
+<div class="mt-space-md pt-space-sm bg-surface-container-low -mx-space-md -mb-space-md p-space-sm font-label-sm text-label-sm text-secondary">
+<span>Sources:</span> <strong class="text-primary font-code text-code">DOB NOW, DOHMH §81, SLA Tit. 9</strong>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-xs mb-space-sm bg-surface-container px-space-sm -mx-space-md -mt-space-md pt-space-xs">
+<span class="font-code text-code font-bold text-primary">02 / SEQUENCING</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">account_tree</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-space-xs">Topological Dependency Sorting</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Constructs a directed acyclic graph to identify rigid procedural dependencies. For example, a Department of Health sanitary inspection is mathematically blocked until the Certificate of Occupancy is amended.
+            </p>
+</div>
+<div class="mt-space-md pt-space-sm bg-surface-container-low -mx-space-md -mb-space-md p-space-sm font-label-sm text-label-sm text-secondary">
+<span>Algorithm:</span> <strong class="text-primary font-code text-code">DAG Prerequisite Resolution</strong>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-container-lowest p-space-md shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-space-xs mb-space-sm bg-surface-container px-space-sm -mx-space-md -mt-space-md pt-space-xs">
+<span class="font-code text-code font-bold text-primary">03 / VERIFICATION</span>
+<span class="material-symbols-outlined text-[18px] text-secondary">verified</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-space-xs">Direct Agency Provenance</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Every fee ledger item, submission checklist, processing lead time, and physical office location links immutably to the current governing statutory code with cryptographically checked verification stamps.
+            </p>
+</div>
+<div class="mt-space-md pt-space-sm bg-surface-container-low -mx-space-md -mb-space-md p-space-sm font-label-sm text-label-sm text-secondary">
+<span>Audit:</span> <strong class="text-primary font-code text-code">SHA-256 Code Index Verified</strong>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Real-time Municipal Feed Status Bar -->
+<section class="bg-surface-container-lowest p-space-sm shadow-sm flex flex-wrap items-center justify-between gap-space-sm font-label-sm text-label-sm text-secondary">
+<div class="flex items-center gap-space-md flex-wrap">
+<div class="flex items-center gap-space-xs text-primary font-semibold">
+<span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+<span>REGISTRY INTEGRITY: <span class="font-code text-code">99.4% VERIFIED</span></span>
+</div>
+<span class="text-outline-variant">|</span>
+<div class="flex items-center gap-space-xs">
+<span class="font-code text-code text-primary font-medium">DOB NOW:</span>
+<span class="text-emerald-700 font-semibold">ACTIVE (v3.1)</span>
+</div>
+<span class="text-outline-variant">|</span>
+<div class="flex items-center gap-space-xs">
+<span class="font-code text-code text-primary font-medium">DOHMH CODE:</span>
+<span class="text-primary">v24.2 SYNCHRONIZED</span>
+</div>
+<span class="text-outline-variant">|</span>
+<div class="flex items-center gap-space-xs">
+<span class="font-code text-code text-primary font-medium">DOF FEE SCHEDULE:</span>
+<span class="text-primary">OCT 2024 CERTIFIED</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs font-code text-code text-on-surface-variant">
+<span>LATENCY: 12ms</span>
+<span>•</span>
+<span>CLUSTER: US-EAST-NYC</span>
+</div>
+</section>
+</div></div></main><footer class="w-full bg-surface-container border-t border-outline-variant mt-auto"><div class="max-w-[1200px] mx-auto px-margin py-space-lg"><div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg pb-space-lg border-b border-outline-variant"><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Jurisdictional Notice</div><p class="font-body-sm text-body-sm text-on-surface-variant">Maintained under the authority of the Metropolitan Administrative Code. Filings recorded through this portal establish binding procedural standing across participating municipal divisions.</p></div><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Public Records &amp; Transparency</div><p class="font-body-sm text-body-sm text-on-surface-variant">All statutory deadlines, prerequisite dependencies, fee schedules, and ledger entries conform to Open Municipal Data Mandates § 402-A. Certified receipts carry SHA-256 verification hashes.</p></div><div class="space-y-space-xs"><div class="font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">Ledger Provenance</div><div class="bg-surface-container-lowest p-space-sm border border-outline-variant"><div class="font-label-sm text-label-sm text-outline">VERIFICATION TIMESTAMP</div><div class="font-code text-code text-primary font-medium">2024-10-24 16:42:09 UTC [NODE NY-014]</div><div class="font-label-sm text-label-sm text-outline mt-space-xs">HASH RECORD</div><div class="font-code text-code text-secondary truncate">0x9f82c4...e18b42cd</div></div></div></div><div class="pt-space-md flex flex-col md:flex-row items-center justify-between text-secondary font-label-sm text-label-sm"><div class="flex items-center gap-space-sm"><span>© Municipal Utility Infrastructure. Public Trust Division.</span><span>•</span><span>Form Docket CTN-2024</span></div><div class="flex items-center gap-space-lg mt-space-sm md:mt-0"><a class="hover:text-primary transition-colors" href="#">Statutory Terms</a><a class="hover:text-primary transition-colors" href="#">Accessibility Standards (ADA § 508)</a><a class="hover:text-primary transition-colors" href="#">System Diagnostics</a></div></div></div></footer></body></html>

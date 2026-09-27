@@ -4,6 +4,8 @@ from app.models import (
     CivicTask, TaskStep, DepartmentInfo, DocumentRequirement,
     FormRequirement, VerificationSource, SubmissionMode, StepStatus
 )
+from app.database_sqlite import sqlite_db
+import os
 
 class CivicDatabase:
     def __init__(self):
@@ -11,6 +13,18 @@ class CivicDatabase:
         self._audit_logs: List[Dict] = []
         self._citizen_feedback: List[Dict] = []
         self._init_seed_data()
+        self._sync_sqlite()
+
+    def _sync_sqlite(self):
+        try:
+            # Seed 18 Aaple Sarkar official services
+            sample_json = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "sample_services.json")
+            sqlite_db.seed_aaple_sarkar_services(sample_json)
+            # Persist curated Maharashtra tasks
+            for task in self._tasks.values():
+                sqlite_db.persist_task(task.model_dump())
+        except Exception as e:
+            print(f"[SQLite Warning] Sync failed: {e}")
 
     def get_all_tasks(self) -> List[CivicTask]:
         return list(self._tasks.values())
@@ -23,8 +37,12 @@ class CivicDatabase:
         results = []
         for task in self._tasks.values():
             match_mun = True
-            if municipality and municipality.lower() != "all":
-                match_mun = municipality.lower() in task.municipality.lower()
+            if municipality and municipality.lower() not in ("all", "any", "maharashtra statewide"):
+                match_mun = (
+                    municipality.lower() in task.municipality.lower() or
+                    task.municipality.lower() in municipality.lower() or
+                    "maharashtra" in task.municipality.lower()
+                )
             
             match_q = (
                 q in task.title.lower() or
@@ -43,19 +61,28 @@ class CivicDatabase:
             "details": details,
             "user": user
         })
+        try:
+            sqlite_db.record_audit(action=action, details=details, user_name=user)
+        except Exception:
+            pass
 
     def get_audit_logs(self) -> List[Dict]:
         return list(reversed(self._audit_logs))
 
     def add_citizen_feedback(self, step_id: str, issue_type: str, notes: str):
+        fb_id = f"fb-{len(self._citizen_feedback) + 1}"
         self._citizen_feedback.append({
-            "id": f"fb-{len(self._citizen_feedback) + 1}",
+            "id": fb_id,
             "step_id": step_id,
             "issue_type": issue_type,
             "notes": notes,
             "timestamp": datetime.now().isoformat(),
             "status": "pending_review"
         })
+        try:
+            sqlite_db.record_feedback(fb_id=fb_id, step_id=step_id, issue_type=issue_type, notes=notes)
+        except Exception:
+            pass
 
     def get_feedback(self) -> List[Dict]:
         return self._citizen_feedback
@@ -77,14 +104,17 @@ class CivicDatabase:
                     action="STEP_VERIFIED" if is_verified else "STEP_MODIFIED",
                     details=f"Step '{step.title}' ({step_id}) updated. Verified: {is_verified}"
                 )
+                try:
+                    sqlite_db.persist_task(task.model_dump())
+                except Exception:
+                    pass
                 return True
         return False
 
     def _init_seed_data(self):
-        # -------------------------------------------------------------------------
-        # TASK 0: Commercial Bakery & Food Service Establishment (Mumbai MCGM / BMC)
-        # Route #MCGM-EODB-2024-8842 - Localized for Indian Municipal Administration
-        # -------------------------------------------------------------------------
+        # =========================================================================
+        # REUSABLE MAHARASHTRA GOVERNMENT DEPARTMENTS MASTER
+        # =========================================================================
         dept_mca_mum = DepartmentInfo(
             id="dept-mca-mum",
             name="Ministry of Corporate Affairs (RoC Mumbai) & GSTN",
@@ -92,516 +122,556 @@ class CivicDatabase:
             office_address="Everest Building, 100 Marine Drive, Nariman Point, Mumbai - 400002",
             contact_phone="022-22812627",
             contact_email="roc.mumbai@mca.gov.in",
+            working_hours="Monday - Friday: 9:30 AM - 5:30 PM IST",
             portal_url="https://www.mca.gov.in"
+        )
+        dept_msme = DepartmentInfo(
+            id="dept-msme",
+            name="Ministry of Micro, Small & Medium Enterprises (Udyam Maharashtra)",
+            jurisdiction="Government of India & Maharashtra MSME Facilitation Cell",
+            office_address="MSME-DFO, Kurla-Andheri Road, Saki Naka, Mumbai - 400072",
+            contact_phone="022-28576090",
+            contact_email="dcdi-mumbai@dcmsme.gov.in",
+            working_hours="Monday - Friday: 9:30 AM - 6:00 PM IST",
+            portal_url="https://udyamregistration.gov.in"
+        )
+        dept_mah_labour = DepartmentInfo(
+            id="dept-mah-labour",
+            name="Maharashtra Labour Department (LMS MahaOnline & Aaple Sarkar)",
+            jurisdiction="Government of Maharashtra (Statewide Labour Commissionerate)",
+            office_address="Kamgar Bhavan, C-20, E-Block, Bandra Kurla Complex (BKC), Bandra East, Mumbai - 400051",
+            contact_phone="022-26572631",
+            contact_email="labour.comm@maharashtra.gov.in",
+            working_hours="Monday - Friday: 10:00 AM - 5:30 PM IST",
+            portal_url="https://lms.mahaonline.gov.in"
         )
         dept_mcgm_labour = DepartmentInfo(
             id="dept-mcgm-labour",
-            name="MCGM Labour & Shops Department (Aaple Sarkar)",
-            jurisdiction="Municipal Corporation of Greater Mumbai (Ward H/West)",
+            name="MCGM Labour & Shops Department (Ward H/West)",
+            jurisdiction="Brihanmumbai Municipal Corporation (BMC / MCGM)",
             office_address="MCGM Ward H/West Office, Saint Martin Road, Bandra West, Mumbai - 400050",
             contact_phone="022-26422311",
             contact_email="shops.hwest@mcgm.gov.in",
             working_hours="Monday - Friday: 10:00 AM - 2:30 PM IST",
-            portal_url="https://aaplesarkar.mahaonline.gov.in"
+            portal_url="https://portal.mcgm.gov.in"
         )
         dept_mfb = DepartmentInfo(
             id="dept-mfb",
             name="Mumbai Fire Brigade (Chief Fire Officer Command)",
-            jurisdiction="Municipal Fire Command (Greater Mumbai)",
+            jurisdiction="Brihanmumbai Municipal Corporation (Greater Mumbai Command)",
             office_address="Byculla Fire Brigade Headquarters, Bapurao Jagtap Marg, Byculla, Mumbai - 400008",
             contact_phone="022-23076111",
             contact_email="fire.noc@mcgm.gov.in",
             working_hours="Monday - Friday: 10:30 AM - 3:30 PM IST",
-            portal_url="https://portal.mcgm.gov.in/eodb-fire-noc"
+            portal_url="https://portal.mcgm.gov.in"
         )
         dept_fssai_mum = DepartmentInfo(
             id="dept-fssai-mum",
-            name="Food Safety and Standards Authority of India (FSSAI Western Region)",
+            name="Food Safety and Standards Authority of India (FSSAI Western Region) & FDA Maharashtra",
             jurisdiction="Central / Maharashtra FDA Regulatory Zone",
-            office_address="MHADA Complex, Bandra Kurla Complex (BKC), Bandra East, Mumbai - 400051",
+            office_address="Food & Drug Administration Maharashtra, Survey No 341, Bandra Kurla Complex (BKC), Bandra East, Mumbai - 400051",
             contact_phone="1800-112-100",
             contact_email="foscos.helpdesk@fssai.gov.in",
+            working_hours="Monday - Friday: 9:30 AM - 6:00 PM IST",
             portal_url="https://foscos.fssai.gov.in"
         )
         dept_mpcb = DepartmentInfo(
             id="dept-mpcb",
             name="Maharashtra Pollution Control Board (MPCB Regional Office)",
-            jurisdiction="State Environmental Protection Authority",
+            jurisdiction="State Environmental Protection Authority (Government of Maharashtra)",
             office_address="Kalpataru Point, 3rd Floor, Opp. Cine Planet, Sion Circle, Sion East, Mumbai - 400022",
             contact_phone="022-24010437",
             contact_email="ms@mpcb.gov.in",
+            working_hours="Monday - Friday: 10:00 AM - 5:30 PM IST",
             portal_url="https://mpcb.gov.in"
         )
         dept_mcgm_health = DepartmentInfo(
             id="dept-mcgm-health",
             name="MCGM Public Health Department (Medical Officer of Health - Ward H/West)",
-            jurisdiction="Municipal Corporation of Greater Mumbai (Ward H/West)",
+            jurisdiction="Brihanmumbai Municipal Corporation (Ward H/West)",
             office_address="Saint Martin Road, Behind Bandra Police Station, Bandra West, Mumbai - 400050",
             contact_phone="022-26422311",
             contact_email="moh.hwest@mcgm.gov.in",
-            working_hours="Monday - Friday: 10:00 AM - 2:30 PM IST (Window 4)",
-            portal_url="https://portal.mcgm.gov.in/eodb-trade-license"
-        )
-        dept_mcgm_license = DepartmentInfo(
-            id="dept-mcgm-license",
-            name="MCGM License & Encroachment Department & Mumbai Police Licensing Branch",
-            jurisdiction="Municipal Corporation of Greater Mumbai (Ward H/West)",
-            office_address="Plot No. 89, Waterfield Road, Bandra West, Mumbai - 400050",
-            contact_phone="022-26422311",
-            contact_email="licensing.hwest@mcgm.gov.in",
-            working_hours="Monday - Friday: 10:00 AM - 2:30 PM IST",
-            portal_url="https://portal.mcgm.gov.in/signboard-license"
-        )
-        dept_mcgm_comm = DepartmentInfo(
-            id="dept-mcgm-comm",
-            name="Municipal Corporation of Greater Mumbai (Ward H/West Secretariat)",
-            jurisdiction="Brihanmumbai Municipal Corporation",
-            office_address="Ward H/West Municipal Headquarters, Saint Martin Road, Bandra West, Mumbai - 400050",
-            contact_phone="022-26422311",
-            contact_email="eodb.support@mcgm.gov.in",
+            working_hours="Monday - Friday: 10:30 AM - 3:00 PM IST",
             portal_url="https://portal.mcgm.gov.in"
         )
+        dept_mcgm_estate = DepartmentInfo(
+            id="dept-mcgm-estate",
+            name="MCGM License & Estate Department (Section 328/394)",
+            jurisdiction="Brihanmumbai Municipal Corporation (Headquarters)",
+            office_address="Municipal Corporation Building, Mahapalika Marg, Fort, Mumbai - 400001",
+            contact_phone="022-22620251",
+            contact_email="licenses.hq@mcgm.gov.in",
+            working_hours="Monday - Friday: 10:30 AM - 4:30 PM IST",
+            portal_url="https://portal.mcgm.gov.in"
+        )
+        dept_mahagst = DepartmentInfo(
+            id="dept-mahagst",
+            name="Department of Goods and Services Tax, Maharashtra (MahaGST)",
+            jurisdiction="Government of Maharashtra",
+            office_address="GST Bhavan, Mazgaon, Mumbai - 400010",
+            contact_phone="1800-225-900",
+            contact_email="helpdesk@mahagst.gov.in",
+            working_hours="Monday - Friday: 10:00 AM - 5:30 PM IST",
+            portal_url="https://mahagst.gov.in"
+        )
+        dept_pmc_health = DepartmentInfo(
+            id="dept-pmc-health",
+            name="Pune Municipal Corporation (PMC Health Department)",
+            jurisdiction="Pune Municipal Corporation (PMC)",
+            office_address="PMC Main Building, Shivajinagar, Pune - 411005",
+            contact_phone="020-25501000",
+            contact_email="health@punecorporation.org",
+            working_hours="Monday - Friday: 10:00 AM - 5:00 PM IST",
+            portal_url="https://pmc.gov.in"
+        )
+        dept_pmc_fire = DepartmentInfo(
+            id="dept-pmc-fire",
+            name="Pune Fire Brigade (PMC Central Fire Command)",
+            jurisdiction="Pune Municipal Corporation",
+            office_address="Central Fire Station, New Timber Market, Ganj Peth, Pune - 411042",
+            contact_phone="020-26451707",
+            contact_email="fire@punecorporation.org",
+            working_hours="Monday - Friday: 10:00 AM - 5:00 PM IST",
+            portal_url="https://pmc.gov.in"
+        )
+        dept_mcgm_bp = DepartmentInfo(
+            id="dept-mcgm-bp",
+            name="BMC Building Proposals Department (AutoDCR Cell)",
+            jurisdiction="Municipal Corporation of Greater Mumbai",
+            office_address="Engineering Hub, Dr. E. Moses Road, Worli, Mumbai - 400018",
+            contact_phone="022-24958000",
+            contact_email="che.bp@mcgm.gov.in",
+            working_hours="Monday - Friday: 10:30 AM - 4:00 PM IST",
+            portal_url="https://autodcr.mcgm.gov.in"
+        )
+        dept_mahabhumi = DepartmentInfo(
+            id="dept-mahabhumi",
+            name="Revenue & Forest Department, Maharashtra (MahaBhumi E-Ferfar Cell)",
+            jurisdiction="Government of Maharashtra (State Land Records)",
+            office_address="Settlement Commissioner & Director of Land Records, Central Building, Pune - 411001",
+            contact_phone="020-26050009",
+            contact_email="dlr.pune@mahabhumi.gov.in",
+            working_hours="Monday - Friday: 10:00 AM - 5:30 PM IST",
+            portal_url="https://mahabhumi.gov.in"
+        )
+        dept_igr = DepartmentInfo(
+            id="dept-igr",
+            name="Inspector General of Registration & Controller of Stamps (IGR Maharashtra)",
+            jurisdiction="Government of Maharashtra",
+            office_address="IGR Office, Ground Floor, Central Building, Station Road, Pune - 411001",
+            contact_phone="020-26050011",
+            contact_email="complaint@igrmaharashtra.gov.in",
+            working_hours="Monday - Friday: 9:45 AM - 5:30 PM IST",
+            portal_url="https://igrmaharashtra.gov.in"
+        )
+        dept_mcgm_he = DepartmentInfo(
+            id="dept-mcgm-he",
+            name="MCGM Hydraulic Engineer Department (Water Works)",
+            jurisdiction="Brihanmumbai Municipal Corporation",
+            office_address="Hydraulic Engineer Office, Worli Water Works, Dr. E. Moses Road, Worli, Mumbai - 400018",
+            contact_phone="022-24958100",
+            contact_email="he@mcgm.gov.in",
+            working_hours="Monday - Friday: 10:30 AM - 4:30 PM IST",
+            portal_url="https://portal.mcgm.gov.in"
+        )
+        dept_aaple_sarkar = DepartmentInfo(
+            id="dept-aaple-sarkar",
+            name="Aaple Sarkar Citizen Services (Maharashtra Right to Public Services Commission)",
+            jurisdiction="Government of Maharashtra (Statewide RTS Portal)",
+            office_address="General Administration Department, Mantralaya, Nariman Point, Mumbai - 400032",
+            contact_phone="1800-120-8040",
+            contact_email="support.aaplesarkar@mahaonline.gov.in",
+            working_hours="24x7 Digital Portal / Helpline: Mon-Sat 8:00 AM - 8:00 PM IST",
+            portal_url="https://aaplesarkar.mahaonline.gov.in"
+        )
 
-        task0_steps = [
+        # -------------------------------------------------------------------------
+        # TASK 1: Register a Small Business / Retail Enterprise in Maharashtra (Gumasta)
+        # Direct Answer to: "I want to register a small business"
+        # -------------------------------------------------------------------------
+        task_small_biz_steps = [
             TaskStep(
-                id="mum-bakery-1",
-                task_id="task-mum-bakery",
+                id="mah-biz-1",
+                task_id="task-mah-small-biz",
                 step_number=1,
-                title="MCA Certificate of Incorporation & Corporate PAN",
-                description="Incorporate commercial entity (Pvt Ltd / LLP) on MCA21 portal via SPICe+ Part A/B, obtain Corporate Identity Number (CIN), and register Corporate PAN.",
-                department=dept_mca_mum,
+                title="PAN & Udyam MSME Zero-Fee Registration",
+                description="Obtain Indian Business Permanent Account Number (PAN) and free National MSME recognition via Government of India Udyam Portal using Aadhaar OTP verification.",
+                department=dept_msme,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=4,
-                fee_amount=1500.0,
-                fee_breakdown={"MCA Name Approval & Registration": 1000.0, "Maharashtra Stamp Duty": 500.0},
+                estimated_days=1,
+                fee_amount=0.0,
+                fee_breakdown={"Statutory Government Fee": 0.0, "Udyam Certificate Generation": 0.0},
                 prerequisites=[],
                 documents=[
-                    DocumentRequirement(
-                        id="doc-cin",
-                        name="Certificate of Incorporation (CIN)",
-                        description="Certified certificate issued by Registrar of Companies, Mumbai",
-                        is_mandatory=True,
-                        category="Identity & KYC",
-                        validity_rule="CIN must be in active status on MCA master records",
-                        issuing_authority="Registrar of Companies (RoC Mumbai)"
-                    ),
-                    DocumentRequirement(
-                        id="doc-pan-mca",
-                        name="Corporate PAN & TAN Card",
-                        description="Income Tax Department corporate permanent account number confirmation",
-                        is_mandatory=True,
-                        category="Identity & KYC",
-                        validity_rule="Linked with active commercial banking account",
-                        issuing_authority="Income Tax Department / NSDL"
-                    )
+                    DocumentRequirement(id="doc-pan-aadhaar", name="Aadhaar Card Linked to Mobile", description="Required for electronic biometric e-KYC and digital signing", is_mandatory=True, category="Identity Proof"),
+                    DocumentRequirement(id="doc-prop-pan", name="Proprietor / Managing Partner PAN Card", description="Permanent Account Number for tax linkage", is_mandatory=True, category="Tax Identity")
+                ],
+                forms=[FormRequirement(form_code="Udyam-01", title="Udyam Registration Portal Application", fill_online_url="https://udyamregistration.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://udyamregistration.gov.in/Government-India/Ministry-MSME-registration.htm",
+                    page_title="Official Ministry of MSME Udyam Registration Portal",
+                    last_scraped_at="2026-09-26T10:00:00Z",
+                    confidence_score=1.0,
+                    is_admin_verified=True,
+                    gazette_ref="Micro, Small and Medium Enterprises Development Act, 2006"
+                ),
+                tips_and_pitfalls="Beware of fraudulent commercial websites charging money for Udyam registration; the official government portal is 100% free.",
+                anti_tout_advisory="Do not pay touts or unofficial agencies. Udyam is paperless, free of cost, and instant."
+            ),
+            TaskStep(
+                id="mah-biz-2",
+                task_id="task-mah-small-biz",
+                step_number=2,
+                title="Commercial Premises Verification & Registered Lease / Tax Index",
+                description="Verify lawful tenancy or title of the commercial premise with registered rent agreement or property tax receipt / electricity bill in Maharashtra.",
+                department=dept_igr,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=2,
+                fee_amount=1300.0,
+                fee_breakdown={"E-Search Inspection Fee": 300.0, "Document Attestation Stamp": 1000.0},
+                prerequisites=[],
+                documents=[
+                    DocumentRequirement(id="doc-rent-lease", name="Registered Commercial Leave & License Agreement", description="Notarized or registered under Maharashtra Rent Control Act", is_mandatory=True, category="Premise Title"),
+                    DocumentRequirement(id="doc-elec-bill", name="Recent Commercial Electricity Bill (MSEDCL / Tata / Adani)", description="Issued within last 2 months showing consumer number and commercial tariff", is_mandatory=True, category="Premise Address Proof"),
+                    DocumentRequirement(id="doc-owner-noc", name="NOC from Landlord / Society", description="No Objection Certificate for commercial usage of property", is_mandatory=True, category="Clearance NOC")
+                ],
+                forms=[FormRequirement(form_code="IGR-INDEX-II", title="E-Registration Certified Index-II Copy", fill_online_url="https://igrmaharashtra.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://igrmaharashtra.gov.in/e-Search",
+                    page_title="IGR Maharashtra - Public Data & Registered Document Verification",
+                    last_scraped_at="2026-09-25T11:30:00Z",
+                    confidence_score=0.98,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra Stamp Act 1958 Section 30"
+                )
+            ),
+            TaskStep(
+                id="mah-biz-3",
+                task_id="task-mah-small-biz",
+                step_number=3,
+                title="Maharashtra Gumasta License / Form A Intimation (LMS MahaOnline)",
+                description="Statutory registration under Maharashtra Shops and Establishments (Regulation of Employment and Conditions of Service) Act, 2017. For 0-9 employees, instant Form A intimation receipt; for 10+ employees, Form F registration certificate.",
+                department=dept_mah_labour,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=3,
+                fee_amount=650.0,
+                fee_breakdown={"State Portal Scrutiny Fee": 500.0, "MahaOnline Facilitation Charges": 150.0},
+                prerequisites=["mah-biz-1", "mah-biz-2"],
+                documents=[
+                    DocumentRequirement(id="doc-shop-photo", name="Photo of Shop / Establishment with Signboard", description="Clear photo showing front facade of shop with signboard in Marathi (Devanagari script)", is_mandatory=True, category="Premise Proof"),
+                    DocumentRequirement(id="doc-aadhaar-biz", name="Applicant Self-Certified KYC & Passport Photo", description="High-resolution digital scan", is_mandatory=True, category="Identity Proof")
                 ],
                 forms=[
-                    FormRequirement(form_code="SPICe+ Part A/B", title="Integrated Company Incorporation Instrument", fill_online_url="https://www.mca.gov.in/mcafoportal/showSpicePlus.do")
+                    FormRequirement(form_code="Form A (Intimation)", title="Intimation of Establishment (0-9 Employees)", fill_online_url="https://lms.mahaonline.gov.in"),
+                    FormRequirement(form_code="Form F (Registration)", title="Application for Registration (10+ Employees)", fill_online_url="https://lms.mahaonline.gov.in")
                 ],
                 verification_source=VerificationSource(
-                    url="https://www.mca.gov.in/mcafoportal/showSpicePlus.do",
-                    page_title="Ministry of Corporate Affairs - SPICe+ Integration",
+                    url="https://lms.mahaonline.gov.in/Home/DownloadForms",
+                    page_title="Maharashtra Labour Management System - Citizen Charter",
+                    last_scraped_at="2026-09-26T14:00:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra Act No. LXI of 2017 (Shops & Establishments)"
+                ),
+                tips_and_pitfalls="Under the 2017 amended Act, establishments with 0-9 workers do not need periodic renewal; Form A intimation is valid perpetually.",
+                anti_tout_advisory="Do not pay middlemen ₹3,000-₹5,000 for Gumasta. The government fee is ₹650 on LMS MahaOnline."
+            ),
+            TaskStep(
+                id="mah-biz-4",
+                task_id="task-mah-small-biz",
+                step_number=4,
+                title="Maharashtra Professional Tax (PTEC & PTRC Enrollment via MahaGST)",
+                description="Statutory registration under the Maharashtra State Tax on Professions, Trades, Callings and Employments Act, 1975. PTEC is mandatory for the business entity; PTRC is mandatory if hiring salaried employees.",
+                department=dept_mahagst,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=2,
+                fee_amount=2500.0,
+                fee_breakdown={"Annual PTEC Statutory Tax Rate": 2500.0, "Portal Enrollment Fee": 0.0},
+                prerequisites=["mah-biz-1", "mah-biz-3"],
+                documents=[
+                    DocumentRequirement(id="doc-ptec-pan", name="Entity PAN Card & Gumasta Intimation", description="Mandatory for linking PT tax account", is_mandatory=True, category="Tax Identity"),
+                    DocumentRequirement(id="doc-bank-proof", name="Cancelled Cheque or Bank Passbook Front Page", description="Showing IFSC and account number", is_mandatory=True, category="Banking")
+                ],
+                forms=[FormRequirement(form_code="Form II (PTEC)", title="Application for Certificate of Enrolment under PT Act", fill_online_url="https://mahagst.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://mahagst.gov.in/en/professional-tax",
+                    page_title="MahaGST - Professional Tax Registration Guidelines",
+                    last_scraped_at="2026-09-25T16:00:00Z",
+                    confidence_score=0.98,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra State Tax on Professions Act 1975 Section 5"
+                ),
+                tips_and_pitfalls="PTEC must be paid annually before June 30 to avoid 1.25% monthly statutory interest penalty."
+            ),
+            TaskStep(
+                id="mah-biz-5",
+                task_id="task-mah-small-biz",
+                step_number=5,
+                title="Municipal Signboard Permission & Marathi Devanagari Prominence Clearance",
+                description="Statutory authorization for outdoor business nameboard pursuant to Maharashtra Municipal rules and BMC Section 328. The name of the establishment in Marathi (Devanagari script) must be in front and in lettering font no smaller than any other language.",
+                department=dept_mcgm_estate,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=3,
+                fee_amount=1200.0,
+                fee_breakdown={"Nameboard Scrutiny Fee": 800.0, "Administrative Processing": 400.0},
+                prerequisites=["mah-biz-3"],
+                documents=[
+                    DocumentRequirement(id="doc-board-layout", name="Color Elevation & Signboard Artwork Layout", description="Specifying dimensions and verified Marathi Devanagari lettering font ratio", is_mandatory=True, category="Layout & Graphics"),
+                    DocumentRequirement(id="doc-loc-photo", name="Facade Photo of Shop Building", description="Showing proposed mounting location", is_mandatory=True, category="Site Proof")
+                ],
+                forms=[FormRequirement(form_code="MMC-SEC-328", title="Application for External Signage / Nameboard", fill_online_url="https://portal.mcgm.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlsignboard",
+                    page_title="BMC Guidelines for Display of Business Signboards & Marathi Mandate",
                     last_scraped_at="2026-09-24T12:00:00Z",
                     confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="Companies Act 2013 & RoC Mumbai Guidelines"
+                    gazette_ref="Maharashtra Shops & Establishments (Amendment) Act 2022 Section 35"
                 ),
-                tips_and_pitfalls="Directors must ensure DIN and Aadhaar e-KYC credentials match exact spelling across incorporation instruments.",
-                anti_tout_advisory="Statutory fee is ₹1,000 + ₹500 stamp duty payable solely via Bharatkosh / MCA21 payment gateway. Never pay private agents for DIN generation.",
-                statutory_payment_channel="Ministry of Corporate Affairs (MCA21) Bharatkosh Gateway",
-                community_verifications=34,
-                official_receipt_mandate="Zero Cash Mandate: Official MCA computerized receipt issued on successful gateway transaction.",
-                last_gazette_notification="MCA Notification G.S.R. 107(E) Companies Rules 2024"
+                tips_and_pitfalls="Violating the Marathi Devanagari signboard mandate attracts immediate penalty of ₹2,000 per day under municipal spot inspection notices."
             ),
             TaskStep(
-                id="mum-bakery-2",
+                id="mah-biz-6",
+                task_id="task-mah-small-biz",
+                step_number=6,
+                title="Commercial Current Bank Account & E-Payment Merchant Integration",
+                description="Open business current account with authorized scheduled commercial bank in Maharashtra using verified Udyam, Gumasta Form A/F, and PAN.",
+                department=dept_mca_mum,
+                submission_mode=SubmissionMode.HYBRID,
+                estimated_days=2,
+                fee_amount=0.0,
+                fee_breakdown={"Zero Account Opening Fee": 0.0},
+                prerequisites=["mah-biz-1", "mah-biz-3", "mah-biz-4"],
+                documents=[
+                    DocumentRequirement(id="doc-full-dossier", name="Consolidated Civic Dossier (Gumasta + Udyam + PAN + PTEC)", description="Complete verified regulatory bundle", is_mandatory=True, category="Banking KYC")
+                ],
+                forms=[],
+                verification_source=VerificationSource(
+                    url="https://rbi.org.in/Scripts/BS_ViewMasCirculardetails.aspx?id=9861",
+                    page_title="RBI Master Direction - KYC Guidelines for Commercial Business Accounts",
+                    last_scraped_at="2026-09-25T09:00:00Z",
+                    confidence_score=0.98,
+                    is_admin_verified=True
+                )
+            )
+        ]
+
+        task_small_biz = CivicTask(
+            id="task-mah-small-biz",
+            title="Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act)",
+            category="Business & Commercial",
+            municipality="Mumbai & Maharashtra Statewide (LMS / Aaple Sarkar)",
+            state="Maharashtra",
+            description="Complete statutory multi-agency procedure to lawfully register, incorporate, and open a small business, retail store, consultancy, or commercial establishment in Maharashtra under the Maharashtra Shops & Establishments Act 2017, Udyam MSME, MahaGST, and Municipal Signage regulations.",
+            tags=["small business", "register a small business", "gumasta", "shop act license", "lms mahaonline", "aaple sarkar", "mumbai", "pune", "thane", "navi mumbai", "maharashtra", "retail shop", "business registration", "dukan"],
+            steps=task_small_biz_steps
+        )
+        self._tasks[task_small_biz.id] = task_small_biz
+
+        # -------------------------------------------------------------------------
+        # TASK 2: Commercial Bakery & Food Service (Mumbai MCGM / BMC)
+        # Flagship Stitch Screen Route #MCGM-EODB-2024-8842
+        # -------------------------------------------------------------------------
+        task_bakery_steps = [
+            TaskStep(
+                id="stop-01",
+                task_id="task-mum-bakery",
+                step_number=1,
+                title="MCA Incorporation, RoC Mumbai & Entity PAN",
+                description="Secure statutory corporate legal entity identity via Ministry of Corporate Affairs SPICe+ single window system and obtain permanent Income Tax PAN & TAN mapped to Maharashtra state tax jurisdiction.",
+                department=dept_mca_mum,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=4,
+                fee_amount=1000.0,
+                fee_breakdown={"RoC Name Reservation (RUN)": 1000.0, "SPICe+ Incorporation Fee": 0.0, "MCA Portal Stamp Duty": 0.0},
+                prerequisites=[],
+                documents=[
+                    DocumentRequirement(id="doc-dir-kyc", name="Directors KYC & Digital Signature (DSC Class III)", description="Self-attested Aadhaar, PAN card, and DSC token of designated directors", is_mandatory=True, category="Corporate Identity"),
+                    DocumentRequirement(id="doc-moa-aoa", name="Draft Memorandum & Articles of Association (e-MOA/AOA)", description="Stating commercial baking, cafe operations, and retail confectionery trade as primary object clause", is_mandatory=True, category="Legal Governance")
+                ],
+                forms=[FormRequirement(form_code="SPICe+ (INC-32)", title="Simplified Proforma for Incorporating Company Electronically Plus", fill_online_url="https://www.mca.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://www.mca.gov.in/content/mca/global/en/home.html",
+                    page_title="Ministry of Corporate Affairs - SPICe+ Integration Handbook",
+                    last_scraped_at="2026-09-24T08:30:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True,
+                    gazette_ref="Companies Act 2013 Section 7"
+                ),
+                tips_and_pitfalls="Ensure your designated primary business object strictly covers food manufacturing, baking, and sit-down cafe seating.",
+                anti_tout_advisory="SPICe+ is a unified central government portal. Zero government fee for incorporation up to ₹15 Lakh authorized capital."
+            ),
+            TaskStep(
+                id="stop-02",
                 task_id="task-mum-bakery",
                 step_number=2,
-                title="Commercial Premise Lease & Maharashtra Gumasta Intimation",
-                description="Execute registered commercial tenancy agreement in Bandra West and file online Gumasta intimation under Maharashtra Shops & Establishments Act 2017 via Aaple Sarkar portal.",
+                title="Commercial Lease Registration & Gumasta License (Ward H/West)",
+                description="Register commercial tenancy lease deed at Sub-Registrar Office, verify BMC property tax SAC number, and obtain Maharashtra Shops & Establishments Registration (Gumasta) via Aaple Sarkar / LMS.",
                 department=dept_mcgm_labour,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=5,
-                fee_amount=1400.0,
-                fee_breakdown={"Shops Act Intimation Fee (Aaple Sarkar)": 400.0, "Commercial Tenancy Notarization & Franking": 1000.0},
-                prerequisites=["mum-bakery-1"],
+                submission_mode=SubmissionMode.HYBRID,
+                estimated_days=7,
+                fee_amount=3400.0,
+                fee_breakdown={"Sub-Registrar Registration Fee": 1000.0, "BMC Gumasta Inspection & Application Fee": 2400.0},
+                prerequisites=["stop-01"],
                 documents=[
-                    DocumentRequirement(
-                        id="doc-lease-mum",
-                        name="Registered Commercial Lease Agreement (Bandra West)",
-                        description="Minimum 3-year registered commercial deed specifying retail bakery and kitchen exhaust usage",
-                        is_mandatory=True,
-                        category="Property & Premise",
-                        validity_rule="Must be registered with Sub-Registrar of Assurances Bandra; minimum 24 months validity remaining",
-                        issuing_authority="Department of Registration & Stamps, Maharashtra"
-                    ),
-                    DocumentRequirement(
-                        id="doc-gumasta",
-                        name="Maharashtra Gumasta Registration / Form G Intimation",
-                        description="Registration #MH-MUM-HW-2024-44109 issued via Aaple Sarkar",
-                        is_mandatory=True,
-                        category="Statutory Clearances",
-                        validity_rule="Official Form G intimation receipt under Maharashtra Act LXI of 2017",
-                        issuing_authority="MCGM Labour Department / Aaple Sarkar"
-                    ),
-                    DocumentRequirement(
-                        id="doc-elec",
-                        name="Commercial Electricity Connection Meter Bill (Adani / BEST)",
-                        description="Sanctioned power load proof for baking machinery",
-                        is_mandatory=True,
-                        category="Property & Premise",
-                        validity_rule="Must be issued within last 90 days; registered commercial tariff (LT-II)",
-                        issuing_authority="Adani Electricity Mumbai Ltd / BEST Undertaking"
-                    )
+                    DocumentRequirement(id="doc-reg-lease", name="Registered Commercial Lease Deed", description="Minimum 3-year registered lease deed with stamp duty payment challan", is_mandatory=True, category="Premise Title"),
+                    DocumentRequirement(id="doc-sac-receipt", name="BMC Property Tax Last Paid Receipt (SAC No.)", description="Showing nil tax arrears and commercial property assessment classification", is_mandatory=True, category="Municipal Revenue"),
+                    DocumentRequirement(id="doc-owner-noc-bakery", name="Building Cooperative Society (CHS) No Objection Certificate", description="Unconditional resolution permitting commercial kitchen and bakery operations", is_mandatory=True, category="Premises Clearance")
                 ],
-                forms=[
-                    FormRequirement(form_code="FORM G", title="Application for Registration / Intimation of Commercial Establishment", fill_online_url="https://aaplesarkar.mahaonline.gov.in")
-                ],
+                forms=[FormRequirement(form_code="Form F / Form A", title="Application for Registration of Shops & Establishments", fill_online_url="https://lms.mahaonline.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://aaplesarkar.mahaonline.gov.in",
-                    page_title="Aaple Sarkar - Maharashtra Shops & Establishments Gateway",
-                    last_scraped_at="2026-09-22T10:00:00Z",
+                    url="https://lms.mahaonline.gov.in/Home/CitizenServices",
+                    page_title="Maharashtra Labour Dept - Shops & Establishments Portal",
+                    last_scraped_at="2026-09-23T14:15:00Z",
                     confidence_score=0.98,
                     is_admin_verified=True,
-                    gazette_ref="Maharashtra Act No. LXI of 2017 § 6"
+                    gazette_ref="Maharashtra Shops & Establishments Act 2017 Section 6"
                 ),
-                tips_and_pitfalls="Commercial lease must clearly delineate kitchen food preparation zone from front retail seating area to avoid CTS inspection queries.",
-                anti_tout_advisory="Maharashtra Shops intimation fee is ₹400 payable exclusively through Aaple Sarkar portal. Zero physical cash handling permitted.",
-                statutory_payment_channel="Government of Maharashtra Aaple Sarkar / GRAS Cyber Treasury",
-                community_verifications=29,
-                official_receipt_mandate="Zero Cash Mandate: All statutory charges deposited into State Treasury Head 0230-Labour & Employment.",
-                last_gazette_notification="Maharashtra Govt Gazette No. LXI of 2017 § 6"
+                tips_and_pitfalls="Verify that the premise has sanctioned commercial user status under BMC Development Control & Promotion Regulations (DCPR-2034)."
             ),
             TaskStep(
-                id="mum-bakery-3",
+                id="stop-03",
                 task_id="task-mum-bakery",
                 step_number=3,
-                title="MFB Fire Safety Compliance & Commercial Kitchen NOC",
-                description="Mandatory fire protection installation, Class-K commercial exhaust hood duct suppression, LPG pipeline safety valve certificate, and dual emergency escape audit pursuant to Maharashtra Fire Prevention and Life Safety Measures Act 2006.",
+                title="Mumbai Fire Brigade (MFB) Fire Safety Inspection NOC",
+                description="Mandatory fire safety audit and compliance clearance from Mumbai Fire Brigade Headquarters under Maharashtra Fire Prevention and Life Safety Measures Act, 2006 for baking ovens, gas pipelines, and emergency egress.",
                 department=dept_mfb,
-                submission_mode=SubmissionMode.HYBRID,
-                estimated_days=18,
-                fee_amount=18500.0,
-                fee_breakdown={
-                    "Chief Fire Officer Scrutiny Fee": 8500.0,
-                    "Site Inspection & Kitchen Exhaust Assessment": 6200.0,
-                    "Hydrant & Fire Equipment Inspection": 3800.0
-                },
-                prerequisites=["mum-bakery-2"],
+                submission_mode=SubmissionMode.IN_PERSON,
+                estimated_days=14,
+                fee_amount=12500.0,
+                fee_breakdown={"MFB Fire Scrutiny Fee": 7500.0, "Fire Equipment Inspection Levy": 5000.0},
+                prerequisites=["stop-02"],
                 documents=[
-                    DocumentRequirement(
-                        id="doc-mep-plans",
-                        name="Sealed Architectural Layout & MEP Drawing",
-                        description="Prepared and stamped by MCGM registered architect showing customer seating, bakery oven zoning, refuse disposal, and fire exit doors",
-                        is_mandatory=True,
-                        category="Technical Plans & Drawings",
-                        validity_rule="Signed and blue-ink sealed by MCGM licensed surveyor/architect (CA/XXXX/YYYY)",
-                        issuing_authority="Council of Architecture / MCGM Registered Architect"
-                    ),
-                    DocumentRequirement(
-                        id="doc-mfb-formb",
-                        name="Licensed Fire Agency Form B Certificate",
-                        description="Certified installation of Class-K wet chemical fire system and portable ISI fire extinguishers",
-                        is_mandatory=True,
-                        category="Statutory Clearances",
-                        validity_rule="Issued by Maharashtra Fire Services Directorate licensed agency (valid for 1 year from test date)",
-                        issuing_authority="Directorate of Maharashtra Fire Services"
-                    ),
-                    DocumentRequirement(
-                        id="doc-exhaust-spec",
-                        name="Kitchen Exhaust & Duct Elevation Schematic",
-                        description="Stainless steel duct routing terminating 3 meters above building roof parapet",
-                        is_mandatory=True,
-                        category="Technical Plans & Drawings",
-                        validity_rule="SS-304 food-grade stainless steel with non-return fire damper specification",
-                        issuing_authority="Licensed Mechanical / HVAC Engineer"
-                    )
+                    DocumentRequirement(id="doc-fire-plan", name="Architectural Kitchen & Seating Fire Evacuation Plan", description="Scale 1:100 layout detailing fire exits, smoke extraction, and extinguisher points signed by Licensed Fire Consultant", is_mandatory=True, category="Safety Engineering"),
+                    DocumentRequirement(id="doc-gas-noc", name="LPG / PNG Gas Pipeline Installation Certificate", description="Certificate from approved authorized gas provider certifying kitchen piping safety and shut-off valves", is_mandatory=True, category="Utility Safety")
                 ],
-                forms=[
-                    FormRequirement(form_code="FORM A - MFB", title="Application for Fire Safety NOC for Commercial Eating House", fill_online_url="https://portal.mcgm.gov.in/eodb-fire-noc"),
-                    FormRequirement(form_code="ANNEXURE C", title="Mumbai Fire Brigade Fire Safety & Kitchen Ventilation Declaration", download_url="https://portal.mcgm.gov.in/eodb-fire-noc/annexure_c.pdf", fill_online_url="https://portal.mcgm.gov.in/eodb-fire-noc")
-                ],
+                forms=[FormRequirement(form_code="MFB-NOC-APP-1", title="Application for Fire Safety Verification & Final NOC", fill_online_url="https://portal.mcgm.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/eodb-fire-noc",
-                    page_title="Mumbai Fire Brigade - Commercial Premise NOC Regulations",
-                    last_scraped_at="2026-09-24T16:42:00Z",
+                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlfirenoc",
+                    page_title="Mumbai Fire Brigade - Standard Operating Procedures for Food Establishments",
+                    last_scraped_at="2026-09-24T11:45:00Z",
                     confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="Maharashtra Fire Prevention and Life Safety Measures Act 2006 § 3(1)"
+                    gazette_ref="Maharashtra Fire Prevention & Life Safety Act 2006"
                 ),
-                tips_and_pitfalls="Maintain minimum 1.5m clearance between commercial exhaust termination and adjacent residential balcony or window openings.",
-                anti_tout_advisory="OFFICIAL ANTI-TOUT ADVISORY: Fire Brigade site inspections attract unauthorized liaisons claiming 'expediting fees'. Under Maharashtra Fire Act 2006, all assessment fees (₹18,500) are payable ONLY via MCGM SAP Portal Challan. Direct cash payment is an offense under Prevention of Corruption Act. Report touts to ACB: 1064.",
-                statutory_payment_channel="Brihanmumbai Municipal Corporation (MCGM) SAP Treasury Gateway",
-                community_verifications=18,
-                official_receipt_mandate="Zero Cash Mandate: All fees payable against official computerized Municipal Challan Receipt (MCR). No cash collection permitted at Byculla Fire HQ.",
-                last_gazette_notification="Maharashtra Fire Act Notification CFO/P/784/2023"
+                tips_and_pitfalls="Emergency egress doors must open outwards and remain unlocked during all working hours; failure results in immediate rejection of MFB NOC.",
+                is_critical_path=True
             ),
             TaskStep(
-                id="mum-bakery-3a",
+                id="stop-03a",
                 task_id="task-mum-bakery",
                 step_number=4,
-                title="FSSAI State Food Business Operator License",
-                description="Mandatory Food Safety and Standards Authority of India (FSSAI) state operating license for commercial baking, dairy handling, and confectionery production. Concurrent filing alongside MFB Fire audit.",
+                title="FSSAI State Food License (FoSCoS Maharashtra)",
+                description="State food safety manufacturing and food service license issued by Food Safety and Standards Authority of India (FSSAI) Western Regional Office / Maharashtra FDA.",
                 department=dept_fssai_mum,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=12,
+                estimated_days=15,
                 fee_amount=7500.0,
-                fee_breakdown={"FSSAI State License Fee (3 Years)": 6000.0, "Water Potability Analysis (Municipal Lab Dadar)": 1500.0},
-                prerequisites=["mum-bakery-2"],
+                fee_breakdown={"FSSAI State License Annual Fee": 5000.0, "Food Testing & Sampling Deposit": 2500.0},
+                prerequisites=["stop-02", "stop-03"],
                 documents=[
-                    DocumentRequirement(
-                        id="doc-fssai-layout",
-                        name="Food Safety Blueprint & Equipment Layout",
-                        description="Showing separate raw ingredient storage, bakery mixing deck, and refrigeration zones",
-                        is_mandatory=True,
-                        category="Technical Plans & Drawings",
-                        validity_rule="Must include pest-control fly killer location schematic and separate hand-wash station",
-                        issuing_authority="FSSAI Certified Food Safety Auditor"
-                    ),
-                    DocumentRequirement(
-                        id="doc-fssai-water",
-                        name="Bacteriological Water Potability Lab Report",
-                        description="Tested compliant under IS 10500 standards from Dadar Municipal Laboratory",
-                        is_mandatory=True,
-                        category="Statutory Clearances",
-                        validity_rule="Issued within last 180 days by NABL/Municipal Accredited Laboratory (IS 10500)",
-                        issuing_authority="Dadar Municipal Laboratory (MCGM Public Health Dept)"
-                    ),
-                    DocumentRequirement(
-                        id="doc-fssai-med",
-                        name="Food Handlers Medical Fitness Certificate",
-                        description="Form IX signed by registered medical practitioner with typhoid vaccination proof",
-                        is_mandatory=True,
-                        category="Identity & KYC",
-                        validity_rule="Annual fitness certificate with chest X-ray and typhoid vaccine endorsement",
-                        issuing_authority="Registered Medical Practitioner (MBBS/MD)"
-                    )
+                    DocumentRequirement(id="doc-fsms", name="Food Safety Management System (FSMS) Plan & SOP", description="Documented hygiene protocols, pest control contract, and Hazard Analysis Critical Control Point (HACCP) layout", is_mandatory=True, category="Food Hygiene"),
+                    DocumentRequirement(id="doc-water-test", name="Potable Water Test Microbiological Analysis Report", description="Chemical and bacterial potability report from NABL-accredited laboratory for kitchen water", is_mandatory=True, category="Quality Testing"),
+                    DocumentRequirement(id="doc-med-fit", name="Food Handler Medical Fitness Certificates (Form IX)", description="Medical fitness certification for all bakery chefs and kitchen staff", is_mandatory=True, category="Staff Health")
                 ],
-                forms=[
-                    FormRequirement(form_code="FORM FSSAI-B", title="Schedule 2 Form B Application for FSSAI State License", fill_online_url="https://foscos.fssai.gov.in")
-                ],
+                forms=[FormRequirement(form_code="FSSAI Form B", title="Application for State Food License under FSS Act", fill_online_url="https://foscos.fssai.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://foscos.fssai.gov.in",
-                    page_title="FSSAI Food Safety Compliance System (FoSCoS)",
-                    last_scraped_at="2026-09-22T14:15:00Z",
+                    url="https://foscos.fssai.gov.in/userguide",
+                    page_title="FSSAI FoSCoS - State Licensing Standard Operating Procedures",
+                    last_scraped_at="2026-09-25T16:20:00Z",
                     confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="Food Safety and Standards Act 2006 § 31"
+                    gazette_ref="Food Safety and Standards (Licensing and Registration of Food Businesses) Regulations, 2011"
                 ),
-                tips_and_pitfalls="Designate a trained FoSTaC certified supervisor to prevent inspection deferrals during state food auditor visits.",
-                anti_tout_advisory="FSSAI State license fee is ₹2,000/year (₹6,000 for 3 years) payable directly through FoSCoS portal gateway. Do not use third-party paid 'fast-track' websites.",
-                statutory_payment_channel="Central FoSCoS Payment Gateway (SBI e-Pay / NetBanking)",
-                community_verifications=21,
-                official_receipt_mandate="Zero Cash Mandate: Official FSSAI Receipt with QR Authenticity Seal generated instantly online.",
-                last_gazette_notification="FSSAI Notification No. 1-1371/FSSAI/Imports/2021"
+                tips_and_pitfalls="Potable water test report must not be older than 30 calendar days at time of FoSCoS filing."
             ),
             TaskStep(
-                id="mum-bakery-3b",
+                id="stop-03b",
                 task_id="task-mum-bakery",
                 step_number=5,
-                title="MPCB Pollution Consent to Establish / Operate (CTE/CTO)",
-                description="Maharashtra Pollution Control Board Consent under Water (Prevention and Control of Pollution) Act 1974 and Air Act 1981. Kitchen effluent grease interceptor and acoustic baking oven dampening.",
+                title="MPCB Green Category Consent to Establish & Operate (CTE/CTO)",
+                description="Statutory environmental clearance for commercial bakery, oven ventilation, and effluent discharge under the Water and Air (Prevention & Control of Pollution) Acts from Maharashtra Pollution Control Board.",
                 department=dept_mpcb,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=10,
-                fee_amount=6200.0,
-                fee_breakdown={"MPCB Application & Scrutiny Fee": 5000.0, "Pollution Cess Assessment": 1200.0},
-                prerequisites=["mum-bakery-2"],
+                estimated_days=12,
+                fee_amount=10000.0,
+                fee_breakdown={"Consent to Establish (CTE) Scrutiny Fee": 5000.0, "Consent to Operate (CTO) 5-Year Fee": 5000.0},
+                prerequisites=["stop-02", "stop-03"],
                 documents=[
-                    DocumentRequirement(
-                        id="doc-mpcb-grease",
-                        name="Grease Trap & Effluent Treatment Specification",
-                        description="Design for commercial three-chamber grease trap treating kitchen sink discharge",
-                        is_mandatory=True,
-                        category="Technical Plans & Drawings",
-                        validity_rule="3-stage baffle grease trap with minimum 150L handling capacity",
-                        issuing_authority="Environmental Engineering Consultant"
-                    ),
-                    DocumentRequirement(
-                        id="doc-mpcb-power",
-                        name="Bakery Electrical Load & Acoustic Enclosure Plan",
-                        description="Showing noise levels under 55 dB(A) for residential mixed zone",
-                        is_mandatory=True,
-                        category="Technical Plans & Drawings",
-                        validity_rule="Noise emission < 55 dB(A) acoustic canopy certificate",
-                        issuing_authority="CPCB Approved Noise Testing Agency"
-                    )
+                    DocumentRequirement(id="doc-grease-trap", name="Grease Trap & Kitchen Exhaust Blueprint", description="Engineering diagram showing grease interceptor on kitchen wastewater line and chimney flue height", is_mandatory=True, category="Environmental Engineering"),
+                    DocumentRequirement(id="doc-mpcb-chart", name="Baking Process Flowchart & Raw Material Matrix", description="Itemized consumption of flour, sugar, butter, power, and estimated daily organic solid waste generation", is_mandatory=True, category="Process Audit")
                 ],
-                forms=[
-                    FormRequirement(form_code="MPCB FORM I", title="Combined Consent Application under Water & Air Acts", fill_online_url="https://mpcb.gov.in")
-                ],
+                forms=[FormRequirement(form_code="MPCB-Form-I", title="Combined Application for CTE & CTO under Water & Air Acts", fill_online_url="https://mpcb.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://mpcb.gov.in",
-                    page_title="Maharashtra Pollution Control Board - EODB Consent Management",
-                    last_scraped_at="2026-09-20T11:00:00Z",
+                    url="https://mpcb.gov.in/consent/categorization-industries",
+                    page_title="MPCB Comprehensive Categorization of Industries - Bakeries & Confectioneries (Green Category)",
+                    last_scraped_at="2026-09-22T09:10:00Z",
                     confidence_score=0.97,
                     is_admin_verified=True,
-                    gazette_ref="Water Act 1974 § 25 & Air Act 1981 § 21"
+                    gazette_ref="Maharashtra Pollution Control Board Notification MPCB/JD(WPC)/B-190328-FTS-0012"
                 ),
-                tips_and_pitfalls="Commercial bakery operations fall under Green Category if capital investment < ₹5 Crore and no coal-fired tandoor is utilized.",
-                anti_tout_advisory="Consent to Establish fee of ₹5,000 + cess is deposited into MPCB SBI Treasury account through portal gateway. Zero cash collection at Regional Office Sion.",
-                statutory_payment_channel="MPCB Centralized Online Consent Gateway",
-                community_verifications=16,
-                official_receipt_mandate="Zero Cash Mandate: Electronic Treasury Reference generated for all Water/Air Act statutory fees.",
-                last_gazette_notification="MPCB Circular No. MPCB/JD(WPC)/B-190424-FTS-0112"
+                tips_and_pitfalls="Commercial ovens with power load exceeding 10 HP must connect to grease traps before discharging kitchen waste to municipal sewers."
             ),
             TaskStep(
-                id="mum-bakery-4",
+                id="stop-04",
                 task_id="task-mum-bakery",
                 step_number=6,
-                title="BMC Health Trade License under Section 394 (MMC Act 1888)",
-                description="Statutory health trade permit authorizing commercial preparation and sale of food items, bakery confectionery, and trade refuse assessment by Medical Officer of Health (Ward H/West).",
+                title="MCGM Section 394 Health Trade License (MOH Ward H/West)",
+                description="Core municipal trade permit to operate an eating house and food preparation establishment in Greater Mumbai pursuant to Section 394 of the Mumbai Municipal Corporation Act (MMC Act 1888).",
                 department=dept_mcgm_health,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=14,
-                fee_amount=12000.0,
-                fee_breakdown={
-                    "Section 394 Trade License Fee (Bakery with Power)": 6000.0,
-                    "Trade Refuse Charge (TRC) Annual Assessment": 3500.0,
-                    "Factory / Power Machinery Inspection (5 HP Baking Deck)": 2500.0
-                },
-                prerequisites=["mum-bakery-3", "mum-bakery-3a", "mum-bakery-3b"],
+                submission_mode=SubmissionMode.HYBRID,
+                estimated_days=10,
+                fee_amount=14000.0,
+                fee_breakdown={"Section 394 Health License Scheduled Fee": 8500.0, "Trade Refuse Charges (TRC) Annual": 4000.0, "PCO Rat Proofing & Sanitation Inspection Fee": 1500.0},
+                prerequisites=["stop-03", "stop-03a", "stop-03b"],
                 documents=[
-                    DocumentRequirement(
-                        id="doc-pest-mum",
-                        name="Pest Control Contract & Water Potability Certificate",
-                        description="Certified contract with MCGM approved pest control operator and Dadar municipal bacteriological test",
-                        is_mandatory=True,
-                        category="Statutory Clearances",
-                        validity_rule="Annual service contract with MCGM licensed pest control operator",
-                        issuing_authority="MCGM Licensed Pest Control Agency"
-                    ),
-                    DocumentRequirement(
-                        id="doc-mfb-clearance",
-                        name="Chief Fire Officer Final Fire NOC Clearance",
-                        description="Verification of compliance from Stop 03",
-                        is_mandatory=True,
-                        category="Statutory Clearances",
-                        validity_rule="Official NOC issued by Chief Fire Officer, Mumbai Fire Brigade",
-                        issuing_authority="Chief Fire Officer, Mumbai Fire Brigade"
-                    ),
-                    DocumentRequirement(
-                        id="doc-fssai-clearance",
-                        name="FSSAI State License Grant Letter",
-                        description="Food business registration certificate from Stop 03A",
-                        is_mandatory=True,
-                        category="Statutory Clearances",
-                        validity_rule="Active FSSAI License Number (14 digits) issued via FoSCoS",
-                        issuing_authority="FSSAI Western Regional Office Mumbai"
-                    )
+                    DocumentRequirement(id="doc-moh-dossier", name="Consolidated Inter-Agency Clearances Bundle", description="Verified MFB Fire NOC, FSSAI State Food License, and MPCB Consent certificates", is_mandatory=True, category="Statutory Clearances"),
+                    DocumentRequirement(id="doc-pco-cert", name="MCGM Pest Control Officer (PCO) Certificate", description="Rat proofing and vector control compliance certificate issued by Ward H/West PCO", is_mandatory=True, category="Public Sanitation"),
+                    DocumentRequirement(id="doc-water-sanction", name="MCGM Municipal Water Connection Sanction Card", description="Sanctioned water meter number under Section 140 MMC Act", is_mandatory=True, category="Utilities")
                 ],
-                forms=[
-                    FormRequirement(form_code="FORM HTL-1", title="Application for Health Trade License under Section 394 (MMC Act 1888)", fill_online_url="https://portal.mcgm.gov.in/eodb-trade-license")
-                ],
+                forms=[FormRequirement(form_code="MMC Form 394", title="Application for Grant of Health License under Section 394 MMC Act", fill_online_url="https://portal.mcgm.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/eodb-trade-license",
-                    page_title="MCGM Public Health Department - Trade License Portal",
-                    last_scraped_at="2026-09-24T16:42:00Z",
+                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlhealthlicense",
+                    page_title="MCGM Public Health Department - Citizen Charter for Health Licenses",
+                    last_scraped_at="2026-09-25T13:30:00Z",
                     confidence_score=0.99,
                     is_admin_verified=True,
                     gazette_ref="Mumbai Municipal Corporation Act 1888 Section 394 Schedule M"
                 ),
-                tips_and_pitfalls="Physical site inspection conducted by Ward MOH within 7 working days of fee payment. Clean water lines must be marked.",
-                anti_tout_advisory="STRICT BMC ANTI-TOUT ADVISORY: Ward H/West Health Department does not authorize brokers or agents. Official Schedule M fee of ₹12,000 must be deposited via MCGM NetBanking or Ward CFC Computerized Counter with official Municipal Computerized Receipt (MCR). Beware of touts claiming inspection waivers.",
-                statutory_payment_channel="Brihanmumbai Municipal Corporation (MCGM) Ward CFC E-Challan",
-                community_verifications=19,
-                official_receipt_mandate="Zero Cash Mandate: Payment receipt must bear the 10-digit MCGM Citizen Receipt Number (MCR). No cash collection permitted by Ward MOH inspectors.",
-                last_gazette_notification="MCGM Circular No. CHE/DP/102/2024 dated 14-06-2024"
+                tips_and_pitfalls="Premises must have minimum 10-foot ceiling clearance in bakery production area and washable ceramic wall tiles up to 7 feet.",
+                is_critical_path=True
             ),
             TaskStep(
-                id="mum-bakery-5",
+                id="stop-05",
                 task_id="task-mum-bakery",
                 step_number=7,
-                title="Commercial Facade & Signboard License (Section 328 MMC Act)",
-                description="Statutory permission for external shopfront signage and illuminated board from MCGM License Department. Must comply with Maharashtra Shops and Establishments Act 2022 amendment for Marathi Devanagari lettering.",
-                department=dept_mcgm_license,
+                title="Outdoor Dining Permission & Devanagari Signage Clearance (Ward H/West)",
+                description="Secure outdoor seating / sidewalk cafe permission under MCGM Open-to-Sky Dining Policy and statutory nameboard authorization with prominent Marathi Devanagari lettering.",
+                department=dept_mcgm_estate,
                 submission_mode=SubmissionMode.ONLINE,
                 estimated_days=7,
-                fee_amount=4800.0,
-                fee_breakdown={"Signboard Advertisement Fee (Section 328)": 3800.0, "Scrutiny & Inspection Levy": 1000.0},
-                prerequisites=["mum-bakery-2", "mum-bakery-4"],
+                fee_amount=4000.0,
+                fee_breakdown={"Outdoor Seating Annual User Fee": 2500.0, "Devanagari Signage Scrutiny Fee": 1500.0},
+                prerequisites=["stop-04"],
                 documents=[
-                    DocumentRequirement(
-                        id="doc-sign-photo",
-                        name="Signboard Artwork & Facade Photo",
-                        description="Scaled elevation drawing demonstrating Marathi Devanagari font in equal or larger size than English lettering",
-                        is_mandatory=True,
-                        category="Technical Plans & Drawings",
-                        validity_rule="Marathi Devanagari lettering font size must be >= English font size",
-                        issuing_authority="Commercial Signage Fabricator / Architect"
-                    ),
-                    DocumentRequirement(
-                        id="doc-soc-noc",
-                        name="Building Cooperative Housing Society (CHS) NOC",
-                        description="Unconditional consent from building society managing committee for facade mounting",
-                        is_mandatory=True,
-                        category="Property & Premise",
-                        validity_rule="Original signed resolution on Cooperative Housing Society letterhead",
-                        issuing_authority="CHS Managing Committee Secretary/Chairman"
-                    )
+                    DocumentRequirement(id="doc-outdoor-plan", name="Outdoor Seating Boundary & Pedestrian Clearance Plan", description="Scale diagram demonstrating 2.5-meter unobstructed pedestrian sidewalk passage", is_mandatory=True, category="Urban Planning"),
+                    DocumentRequirement(id="doc-signage-marathi", name="Signboard Graphic Layout with Devanagari Font Prominence", description="Demonstrating compliance with Maharashtra Shops & Establishments Amendment Act 2022", is_mandatory=True, category="Signage Compliance")
                 ],
-                forms=[
-                    FormRequirement(form_code="FORM LIC-328", title="Application for Sky-Sign / Signboard Permission", fill_online_url="https://portal.mcgm.gov.in/signboard-license")
-                ],
+                forms=[FormRequirement(form_code="MCGM-OTS-2024", title="Application for Outdoor Customer Seating & Signage", fill_online_url="https://portal.mcgm.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/signboard-license",
-                    page_title="MCGM License Department - Signboard Permissions",
-                    last_scraped_at="2026-09-21T14:00:00Z",
+                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlrooftopdining",
+                    page_title="BMC Policy Guidelines for Outdoor Food Seating & Commercial Signage",
+                    last_scraped_at="2026-09-24T17:00:00Z",
                     confidence_score=0.98,
                     is_admin_verified=True,
-                    gazette_ref="Mumbai Municipal Corporation Act 1888 Section 328 & 328A"
+                    gazette_ref="MCGM Circular No. CHE/DP/3241/Gen (Outdoor Dining)"
                 ),
-                tips_and_pitfalls="Devanagari script must precede English text and maintain minimum 50% visual prominence.",
-                anti_tout_advisory="Section 328 sky-sign fees (₹4,800) are assessed strictly by square meter. Paid via official municipal challan only.",
-                statutory_payment_channel="MCGM Citizen Portal License Department Gateway",
-                community_verifications=15,
-                official_receipt_mandate="Zero Cash Mandate: Computerized MCR Challan generated on area-based calculation formula.",
-                last_gazette_notification="MCGM Circular No. Lic/08/2022 (Marathi Signboard Mandate)"
-            ),
-            TaskStep(
-                id="mum-bakery-6",
-                task_id="task-mum-bakery",
-                step_number=8,
-                title="Final Health Trade Certificate & Official Municipal Seal (Terminus)",
-                description="Issuance of unified composite Municipal Health Trade License Certificate bearing encrypted QR verification code and entry into Municipal Registry.",
-                department=dept_mcgm_comm,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=3,
-                fee_amount=500.0,
-                fee_breakdown={"Digital Certificate Issuance & QR Seal": 500.0},
-                prerequisites=["mum-bakery-5"],
-                documents=[
-                    DocumentRequirement(
-                        id="doc-final-inspec",
-                        name="Ward MOH Satisfactory Inspection Report",
-                        description="Final site compliance certificate from Ward H/West health officer",
-                        is_mandatory=True,
-                        category="Statutory Clearances",
-                        validity_rule="Official digital sign-off by MOH Ward H/West on MCGM Portal",
-                        issuing_authority="Medical Officer of Health (MOH Ward H/West)"
-                    )
-                ],
-                forms=[
-                    FormRequirement(form_code="CERT-HTL-FINAL", title="Download Official Health Trade License Certificate", fill_online_url="https://portal.mcgm.gov.in")
-                ],
-                verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in",
-                    page_title="Municipal Corporation of Greater Mumbai - Citizen E-Portal",
-                    last_scraped_at="2026-09-25T13:00:00Z",
-                    confidence_score=1.0,
-                    is_admin_verified=True,
-                    gazette_ref="Maharashtra Right to Public Services Act 2015"
-                ),
-                tips_and_pitfalls="Laminated certificate with QR code must be displayed prominently at front customer counter.",
-                anti_tout_advisory="Official digital certificate with encrypted QR code is issued free of liaison fees upon clearing statutory milestones. ₹500 digital certification fee only.",
-                statutory_payment_channel="MCGM Ward H/West Automated E-Seal Release",
-                community_verifications=24,
-                official_receipt_mandate="Zero Cash Mandate: Final certificate generated with cryptographically verifiable digital signature of Municipal Commissioner.",
-                last_gazette_notification="Maharashtra Right to Public Services Act 2015 Notification"
+                tips_and_pitfalls="Permanent structural roofing or glass enclosures over outdoor seating are strictly prohibited; only removable fabric awnings are allowed."
             )
         ]
 
-        task0 = CivicTask(
+        task_bakery = CivicTask(
             id="task-mum-bakery",
             title="Register & Commission a Commercial Bakery in Bandra, Mumbai",
             category="Food & Hospitality",
@@ -609,543 +679,278 @@ class CivicDatabase:
             state="Maharashtra",
             description="Statutory pathway governing commercial bakery establishment with eating house authorization across MCGM Ward H/West, Mumbai Fire Brigade (MFB), FSSAI FoSCoS, and Maharashtra Pollution Control Board (MPCB) pursuant to Section 394 MMC Act 1888.",
             tags=["commercial bakery", "cafe", "food service", "mcgm", "bmc", "mumbai", "bandra west", "ward h/west", "section 394", "mmc act 1888", "fssai", "foscos", "gumasta", "mfb fire noc", "mpcb", "aaple sarkar"],
-            steps=task0_steps
+            steps=task_bakery_steps
         )
-        self._tasks[task0.id] = task0
+        self._tasks[task_bakery.id] = task_bakery
 
         # -------------------------------------------------------------------------
-        # TASK 1: Food Business & Restaurant Registration (Bengaluru BBMP)
+        # TASK 3: Open a Restaurant, Cafe or Food Outlet in Pune (PMC)
+        # Major Maharashtra Metropolitan City
         # -------------------------------------------------------------------------
-        dept_mca = DepartmentInfo(
-            id="dept-mca",
-            name="Ministry of Corporate Affairs / GSTN",
-            jurisdiction="Central Government (State Desk: Karnataka)",
-            office_address="E-Governance Cell, Kendriya Sadan, Koramangala, Bengaluru - 560034",
-            contact_phone="1800-103-4786",
-            contact_email="helpdesk.mca@gov.in",
-            portal_url="https://www.mca.gov.in"
-        )
-        dept_bbmp_town = DepartmentInfo(
-            id="dept-bbmp-town",
-            name="Bruhat Bengaluru Mahanagara Palike (Town Planning Wing)",
-            jurisdiction="Municipal (Bengaluru Urban)",
-            office_address="BBMP Head Office, NR Square, Hudson Circle, Bengaluru - 560002",
-            contact_phone="080-22221188",
-            contact_email="townplanning@bbmp.gov.in",
-            portal_url="https://bbmp.karnataka.gov.in"
-        )
-        dept_fssai = DepartmentInfo(
-            id="dept-fssai",
-            name="Food Safety and Standards Authority of India (FSSAI)",
-            jurisdiction="FSSAI Regional Office, Southern Region",
-            office_address="CGO Complex, 2nd Floor, Wing-B, Basaveshwara Road, Bengaluru - 560001",
-            contact_phone="1800-112-100",
-            contact_email="foscos.helpdesk@fssai.gov.in",
-            portal_url="https://foscos.fssai.gov.in"
-        )
-        dept_fire = DepartmentInfo(
-            id="dept-fire",
-            name="Karnataka Fire & Emergency Services",
-            jurisdiction="State Government (Bengaluru Command)",
-            office_address="Fire Force Headquarters, Annaswamy Mudaliar Road, Bengaluru - 560042",
-            contact_phone="080-22971501",
-            contact_email="fire.karnataka@gov.in",
-            portal_url="https://ksfes.karnataka.gov.in"
-        )
-        dept_kspcb = DepartmentInfo(
-            id="dept-kspcb",
-            name="Karnataka State Pollution Control Board (KSPCB)",
-            jurisdiction="Regional Environmental Office",
-            office_address="Parisara Bhavan, #49, Church Street, Bengaluru - 560001",
-            contact_phone="080-25589112",
-            contact_email="memsecy@kspcb.gov.in",
-            portal_url="https://kspcb.karnataka.gov.in"
-        )
-        dept_bbmp_health = DepartmentInfo(
-            id="dept-bbmp-health",
-            name="BBMP Directorate of Health & Public Licensing",
-            jurisdiction="BBMP Zonal / Ward Health Office",
-            office_address="Zonal Joint Commissioner Office, Queens Road, Tasker Town, Bengaluru",
-            contact_phone="080-22660000",
-            contact_email="healthlicensing@bbmp.gov.in",
-            portal_url="https://bbmptax.karnataka.gov.in/tradelicense"
-        )
-        dept_bescom = DepartmentInfo(
-            id="dept-bescom",
-            name="Bangalore Electricity Supply Company Limited (BESCOM)",
-            jurisdiction="Bengaluru Metropolitan Area",
-            office_address="BESCOM Corporate Office, K.R. Circle, Bengaluru - 560001",
-            contact_phone="1912",
-            contact_email="helpline@bescom.org",
-            portal_url="https://bescom.karnataka.gov.in"
-        )
-
-        task1_steps = [
+        task_pune_steps = [
             TaskStep(
-                id="blr-food-1",
-                task_id="task-blr-restaurant",
+                id="pune-food-1",
+                task_id="task-pune-restaurant",
                 step_number=1,
-                title="Business Legal Structure & GSTIN Registration",
-                description="Register entity (Sole Proprietorship, LLP, or Pvt Ltd) and obtain Goods and Services Tax Identification Number (GSTIN) with PAN.",
-                department=dept_mca,
+                title="Business Incorporation & PMC Gumasta Intimation",
+                description="Complete legal entity creation and obtain Pune Municipal Corporation (PMC) Shops & Establishments Intimation / Registration via Maharashtra LMS portal.",
+                department=dept_mah_labour,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=4,
-                fee_amount=1500.0,
-                fee_breakdown={"MCA Name Approval": 1000.0, "State Stamp Duty": 500.0, "GSTIN Registration": 0.0},
+                estimated_days=3,
+                fee_amount=650.0,
+                fee_breakdown={"LMS Registration Fee": 500.0, "Portal Charges": 150.0},
                 prerequisites=[],
                 documents=[
-                    DocumentRequirement(id="doc-pan", name="Director/Proprietor PAN Card", description="Self-attested identity proof", is_mandatory=True),
-                    DocumentRequirement(id="doc-aadhaar", name="Aadhaar Card with Mobile Link", description="For e-KYC digital signing", is_mandatory=True),
-                    DocumentRequirement(id="doc-bank", name="Cancelled Cheque or Bank Statement", description="Proof of commercial bank account", is_mandatory=True)
+                    DocumentRequirement(id="doc-pune-kyc", name="Proprietor / Partners KYC & PAN", description="Aadhaar and PAN of business owners", is_mandatory=True, category="Identity"),
+                    DocumentRequirement(id="doc-pune-lease", name="Registered Commercial Lease Deed in Pune", description="Registered with Sub-Registrar Pune", is_mandatory=True, category="Premises")
                 ],
-                forms=[
-                    FormRequirement(form_code="SPICe+ Part A/B", title="Integrated Company Incorporation Form", fill_online_url="https://www.mca.gov.in/mcafoportal/showSpicePlus.do"),
-                    FormRequirement(form_code="REG-01", title="Application for Registration under GST Act", fill_online_url="https://reg.gst.gov.in/registration")
-                ],
+                forms=[FormRequirement(form_code="Form A / Form F", title="PMC Gumasta Registration Form", fill_online_url="https://lms.mahaonline.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://services.india.gov.in/service/detail/apply-for-company-incorporation-online",
-                    page_title="National Portal of India - Company Incorporation & GST",
-                    last_scraped_at="2026-09-24T08:30:00Z",
-                    confidence_score=0.98,
-                    is_admin_verified=True,
-                    gazette_ref="Central Gazette No. GSR 180(E) - Companies Act Rules"
-                ),
-                tips_and_pitfalls="Ensure your trade name matches exact keywords on electricity bills to avoid query objections.",
-                status=StepStatus.READY
-            ),
-            TaskStep(
-                id="blr-food-2",
-                task_id="task-blr-restaurant",
-                step_number=2,
-                title="Commercial Premise Lease & BBMP Zoning NOC",
-                description="Obtain notarized registered rental deed for commercial premise and verify land-use zoning (Commercial/Mixed-use under Revised Master Plan 2015).",
-                department=dept_bbmp_town,
-                submission_mode=SubmissionMode.HYBRID,
-                estimated_days=7,
-                fee_amount=2200.0,
-                fee_breakdown={"Zoning Verification Scrutiny": 1200.0, "Notarization & Stamp Fee": 1000.0},
-                prerequisites=[],
-                documents=[
-                    DocumentRequirement(id="doc-lease", name="Registered Commercial Lease Agreement", description="Minimum 11-month registered lease specifying food establishment use", is_mandatory=True),
-                    DocumentRequirement(id="doc-khata", name="BBMP Khata Certificate (A-Khata)", description="Property must have valid tax assessment and A-Khata", is_mandatory=True),
-                    DocumentRequirement(id="doc-taxrec", name="Latest Municipal Property Tax Paid Receipt", description="SAC code receipt for current assessment year", is_mandatory=True)
-                ],
-                forms=[
-                    FormRequirement(form_code="BBMP-TP-Z01", title="Application for Land Use / Zoning Concurrence", download_url="https://bbmp.karnataka.gov.in/forms/zoning_noc.pdf")
-                ],
-                verification_source=VerificationSource(
-                    url="https://bbmp.karnataka.gov.in/page.php?slug=town-planning-guidelines",
-                    page_title="BBMP Town Planning - Permissible Land Use Guidelines",
-                    last_scraped_at="2026-09-20T11:45:00Z",
-                    confidence_score=0.95,
-                    is_admin_verified=True,
-                    portal_section="RMP-2015 Zonal Regulations"
-                ),
-                tips_and_pitfalls="Restaurants require road width >= 40 feet in residential mixed zones. Operating in B-Khata or pure residential zone will lead to immediate rejection."
-            ),
-            TaskStep(
-                id="blr-food-3a",
-                task_id="task-blr-restaurant",
-                step_number=3,
-                title="FSSAI State Food License / Registration",
-                description="Apply for FSSAI State License (for turnover > 12 Lakhs/year) or Registration on FoSCoS portal with kitchen layout and water testing report.",
-                department=dept_fssai,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=10,
-                fee_amount=2000.0,
-                fee_breakdown={"FSSAI Annual Fee (1 Year)": 2000.0},
-                prerequisites=["blr-food-1", "blr-food-2"],
-                documents=[
-                    DocumentRequirement(id="doc-layout", name="Blueprint / Kitchen Floor Layout Plan", description="Dimensioned plan showing food preparation, storage, and dishwashing zones", is_mandatory=True),
-                    DocumentRequirement(id="doc-water", name="Potable Water Testing Lab Report", description="From NABL accredited lab testing bacterial and chemical standards", is_mandatory=True),
-                    DocumentRequirement(id="doc-med", name="Staff Medical Fitness Certificates", description="Form IX signed by registered medical practitioner", is_mandatory=True)
-                ],
-                forms=[
-                    FormRequirement(form_code="Form B", title="Application for State License under Food Safety Act", fill_online_url="https://foscos.fssai.gov.in/apply-state-license")
-                ],
-                verification_source=VerificationSource(
-                    url="https://foscos.fssai.gov.in/user-manuals/restaurant-food-services-flow.pdf",
-                    page_title="FSSAI Food Safety Compliance System - Licensing Guide",
-                    last_scraped_at="2026-09-22T14:15:00Z",
+                    url="https://pmc.gov.in/en/shops-and-establishments",
+                    page_title="Pune Municipal Corporation - Shops and Establishments Section",
+                    last_scraped_at="2026-09-24T10:00:00Z",
                     confidence_score=0.99,
-                    is_admin_verified=True
-                ),
-                tips_and_pitfalls="Mandatory to upload Food Safety Management System (FSMS) plan checklist during initial submission."
-            ),
-            TaskStep(
-                id="blr-food-3b",
-                task_id="task-blr-restaurant",
-                step_number=4,
-                title="Fire & Emergency Services Safety NOC",
-                description="Obtain Fire Safety Clearances (Provisional NOC for premise inspection and compliance with National Building Code Part IV).",
-                department=dept_fire,
-                submission_mode=SubmissionMode.HYBRID,
-                estimated_days=14,
-                fee_amount=3500.0,
-                fee_breakdown={"Department Inspection Fee": 2500.0, "Safety Assessment Scrutiny": 1000.0},
-                prerequisites=["blr-food-1", "blr-food-2"],
-                documents=[
-                    DocumentRequirement(id="doc-fire-eq", name="Fire Extinguisher Invoice & ISI Certification", description="CO2 and ABC dry powder canisters with valid hydro test tag", is_mandatory=True),
-                    DocumentRequirement(id="doc-evac", name="Premise Evacuation & Exit Route Diagram", description="Highlighted secondary emergency escape exits", is_mandatory=True)
-                ],
-                forms=[
-                    FormRequirement(form_code="KFES-NOC-1", title="Application for Fire Safety Verification of Commercial Eating House", download_url="https://ksfes.karnataka.gov.in/downloads/commercial_eating_house_noc.pdf")
-                ],
-                verification_source=VerificationSource(
-                    url="https://ksfes.karnataka.gov.in/page.php?slug=advisory-for-commercial-premises",
-                    page_title="Karnataka Fire & Emergency Services - Eating Establishment Safety Rules",
-                    last_scraped_at="2026-09-18T10:00:00Z",
-                    confidence_score=0.94,
                     is_admin_verified=True,
-                    gazette_ref="Karnataka Fire Force Act 1964 Section 13"
-                ),
-                tips_and_pitfalls="Kitchen exhaust hood must feature automatic fire dampening or certified non-grease filtration."
+                    gazette_ref="Maharashtra Municipal Corporations Act Section 376"
+                )
             ),
             TaskStep(
-                id="blr-food-3c",
-                task_id="task-blr-restaurant",
-                step_number=5,
-                title="KSPCB Consent to Establish (CTE - Green Category)",
-                description="Pollution control consent for grease trap effluent discharge, exhaust chimney height, and organic waste composter installation.",
-                department=dept_kspcb,
+                id="pune-food-2",
+                task_id="task-pune-restaurant",
+                step_number=2,
+                title="PMC Property Tax Khata & No Arrears Certificate",
+                description="Verify property tax account on PMC Ptis portal and obtain No Dues Certificate for commercial premises.",
+                department=dept_pmc_health,
                 submission_mode=SubmissionMode.ONLINE,
+                estimated_days=2,
+                fee_amount=0.0,
+                fee_breakdown={"Zero Arrears Clearance Fee": 0.0},
+                prerequisites=["pune-food-1"],
+                documents=[
+                    DocumentRequirement(id="doc-pmc-tax", name="Last Paid PMC Property Tax Receipt", description="Showing zero tax dues for current financial year", is_mandatory=True, category="Property Tax")
+                ],
+                forms=[FormRequirement(form_code="PMC-NDC", title="Property Tax Clearance Application", fill_online_url="https://pmc.gov.in/ptis")],
+                verification_source=VerificationSource(
+                    url="https://pmc.gov.in/en/property-tax",
+                    page_title="PMC Property Tax Assessment & Collection",
+                    last_scraped_at="2026-09-25T12:00:00Z",
+                    confidence_score=0.98,
+                    is_admin_verified=True
+                )
+            ),
+            TaskStep(
+                id="pune-food-3",
+                task_id="task-pune-restaurant",
+                step_number=3,
+                title="Pune Central Fire Brigade NOC (New Timber Market HQ)",
+                description="Fire safety audit and inspection for commercial kitchen, gas piping, and seating exits by Pune Municipal Corporation Fire Department.",
+                department=dept_pmc_fire,
+                submission_mode=SubmissionMode.IN_PERSON,
                 estimated_days=12,
-                fee_amount=1800.0,
-                fee_breakdown={"Consent Application Fee": 1800.0},
-                prerequisites=["blr-food-1", "blr-food-2"],
+                fee_amount=8500.0,
+                fee_breakdown={"PMC Fire Scrutiny Fee": 5500.0, "Inspection & Safety Levy": 3000.0},
+                prerequisites=["pune-food-2"],
                 documents=[
-                    DocumentRequirement(id="doc-grease", name="Oil & Grease Trap Schematic Diagram", description="Specifications of 3-chamber grease trap installation before sewer discharge", is_mandatory=True),
-                    DocumentRequirement(id="doc-chimney", name="Kitchen Hood Exhaust Chimney Height Clearance", description="Must discharge minimum 3 meters above surrounding roof level", is_mandatory=True)
+                    DocumentRequirement(id="doc-pune-fireplan", name="Architect Fire Escape Blueprint", description="Approved by certified PMC fire architect", is_mandatory=True, category="Fire Safety")
                 ],
-                forms=[
-                    FormRequirement(form_code="KSPCB-CTE-Form1", title="Combined Consent Mechanism for Hotel & Food Outlets", fill_online_url="https://kspcb.karnataka.gov.in/xgn-online-consent")
-                ],
+                forms=[FormRequirement(form_code="PMC-FIRE-01", title="Application for Commercial Kitchen Fire NOC", fill_online_url="https://pmc.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://kspcb.karnataka.gov.in/category-of-industries-hotel-sector",
-                    page_title="KSPCB - Guidelines for Hotels, Restaurants and Bakeries",
-                    last_scraped_at="2026-09-15T16:20:00Z",
-                    confidence_score=0.92,
+                    url="https://pmc.gov.in/en/fire-department",
+                    page_title="PMC Fire Department - Fire Safety Inspection Guidelines",
+                    last_scraped_at="2026-09-25T14:00:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra Fire Prevention and Life Safety Measures Act 2006"
+                ),
+                is_critical_path=True
+            ),
+            TaskStep(
+                id="pune-food-4",
+                task_id="task-pune-restaurant",
+                step_number=4,
+                title="FSSAI Maharashtra State Food License & MPCB Consent",
+                description="Obtain Food Safety license from FoSCoS Maharashtra FDA and Green Category pollution consent from MPCB Pune Regional Office.",
+                department=dept_fssai_mum,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=14,
+                fee_amount=12500.0,
+                fee_breakdown={"FSSAI State License": 7500.0, "MPCB Consent Fee": 5000.0},
+                prerequisites=["pune-food-2", "pune-food-3"],
+                documents=[
+                    DocumentRequirement(id="doc-pune-water", name="NABL Potable Water Testing Report", description="Authorized bacteriological and chemical test report", is_mandatory=True, category="Food Safety"),
+                    DocumentRequirement(id="doc-pune-etp", name="Grease Trap Installation Scheme", description="Effluent mitigation scheme for commercial kitchen sink", is_mandatory=True, category="Pollution")
+                ],
+                forms=[FormRequirement(form_code="FSSAI Form B", title="State Food License Application", fill_online_url="https://foscos.fssai.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://fda.maharashtra.gov.in",
+                    page_title="FDA Maharashtra - Food Safety Administration",
+                    last_scraped_at="2026-09-24T15:00:00Z",
+                    confidence_score=0.98,
                     is_admin_verified=True
                 )
             ),
             TaskStep(
-                id="blr-food-4",
-                task_id="task-blr-restaurant",
-                step_number=6,
-                title="BBMP Municipal Health & Trade License",
-                description="The master municipal operational permit issued by the Medical Officer of Health (MOH) after verifying FSSAI, Fire NOC, and KSPCB consent.",
-                department=dept_bbmp_health,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=15,
-                fee_amount=6500.0,
-                fee_breakdown={"Trade License Fee": 4000.0, "Solid Waste Management Cess": 1500.0, "Health Scrutiny Fee": 1000.0},
-                prerequisites=["blr-food-3a", "blr-food-3b", "blr-food-3c"],
-                documents=[
-                    DocumentRequirement(id="doc-all-nocs", name="Combined Clearances Bundle (FSSAI + Fire + KSPCB)", description="All prerequisite clearance certificate copies", is_mandatory=True),
-                    DocumentRequirement(id="doc-swm", name="BBMP Empanelled Solid Waste Vendor Agreement", description="Agreement with authorized waste aggregator for wet waste processing", is_mandatory=True)
-                ],
-                forms=[
-                    FormRequirement(form_code="BBMP-TL-H1", title="Application for Health & Trade License for Eating House", fill_online_url="https://bbmptax.karnataka.gov.in/tradelicense/newapplicant.aspx")
-                ],
-                verification_source=VerificationSource(
-                    url="https://bbmptax.karnataka.gov.in/tradelicense/citizen_charter.pdf",
-                    page_title="BBMP Trade License Citizen Charter & SLA",
-                    last_scraped_at="2026-09-25T09:10:00Z",
-                    confidence_score=0.97,
-                    is_admin_verified=True,
-                    gazette_ref="BBMP Act 2020 Section 305 - Regulation of Trades & Food Establishments"
-                ),
-                tips_and_pitfalls="Critical bottleneck! Ensure MOH inspection date is booked immediately upon document upload. Rejection occurs if commercial SWM contract is missing."
-            ),
-            TaskStep(
-                id="blr-food-5",
-                task_id="task-blr-restaurant",
-                step_number=7,
-                title="Commercial Power Load Sanction (BESCOM LT-3)",
-                description="Conversion or enhancement of electrical sanction to commercial power tier with separate energy meter and earthing test certificate.",
-                department=dept_bescom,
+                id="pune-food-5",
+                task_id="task-pune-restaurant",
+                step_number=5,
+                title="PMC Health Department Trade / Eating House License",
+                description="Final statutory license to operate an eating house and restaurant within Pune municipal limits pursuant to Section 376 of Maharashtra Municipal Corporations Act.",
+                department=dept_pmc_health,
                 submission_mode=SubmissionMode.HYBRID,
-                estimated_days=8,
-                fee_amount=4500.0,
-                fee_breakdown={"Meter Security Deposit": 3000.0, "Service Line Charge": 1500.0},
-                prerequisites=["blr-food-4"],
+                estimated_days=10,
+                fee_amount=10500.0,
+                fee_breakdown={"PMC Trade License Fee": 7000.0, "Refuse Charges": 3500.0},
+                prerequisites=["pune-food-3", "pune-food-4"],
                 documents=[
-                    DocumentRequirement(id="doc-tl-cert", name="Approved BBMP Trade License Certificate", description="Proof of lawful municipal operation", is_mandatory=True),
-                    DocumentRequirement(id="doc-wiring", name="Licensed Electrical Contractor Wiring Completion Certificate", description="Class 1 contractor testing report", is_mandatory=True)
+                    DocumentRequirement(id="doc-pune-bundle", name="Verified Fire NOC & FSSAI License", description="Approved certificates bundle", is_mandatory=True, category="Statutory Clearances")
                 ],
-                forms=[
-                    FormRequirement(form_code="BESCOM-A1", title="Application for LT Commercial Power Connection", fill_online_url="https://bescom.karnataka.gov.in/apply-lt-connection")
-                ],
+                forms=[FormRequirement(form_code="PMC-EAT-LIC", title="Application for Eating House License", fill_online_url="https://pmc.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://bescom.karnataka.gov.in/page.php?slug=commercial-tariffs-lt3",
-                    page_title="BESCOM Commercial Power Tariff & Service Connections",
-                    last_scraped_at="2026-09-12T13:00:00Z",
-                    confidence_score=0.93,
-                    is_admin_verified=True
-                )
-            ),
-            TaskStep(
-                id="blr-food-6",
-                task_id="task-blr-restaurant",
-                step_number=8,
-                title="Municipal Commercial Signage & Nameboard Permit",
-                description="Obtain permit for external building signage, ensuring Kannada language takes at least 60% prominent upper section per BBMP 2024 Ordinance.",
-                department=dept_bbmp_town,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=5,
-                fee_amount=2000.0,
-                fee_breakdown={"Signage Tax Per Sq.Ft": 1500.0, "Scrutiny Fee": 500.0},
-                prerequisites=["blr-food-4"],
-                documents=[
-                    DocumentRequirement(id="doc-sign-mockup", name="Signboard Elevation & Language Proportion Mockup", description="Visual elevation drawing showing 60% Kannada top ratio and dimension specs", is_mandatory=True)
-                ],
-                forms=[
-                    FormRequirement(form_code="BBMP-ADV-02", title="Permission for Non-Illuminated/Illuminated Commercial Signboard", fill_online_url="https://bbmp.karnataka.gov.in/advertisement-portal")
-                ],
-                verification_source=VerificationSource(
-                    url="https://bbmp.karnataka.gov.in/notification_signage_regulations_2024.pdf",
-                    page_title="BBMP Official Notification - Signboard Language & Size Regulations",
-                    last_scraped_at="2026-09-23T12:00:00Z",
-                    confidence_score=0.96,
+                    url="https://pmc.gov.in/en/health-department",
+                    page_title="PMC Citizen Charter - Health & Trade Licenses",
+                    last_scraped_at="2026-09-26T11:00:00Z",
+                    confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="Karnataka Official Language (Amendment) Act 2024"
+                    gazette_ref="Maharashtra Municipal Corporations Act (Act LIX of 1949)"
                 ),
-                tips_and_pitfalls="Violating the 60% Kannada signboard rule will lead to immediate cancellation of Trade License and sealing of premises."
+                is_critical_path=True
             )
         ]
 
-        task1 = CivicTask(
-            id="task-blr-restaurant",
-            title="Open a Restaurant, Bakery or Cloud Kitchen",
+        task_pune = CivicTask(
+            id="task-pune-restaurant",
+            title="Open a Restaurant, Cafe or Food Outlet in Pune (PMC)",
             category="Food & Hospitality",
-            municipality="Bengaluru (BBMP)",
-            state="Karnataka",
-            description="Complete statutory roadmap to lawfully operate an eating house or food delivery kitchen in Bengaluru: from legal incorporation and kitchen safety NOCs to BBMP Trade License and signage.",
-            tags=["restaurant", "food business", "cloud kitchen", "trade license", "fssai", "bbmp", "bengaluru", "commercial permit"],
-            steps=task1_steps
+            municipality="Pune (PMC / PMRDA)",
+            state="Maharashtra",
+            description="Statutory municipal and state clearance pathway to commission an eating house or food delivery kitchen in Pune under the Maharashtra Municipal Corporations Act, PMC Health Department, and PMRDA.",
+            tags=["restaurant", "cafe", "food business", "pune", "pmc", "pmrda", "trade license", "fssai", "gumasta", "fire noc", "maharashtra"],
+            steps=task_pune_steps
         )
-        self._tasks[task1.id] = task1
+        self._tasks[task_pune.id] = task_pune
 
         # -------------------------------------------------------------------------
-        # TASK 2: Commercial Construction & Building Plan Sanction (Mumbai BMC)
+        # TASK 4: Commercial & Residential Building Plan Sanction (AutoDCR BMC)
+        # Infrastructure & Urban Development in Maharashtra
         # -------------------------------------------------------------------------
-        dept_bmc_bldg = DepartmentInfo(
-            id="dept-bmc-bldg",
-            name="Brihanmumbai Municipal Corporation (Building Proposal Dept)",
-            jurisdiction="Greater Mumbai (City / Suburbs)",
-            office_address="BMC Head Office Extension, Mahapalika Marg, Fort, Mumbai - 400001",
-            contact_phone="022-22620251",
-            contact_email="chiefengineer.bp@mcgm.gov.in",
-            portal_url="https://autodcr.mcgm.gov.in"
-        )
-        dept_bmc_tree = DepartmentInfo(
-            id="dept-bmc-tree",
-            name="BMC Tree Authority & Garden Department",
-            jurisdiction="Municipal Corporation of Greater Mumbai",
-            office_address="Parijat Building, Veer Savarkar Marg, Dadar West, Mumbai - 400028",
-            contact_phone="022-24300301",
-            contact_email="treeauthority@mcgm.gov.in",
-            portal_url="https://portal.mcgm.gov.in"
-        )
-        dept_mumbai_fire = DepartmentInfo(
-            id="dept-mumbai-fire",
-            name="Mumbai Fire Brigade (Headquarters)",
-            jurisdiction="Mumbai Fire Brigade Command",
-            office_address="Byculla Fire Station, Balaram Street, Byculla, Mumbai - 400008",
-            contact_phone="022-23076111",
-            contact_email="cfo.fire@mcgm.gov.in",
-            portal_url="https://portal.mcgm.gov.in"
-        )
-
-        task2_steps = [
+        task_construction_steps = [
             TaskStep(
-                id="mum-bldg-1",
+                id="mum-bp-1",
                 task_id="task-mum-construction",
                 step_number=1,
-                title="City Survey & Land Ownership Demarcation (PR Card)",
-                description="Obtain certified Property Registration Card (PR Card), City Survey demarcation plan, and verify title clearance from Revenue Dept.",
-                department=dept_bmc_bldg,
-                submission_mode=SubmissionMode.HYBRID,
-                estimated_days=10,
-                fee_amount=3000.0,
-                fee_breakdown={"Demarcation Fee": 2000.0, "PR Card Certified Copy": 1000.0},
+                title="Property Card, CTS Plan & IGR Title Clearance",
+                description="Extract verified digital Property Card (PR Card) from City Survey Office (CTSO), extract CTS plan, and clear 30-year non-encumbrance on IGR Maharashtra.",
+                department=dept_mahabhumi,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=3,
+                fee_amount=1500.0,
+                fee_breakdown={"Digital PR Card Fee": 500.0, "IGR E-Search Non-Encumbrance": 1000.0},
                 prerequisites=[],
                 documents=[
-                    DocumentRequirement(id="doc-mum-title", name="Certified Title Search Report (30 Years)", description="Advocate search report confirming encumbrance free title", is_mandatory=True),
-                    DocumentRequirement(id="doc-mum-prcard", name="PR Card with CTS Number", description="Issued by Superintendent of Land Records (SLR)", is_mandatory=True)
+                    DocumentRequirement(id="doc-pr-card", name="Certified Digital Property Card (PR Card)", description="Showing current CTS number, area in sq. meters, and registered holder names", is_mandatory=True, category="Land Title"),
+                    DocumentRequirement(id="doc-cts-sheet", name="Demarcated CTS Sheet from Superintendent of Land Records", description="Authenticated land boundary coordinates", is_mandatory=True, category="Survey Map")
                 ],
-                forms=[FormRequirement(form_code="SLR-CTS-01", title="Application for Certified Demarcation Sheet", fill_online_url="https://mahabhumi.gov.in")],
+                forms=[FormRequirement(form_code="PR-CARD-ONLINE", title="Digital Property Card Download", fill_online_url="https://mahabhumi.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://mahabhumi.gov.in/mahabhumihome",
-                    page_title="Maharashtra Revenue - City Survey & Land Records",
-                    last_scraped_at="2026-09-21T09:00:00Z",
-                    confidence_score=0.97,
-                    is_admin_verified=True
-                )
-            ),
-            TaskStep(
-                id="mum-bldg-2",
-                task_id="task-mum-construction",
-                step_number=2,
-                title="Development Plan Remark (DP-2034 Zoning Verification)",
-                description="Procure official DP Remarks validating reservations, road widening set-backs, and permissible Floor Space Index (FSI).",
-                department=dept_bmc_bldg,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=7,
-                fee_amount=5000.0,
-                fee_breakdown={"DP Scrutiny Fee": 5000.0},
-                prerequisites=["mum-bldg-1"],
-                documents=[
-                    DocumentRequirement(id="doc-cad-layout", name="Cadastral Map Overlay", description="CAD overlay with Google Earth geo-coordinates", is_mandatory=True)
-                ],
-                forms=[FormRequirement(form_code="BMC-DP-REM", title="Application for Development Plan 2034 Remarks", fill_online_url="https://autodcr.mcgm.gov.in")],
-                verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlDP2034",
-                    page_title="BMC Development Plan 2034 Public Repository",
-                    last_scraped_at="2026-09-19T14:30:00Z",
+                    url="https://mahabhumi.gov.in/e-Records",
+                    page_title="MahaBhumi - Digital Land Records & Property Cards",
+                    last_scraped_at="2026-09-24T16:00:00Z",
                     confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="DCPR 2034 Regulations 9 & 10"
+                    gazette_ref="Maharashtra Land Revenue Code 1966 Section 148"
                 )
             ),
             TaskStep(
-                id="mum-bldg-3a",
+                id="mum-bp-2",
                 task_id="task-mum-construction",
-                step_number=3,
-                title="AutoDCR Architectural Plan Scrutiny & Submission",
-                description="Upload computer-aided architectural drawing files into BMC AutoDCR software for automatic building bye-law compliance check.",
-                department=dept_bmc_bldg,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=14,
-                fee_amount=15000.0,
-                fee_breakdown={"AutoDCR Scrutiny Fee": 15000.0},
-                prerequisites=["mum-bldg-2"],
-                documents=[
-                    DocumentRequirement(id="doc-dcr-dwg", name="AutoDCR Structured Drawing File (DWG)", description="Layered drawings following BMC AutoDCR color coding standard", is_mandatory=True),
-                    DocumentRequirement(id="doc-arch-license", name="Council of Architecture Registered Architect Undertaking", description="Supervision appointment certificate", is_mandatory=True)
-                ],
-                forms=[FormRequirement(form_code="Appendix A-1", title="Notice of Intention to Erect Building under Section 337", fill_online_url="https://autodcr.mcgm.gov.in")],
-                verification_source=VerificationSource(
-                    url="https://autodcr.mcgm.gov.in/help/autodcr_user_manual.pdf",
-                    page_title="BMC Building Proposal AutoDCR Portal",
-                    last_scraped_at="2026-09-22T10:15:00Z",
-                    confidence_score=0.96,
-                    is_admin_verified=True
-                )
-            ),
-            TaskStep(
-                id="mum-bldg-3b",
-                task_id="task-mum-construction",
-                step_number=4,
-                title="Mumbai Fire Brigade Chief Fire Officer (CFO) NOC",
-                description="Fire safety clearance approving building height, refuge areas, fire lifts, sprinkler layouts, and driveway turning radiuses.",
-                department=dept_mumbai_fire,
+                step_number=2,
+                title="Architectural AutoDCR Plan Submission & Intimation of Disapproval (IOD)",
+                description="Licensed architect submits standardized CAD blueprints on BMC AutoDCR portal to evaluate FSI, road widening reservations, and generate statutory IOD conditions.",
+                department=dept_mcgm_bp,
                 submission_mode=SubmissionMode.ONLINE,
                 estimated_days=21,
-                fee_amount=25000.0,
-                fee_breakdown={"Fire Service Premium Per Sq.Meter": 25000.0},
-                prerequisites=["mum-bldg-2"],
+                fee_amount=45000.0,
+                fee_breakdown={"AutoDCR Scrutiny Fee": 25000.0, "Development Cess": 20000.0},
+                prerequisites=["mum-bp-1"],
                 documents=[
-                    DocumentRequirement(id="doc-cfo-dwg", name="CFO Fire Protection Drawings", description="Showing wet risers, fire escape staircase widths, and hydrant network", is_mandatory=True)
+                    DocumentRequirement(id="doc-cad-drawings", name="AutoDCR Pre-Checked Architectural CAD Plans", description="Pre-validated by AutoDCR scrutiny software conforming to DCPR-2034 rules", is_mandatory=True, category="Building Plans"),
+                    DocumentRequirement(id="doc-super-arch", name="Architect & Structural Engineer Supervision Undertaking", description="Form of supervision under Section 342 MMC Act", is_mandatory=True, category="Professional Undertakings")
                 ],
-                forms=[FormRequirement(form_code="CFO-NOC-APP", title="Online CFO Building Clearance Form", fill_online_url="https://portal.mcgm.gov.in")],
+                forms=[FormRequirement(form_code="AutoDCR Form A", title="Application for Development Permission & Building Sanction", fill_online_url="https://autodcr.mcgm.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlfirebrigade",
-                    page_title="Mumbai Fire Brigade Building Approvals",
-                    last_scraped_at="2026-09-20T17:00:00Z",
-                    confidence_score=0.95,
+                    url="https://autodcr.mcgm.gov.in/eodb-dashboard",
+                    page_title="BMC AutoDCR Portal - Ease of Doing Business Dashboard",
+                    last_scraped_at="2026-09-25T17:00:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True,
+                    gazette_ref="BMC DCPR-2034 Regulation 10"
+                ),
+                is_critical_path=True
+            ),
+            TaskStep(
+                id="mum-bp-3",
+                task_id="task-mum-construction",
+                step_number=3,
+                title="Integrated Statutory Clearances (CFO Fire NOC, Traffic & SWD)",
+                description="Comply with pre-commencement IOD conditions by obtaining Chief Fire Officer NOC, Traffic Police clearance, and Storm Water Drain remarks.",
+                department=dept_mfb,
+                submission_mode=SubmissionMode.HYBRID,
+                estimated_days=20,
+                fee_amount=35000.0,
+                fee_breakdown={"CFO Fire Scrutiny Premium": 25000.0, "SWD Storm Drain Scrutiny": 10000.0},
+                prerequisites=["mum-bp-2"],
+                documents=[
+                    DocumentRequirement(id="doc-fire-cfo-layout", name="Comprehensive Fire Fighting System Schematic", description="Wet riser, fire booster pump, and refuge floor calculations", is_mandatory=True, category="Fire Safety")
+                ],
+                forms=[],
+                verification_source=VerificationSource(
+                    url="https://portal.mcgm.gov.in/eodb-approvals",
+                    page_title="BMC Single Window Clearances for Building Proposals",
+                    last_scraped_at="2026-09-24T18:00:00Z",
+                    confidence_score=0.98,
                     is_admin_verified=True
                 )
             ),
             TaskStep(
-                id="mum-bldg-3c",
+                id="mum-bp-4",
+                task_id="task-mum-construction",
+                step_number=4,
+                title="Plinth Commencement Certificate (CC)",
+                description="Executive Engineer (BP) inspects completed plinth foundation, verifies boundary setback offsets, and grants Commencement Certificate.",
+                department=dept_mcgm_bp,
+                submission_mode=SubmissionMode.HYBRID,
+                estimated_days=10,
+                fee_amount=15000.0,
+                fee_breakdown={"Plinth Checking Inspection Fee": 15000.0},
+                prerequisites=["mum-bp-2", "mum-bp-3"],
+                documents=[
+                    DocumentRequirement(id="doc-plinth-survey", name="Plinth Completion Certificate by Structural Engineer", description="Certifying foundation conforms to structural safety and earthquake resistant design", is_mandatory=True, category="Structural Integrity")
+                ],
+                forms=[FormRequirement(form_code="Appendix C", title="Notice of Completion of Plinth", fill_online_url="https://autodcr.mcgm.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://autodcr.mcgm.gov.in/guidelines/cc_procedure.pdf",
+                    page_title="BMC AutoDCR Guidelines - Grant of Commencement Certificate",
+                    last_scraped_at="2026-09-23T11:00:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True
+                ),
+                is_critical_path=True
+            ),
+            TaskStep(
+                id="mum-bp-5",
                 task_id="task-mum-construction",
                 step_number=5,
-                title="Tree Authority Tree Preservation / Relocation Clearance",
-                description="Inspection of on-site trees; mandatory compensatory tree plantation deposit or tree cutting permission from Tree Authority.",
-                department=dept_bmc_tree,
-                submission_mode=SubmissionMode.HYBRID,
-                estimated_days=15,
-                fee_amount=10000.0,
-                fee_breakdown={"Tree Deposit & Afforestation Cess": 10000.0},
-                prerequisites=["mum-bldg-2"],
-                documents=[
-                    DocumentRequirement(id="doc-tree-survey", name="Botanical Tree Census & Geo-Tagged Site Photos", description="Marking botanical names, girth, and height of trees on plot", is_mandatory=True)
-                ],
-                forms=[FormRequirement(form_code="BMC-TA-01", title="Application for Tree Felling/Transplantation Clearance", download_url="https://portal.mcgm.gov.in/tree_authority_form.pdf")],
-                verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qltreeauthority",
-                    page_title="BMC Tree Authority Citizen Charter",
-                    last_scraped_at="2026-09-17T11:00:00Z",
-                    confidence_score=0.91,
-                    is_admin_verified=True
-                )
-            ),
-            TaskStep(
-                id="mum-bldg-4",
-                task_id="task-mum-construction",
-                step_number=6,
-                title="Issuance of Intimation of Disapproval (IOD)",
-                description="Executive Engineer issues IOD (Conditional Approval) listing 30 to 45 statutory compliance conditions prior to plinth work.",
-                department=dept_bmc_bldg,
+                title="Final Building Completion & Occupancy Certificate (OC)",
+                description="Final joint municipal inspection following full building construction, lift inspection, water connection test, and issuance of Full Occupancy Certificate (OC).",
+                department=dept_mcgm_bp,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=30,
-                fee_amount=50000.0,
-                fee_breakdown={"Development Charges": 35000.0, "Labour Cess (1%)": 15000.0},
-                prerequisites=["mum-bldg-3a", "mum-bldg-3b", "mum-bldg-3c"],
+                estimated_days=15,
+                fee_amount=25000.0,
+                fee_breakdown={"OC Inspection Fee": 15000.0, "Drainage Completion Assessment": 10000.0},
+                prerequisites=["mum-bp-4"],
                 documents=[
-                    DocumentRequirement(id="doc-all-consents", name="Consolidated Clearances Dossier", description="Approved AutoDCR + CFO NOC + Tree Authority NOC", is_mandatory=True)
-                ],
-                forms=[FormRequirement(form_code="MMC Section 346", title="Formal Intimation of Disapproval (IOD) Issuance Order", fill_online_url="https://autodcr.mcgm.gov.in")],
-                verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlbuildingproposal",
-                    page_title="BMC Building Proposal Manual of Procedures",
-                    last_scraped_at="2026-09-24T15:00:00Z",
-                    confidence_score=0.98,
-                    is_admin_verified=True,
-                    gazette_ref="Mumbai Municipal Corporation Act 1888 Section 346"
-                ),
-                tips_and_pitfalls="Major milestone! The IOD unlocks right to deposit development cess and proceed to commencement certification."
-            ),
-            TaskStep(
-                id="mum-bldg-5",
-                task_id="task-mum-construction",
-                step_number=7,
-                title="Commencement Certificate (CC - Plinth Level)",
-                description="After clearing all 40+ IOD conditions and paying development cess, ward surveyor inspects site and grants formal legal permit to dig and build.",
-                department=dept_bmc_bldg,
-                submission_mode=SubmissionMode.HYBRID,
-                estimated_days=18,
-                fee_amount=12000.0,
-                fee_breakdown={"CC Endorsement Fee": 12000.0},
-                prerequisites=["mum-bldg-4"],
-                documents=[
-                    DocumentRequirement(id="doc-iod-compliance", name="Itemized IOD Compliance Compliance Affidavit", description="Notarized compliance on Rs 500 stamp paper", is_mandatory=True)
-                ],
-                forms=[FormRequirement(form_code="Appendix C", title="Application for Commencement Certificate", fill_online_url="https://autodcr.mcgm.gov.in")],
-                verification_source=VerificationSource(
-                    url="https://autodcr.mcgm.gov.in/citizen_info/cc_issuance_sop.pdf",
-                    page_title="Standard Operating Procedure for CC Issuance",
-                    last_scraped_at="2026-09-25T11:20:00Z",
-                    confidence_score=0.97,
-                    is_admin_verified=True
-                )
-            ),
-            TaskStep(
-                id="mum-bldg-6",
-                task_id="task-mum-construction",
-                step_number=8,
-                title="Building Completion Certificate (BCC) & Occupancy Certificate (OC)",
-                description="Final statutory inspection of constructed building, verifying water line, sewerage connection, rainwater harvesting, and fire safety.",
-                department=dept_bmc_bldg,
-                submission_mode=SubmissionMode.HYBRID,
-                estimated_days=25,
-                fee_amount=20000.0,
-                fee_breakdown={"BCC Scrutiny Fee": 10000.0, "Water Connection Assessment": 10000.0},
-                prerequisites=["mum-bldg-5"],
-                documents=[
-                    DocumentRequirement(id="doc-as-built", name="As-Built Architectural Drawings", description="Final plans reflecting exact physical construction on ground", is_mandatory=True),
-                    DocumentRequirement(id="doc-cfo-final", name="CFO Final Fire Safety NOC", description="On-site water sprinkler and fire hose functional certificate", is_mandatory=True)
+                    DocumentRequirement(id="doc-final-cfo", name="Final CFO Fire Operational NOC", description="Confirming functional fire hydrants and alarms", is_mandatory=True, category="Clearances"),
+                    DocumentRequirement(id="doc-lift-lic", name="Maharashtra PWD Lift Inspector License", description="Safety operational license for passenger elevators", is_mandatory=True, category="Safety")
                 ],
                 forms=[FormRequirement(form_code="Appendix D", title="Completion Certificate & Notice of Completion", fill_online_url="https://autodcr.mcgm.gov.in")],
                 verification_source=VerificationSource(
@@ -1154,309 +959,429 @@ class CivicDatabase:
                     last_scraped_at="2026-09-24T18:00:00Z",
                     confidence_score=0.98,
                     is_admin_verified=True
-                )
+                ),
+                is_critical_path=True
             )
         ]
 
-        task2 = CivicTask(
+        task_construction = CivicTask(
             id="task-mum-construction",
             title="Commercial Building Plan Sanction & Occupancy (OC)",
             category="Construction & Real Estate",
             municipality="Mumbai (BMC / MCGM)",
             state="Maharashtra",
             description="Comprehensive municipal clearance path to obtain Building Plan Sanction, IOD, Plinth Commencement Certificate (CC), and Occupancy Certificate (OC) under BMC DCPR-2034.",
-            tags=["building permit", "construction", "autodcr", "iod", "commencement certificate", "occupancy certificate", "bmc", "mumbai"],
-            steps=task2_steps
+            tags=["building permit", "construction", "autodcr", "iod", "commencement certificate", "occupancy certificate", "bmc", "mumbai", "dcpr-2034", "maharashtra"],
+            steps=task_construction_steps
         )
-        self._tasks[task2.id] = task2
+        self._tasks[task_construction.id] = task_construction
 
         # -------------------------------------------------------------------------
-        # TASK 3: Property Tax Mutation & Khata Transfer (Delhi MCD)
+        # TASK 5: Land 7/12 (Satbara) Mutation & Title Transfer (MahaBhumi / E-Ferfar)
+        # Critical Maharashtra Land & Revenue Process
         # -------------------------------------------------------------------------
-        dept_mcd_revenue = DepartmentInfo(
-            id="dept-mcd-revenue",
-            name="Municipal Corporation of Delhi (Assessment & Collection Dept)",
-            jurisdiction="NCT of Delhi (North/South/East Zones)",
-            office_address="Dr. S.P. Mukherjee Civic Centre, JLN Marg, New Delhi - 110002",
-            contact_phone="011-23225227",
-            contact_email="propertytax@mcd.nic.in",
-            portal_url="https://mcdonline.nic.in"
-        )
-        dept_delhi_rev = DepartmentInfo(
-            id="dept-delhi-rev",
-            name="Revenue Department, GNCTD (Sub-Registrar Office)",
-            jurisdiction="Government of NCT of Delhi",
-            office_address="Zonal Sub-Registrar Office, Mehrauli Road, New Delhi",
-            contact_phone="011-23935222",
-            contact_email="doris.helpdesk@delhi.gov.in",
-            portal_url="https://esearch.delhigovt.nic.in"
-        )
-
-        task3_steps = [
+        task_mutation_steps = [
             TaskStep(
-                id="del-mut-1",
-                task_id="task-del-mutation",
+                id="mah-mut-1",
+                task_id="task-mah-712-mutation",
                 step_number=1,
-                title="Sub-Registrar Sale Deed Verification & E-Search",
-                description="Verify registration index of registered title deed or gift deed on Delhi Online Registration Information System (DORIS).",
-                department=dept_delhi_rev,
+                title="Registered Title Deed & IGR Index-II Verification",
+                description="Verify official registered sale deed, gift deed, or partition deed on IGR Maharashtra E-Search to extract volume, document number, and stamp duty paid.",
+                department=dept_igr,
                 submission_mode=SubmissionMode.ONLINE,
                 estimated_days=2,
-                fee_amount=200.0,
-                fee_breakdown={"E-Search Inspection Fee": 200.0},
+                fee_amount=300.0,
+                fee_breakdown={"E-Search Inspection Fee": 300.0},
                 prerequisites=[],
                 documents=[
-                    DocumentRequirement(id="doc-reg-deed", name="Registered Conveyance / Sale Deed Copy", description="With Sub-Registrar stamp and volume number", is_mandatory=True)
+                    DocumentRequirement(id="doc-reg-deed", name="Registered Conveyance / Sale Deed Copy", description="With Sub-Registrar stamp and volume number", is_mandatory=True, category="Title Deed"),
+                    DocumentRequirement(id="doc-index-ii", name="Certified Index II from IGR Portal", description="Showing transaction summary and consideration", is_mandatory=True, category="Title Deed")
                 ],
-                forms=[FormRequirement(form_code="DORIS-INDEX-II", title="Certified Copy of Book No. 1 Index II", fill_online_url="https://esearch.delhigovt.nic.in")],
+                forms=[FormRequirement(form_code="IGR-INDEX-II", title="Certified Copy of Book No. 1 Index II", fill_online_url="https://igrmaharashtra.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://esearch.delhigovt.nic.in/CompleteDetails.aspx",
-                    page_title="GNCTD Revenue - Online Registered Document Verification",
-                    last_scraped_at="2026-09-23T10:00:00Z",
+                    url="https://igrmaharashtra.gov.in/e-Search",
+                    page_title="IGR Maharashtra - Online Registered Document Verification",
+                    last_scraped_at="2026-09-25T10:00:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True,
+                    gazette_ref="Registration Act 1908 Section 51"
+                )
+            ),
+            TaskStep(
+                id="mah-mut-2",
+                task_id="task-mah-712-mutation",
+                step_number=2,
+                title="E-Ferfar (Online Mutation) Filing on MahaBhumi E-Hakk Portal",
+                description="Citizen submits mutation entry request on Maharashtra Government E-Hakk portal under Section 149 of the Maharashtra Land Revenue Code 1966.",
+                department=dept_mahabhumi,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=3,
+                fee_amount=150.0,
+                fee_breakdown={"E-Hakk Application Processing Fee": 150.0},
+                prerequisites=["mah-mut-1"],
+                documents=[
+                    DocumentRequirement(id="doc-curr-712", name="Current Digital 7/12 (Satbara) & 8A Extract", description="Showing current seller/transferor name in Gaon Namuna 7", is_mandatory=True, category="Land Record"),
+                    DocumentRequirement(id="doc-aadhaar-buyer", name="Aadhaar Cards of All New Purchasers / Heirs", description="For recording legal names in land records", is_mandatory=True, category="Identity")
+                ],
+                forms=[FormRequirement(form_code="E-Hakk-Form-149", title="Application for E-Ferfar Mutation Entry", fill_online_url="https://mahabhumi.gov.in/e-Hakk")],
+                verification_source=VerificationSource(
+                    url="https://mahabhumi.gov.in/e-Ferfar/rules.pdf",
+                    page_title="MahaBhumi - E-Ferfar Citizen Portal Guidelines",
+                    last_scraped_at="2026-09-26T12:00:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra Land Revenue Code 1966 Section 149"
+                ),
+                tips_and_pitfalls="Enter the exact Sub-Registrar Office SRO code and document year so the system fetches the deed automatically via API."
+            ),
+            TaskStep(
+                id="mah-mut-3",
+                task_id="task-mah-712-mutation",
+                step_number=3,
+                title="Statutory Notice Issuance under Section 150 (15-Day Public Objection)",
+                description="Talathi issues statutory notice to all interested parties, legal heirs, and co-owners listed in the 7/12 extract; 15-day mandatory public waiting window.",
+                department=dept_mahabhumi,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=15,
+                fee_amount=0.0,
+                fee_breakdown={"Public Notice Mandate": 0.0},
+                prerequisites=["mah-mut-2"],
+                documents=[],
+                forms=[FormRequirement(form_code="Notice-Sec-150", title="Public Notice of Property Record Transfer", fill_online_url="https://bhulekh.mahabhumi.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://bhulekh.mahabhumi.gov.in",
+                    page_title="MahaBhumi - Public Notices & E-Dispute Registry",
+                    last_scraped_at="2026-09-25T08:00:00Z",
+                    confidence_score=0.98,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra Land Revenue Code 1966 Section 150"
+                ),
+                is_critical_path=True
+            ),
+            TaskStep(
+                id="mah-mut-4",
+                task_id="task-mah-712-mutation",
+                step_number=4,
+                title="Talathi Field Inquiry & Verification Report",
+                description="Talathi conducts on-site verification, confirms actual physical possession, checks agricultural/NA land classification, and submits verification report.",
+                department=dept_mahabhumi,
+                submission_mode=SubmissionMode.HYBRID,
+                estimated_days=7,
+                fee_amount=500.0,
+                fee_breakdown={"Field Scrutiny Fee": 500.0},
+                prerequisites=["mah-mut-3"],
+                documents=[
+                    DocumentRequirement(id="doc-possession-receipt", name="Affidavit of Uncontested Possession", description="Affirming undisturbed boundary and physical possession", is_mandatory=True, category="Possession")
+                ],
+                forms=[],
+                verification_source=VerificationSource(
+                    url="https://mahabhumi.gov.in",
+                    page_title="MahaBhumi - Revenue Officer Inspection Standards",
+                    last_scraped_at="2026-09-24T14:00:00Z",
+                    confidence_score=0.97,
+                    is_admin_verified=True
+                )
+            ),
+            TaskStep(
+                id="mah-mut-5",
+                task_id="task-mah-712-mutation",
+                step_number=5,
+                title="Circle Officer / Tehsildar Approval & Digital 7/12 Satbara Issuance",
+                description="Circle Officer certifies the Ferfar entry with digital signature; title is formally updated in the live Mahabhumi registry and digitally signed 7/12 & 8A is generated.",
+                department=dept_mahabhumi,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=4,
+                fee_amount=15.0,
+                fee_breakdown={"Certified Digital 7/12 Download Fee": 15.0},
+                prerequisites=["mah-mut-4"],
+                documents=[],
+                forms=[FormRequirement(form_code="DIGI-712", title="Digitally Signed 7/12 & 8A Extract", fill_online_url="https://digitalsatbara.mahabhumi.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://digitalsatbara.mahabhumi.gov.in",
+                    page_title="MahaBhumi - Digital Satbara Download & Verification Portal",
+                    last_scraped_at="2026-09-26T15:00:00Z",
+                    confidence_score=1.0,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra Right to Public Services Act 2015"
+                ),
+                is_critical_path=True
+            )
+        ]
+
+        task_mutation = CivicTask(
+            id="task-mah-712-mutation",
+            title="Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer",
+            category="Property & Land Records",
+            municipality="Maharashtra Statewide (Revenue & Forest Dept / MahaBhumi)",
+            state="Maharashtra",
+            description="Statutory online process for E-Ferfar (Mutation), entry of rights in 7/12 Extract, Village Form 6, and Property Card under Maharashtra Land Revenue Code (MLRC 1966) via MahaBhumi and IGR Maharashtra.",
+            tags=["7/12", "satbara", "ferfar", "mutation", "mahabhumi", "land records", "bhulekh", "e-hakk", "igr maharashtra", "pune", "mumbai", "nagpur", "nashik"],
+            steps=task_mutation_steps
+        )
+        self._tasks[task_mutation.id] = task_mutation
+
+        # -------------------------------------------------------------------------
+        # TASK 6: New Commercial / Domestic Water Supply Connection (MCGM BMC)
+        # Municipal Utility & Citizen Public Works
+        # -------------------------------------------------------------------------
+        task_water_steps = [
+            TaskStep(
+                id="mum-wat-1",
+                task_id="task-mum-water-connection",
+                step_number=1,
+                title="MCGM Property Tax SAC & Building Plan Verification",
+                description="Verify SAC (Section Applied Customer) number on BMC citizen portal and confirm sanction of internal plumbing design.",
+                department=dept_mcgm_he,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=2,
+                fee_amount=0.0,
+                fee_breakdown={"SAC Scrutiny": 0.0},
+                prerequisites=[],
+                documents=[
+                    DocumentRequirement(id="doc-water-sac", name="Current BMC Property Tax Paid Receipt (SAC)", description="Proof of lawful assessed municipal premise", is_mandatory=True, category="Revenue"),
+                    DocumentRequirement(id="doc-bldg-sanction", name="Approved Building Proposal Sanction Plan", description="Sanction plan showing water storage overhead and underground tank sizes", is_mandatory=True, category="Building Plans")
+                ],
+                forms=[FormRequirement(form_code="BMC-WAT-01", title="Application for Fresh Municipal Water Supply", fill_online_url="https://portal.mcgm.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlwaterconnection",
+                    page_title="MCGM Hydraulic Engineer Department - Water Connection Guidelines",
+                    last_scraped_at="2026-09-25T14:30:00Z",
+                    confidence_score=0.99,
+                    is_admin_verified=True,
+                    gazette_ref="Mumbai Municipal Corporation Act 1888 Section 140"
+                )
+            ),
+            TaskStep(
+                id="mum-wat-2",
+                task_id="task-mum-water-connection",
+                step_number=2,
+                title="Licensed Plumber Layout & Online Filing (Aaple Sarkar / BMC)",
+                description="Licensed BMC plumber submits hydraulic pipeline connection diagram and calculates required connection diameter (15mm to 100mm).",
+                department=dept_mcgm_he,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=3,
+                fee_amount=1500.0,
+                fee_breakdown={"Water Scrutiny Fee": 1500.0},
+                prerequisites=["mum-wat-1"],
+                documents=[
+                    DocumentRequirement(id="doc-plumber-cert", name="Licensed Plumber Undertaking & License Copy", description="Empaneled with Municipal Corporation of Greater Mumbai", is_mandatory=True, category="Professional Undertakings")
+                ],
+                forms=[FormRequirement(form_code="Form W-2", title="Plumber Certificate of Internal Water Fitting", fill_online_url="https://portal.mcgm.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://portal.mcgm.gov.in/water-services",
+                    page_title="BMC Hydraulic Engineer Dept - Water Connection Forms",
+                    last_scraped_at="2026-09-24T12:00:00Z",
                     confidence_score=0.98,
                     is_admin_verified=True
                 )
             ),
             TaskStep(
-                id="del-mut-2",
-                task_id="task-del-mutation",
-                step_number=2,
-                title="Property Tax Nil Dues Certificate (NDC)",
-                description="Clear all outstanding municipal property taxes up to the current financial year and generate automated NDC from MCD portal.",
-                department=dept_mcd_revenue,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=3,
-                fee_amount=0.0,
-                fee_breakdown={"Tax Arrears": 0.0, "NDC Generation": 0.0},
-                prerequisites=["del-mut-1"],
-                documents=[
-                    DocumentRequirement(id="doc-upic", name="Unique Property Identification Code (UPIC) Card", description="15-digit alphanumeric property identifier", is_mandatory=True),
-                    DocumentRequirement(id="doc-tax-challan", name="Last 3 Years Property Tax Receipts", description="Self-assessment receipts with transaction UTR", is_mandatory=True)
-                ],
-                forms=[FormRequirement(form_code="MCD-PTR-NDC", title="Application for No Dues Certificate", fill_online_url="https://mcdonline.nic.in/ptax/public/ndc")],
+                id="mum-wat-3",
+                task_id="task-mum-water-connection",
+                step_number=3,
+                title="Assistant Engineer (Water Works) Site Survey & Feasibility Inspection",
+                description="Ward Assistant Engineer (Water Works) inspects street municipal water main line, pressure gradients, and approves connection tapping point.",
+                department=dept_mcgm_he,
+                submission_mode=SubmissionMode.IN_PERSON,
+                estimated_days=7,
+                fee_amount=2500.0,
+                fee_breakdown={"Site Inspection Charge": 2500.0},
+                prerequisites=["mum-wat-2"],
+                documents=[],
+                forms=[],
                 verification_source=VerificationSource(
-                    url="https://mcdonline.nic.in/ptax/public/guidelines_mutation.pdf",
-                    page_title="MCD Property Tax Guidelines - Section on NDC & Mutation",
-                    last_scraped_at="2026-09-22T13:40:00Z",
+                    url="https://portal.mcgm.gov.in",
+                    page_title="BMC Water Works Field Inspection SLA",
+                    last_scraped_at="2026-09-25T16:00:00Z",
                     confidence_score=0.97,
                     is_admin_verified=True
-                )
+                ),
+                is_critical_path=True
             ),
             TaskStep(
-                id="del-mut-3",
-                task_id="task-del-mutation",
-                step_number=3,
-                title="Online MCD Property Mutation Application (Form A)",
-                description="File electronic mutation application on MCD portal attaching sale deed, NDC, indemnity bond, and NOC from co-owners.",
-                department=dept_mcd_revenue,
+                id="mum-wat-4",
+                task_id="task-mum-water-connection",
+                step_number=4,
+                title="Road Opening / Trenching Permission & Restoration Charges",
+                description="Secure road opening permission from BMC Maintenance Department to trench road/sidewalk for laying pipeline; pay street reinstatement fee.",
+                department=dept_mcgm_he,
                 submission_mode=SubmissionMode.ONLINE,
                 estimated_days=5,
-                fee_amount=1500.0,
-                fee_breakdown={"Mutation Scrutiny Fee": 1000.0, "Document Processing Fee": 500.0},
-                prerequisites=["del-mut-1", "del-mut-2"],
+                fee_amount=12000.0,
+                fee_breakdown={"Road Reinstatement Deposit": 10000.0, "Trenching Permit Fee": 2000.0},
+                prerequisites=["mum-wat-3"],
                 documents=[
-                    DocumentRequirement(id="doc-indemnity", name="Notarized Indemnity Bond on Rs 100 Stamp", description="In prescribed format indemnifying MCD against future claims", is_mandatory=True),
-                    DocumentRequirement(id="doc-affidavit", name="Affidavit regarding Legal Heirship / Title", description="Attested by Notary Public or Oath Commissioner", is_mandatory=True)
+                    DocumentRequirement(id="doc-trench-plan", name="Trenching Route Map with Traffic Police NOC", description="If trenching along major arterial carriageway", is_mandatory=True, category="Traffic & Roads")
                 ],
-                forms=[FormRequirement(form_code="MCD Form A", title="Application for Mutation of Name in Property Tax Records", fill_online_url="https://mcdonline.nic.in/ptax/citizen/mutation")],
+                forms=[FormRequirement(form_code="RoW-Trench-01", title="Right of Way Road Opening Permission", fill_online_url="https://portal.mcgm.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://mcdonline.nic.in/ptax/citizen/citizen_charter.pdf",
-                    page_title="MCD Citizen Charter - Property Tax Mutation SLA",
-                    last_scraped_at="2026-09-24T16:15:00Z",
+                    url="https://portal.mcgm.gov.in/eodb-trenching",
+                    page_title="BMC Road Opening & Trenching Policy",
+                    last_scraped_at="2026-09-23T15:00:00Z",
+                    confidence_score=0.98,
+                    is_admin_verified=True
+                ),
+                is_critical_path=True
+            ),
+            TaskStep(
+                id="mum-wat-5",
+                task_id="task-mum-water-connection",
+                step_number=5,
+                title="Main Pipeline Tapping, Water Meter Calibration & Supply Activation",
+                description="Municipal water works team taps water main, installs certified calibrated AMR/mechanical water meter, and releases water supply to premises.",
+                department=dept_mcgm_he,
+                submission_mode=SubmissionMode.IN_PERSON,
+                estimated_days=5,
+                fee_amount=8500.0,
+                fee_breakdown={"Water Meter Security Deposit": 5000.0, "Tapping Execution Fee": 3500.0},
+                prerequisites=["mum-wat-4"],
+                documents=[
+                    DocumentRequirement(id="doc-meter-calib", name="Government Approved Water Meter Calibration Certificate", description="Calibrated at BMC Water Meter Testing Lab, Dadar", is_mandatory=True, category="Equipment Test")
+                ],
+                forms=[FormRequirement(form_code="BMC-CAN-ORDER", title="Water Supply Release & Meter Connection Order", fill_online_url="https://portal.mcgm.gov.in")],
+                verification_source=VerificationSource(
+                    url="https://portal.mcgm.gov.in",
+                    page_title="BMC Hydraulic Engineer Dept - Water Supply Release Order",
+                    last_scraped_at="2026-09-26T17:00:00Z",
                     confidence_score=0.99,
                     is_admin_verified=True,
-                    gazette_ref="Delhi Municipal Corporation Act 1957 Section 128"
-                )
-            ),
-            TaskStep(
-                id="del-mut-4",
-                task_id="task-del-mutation",
-                step_number=4,
-                title="Public Notice & Objection Period (15 Days)",
-                description="Statutory publication of intention to mutate property record on MCD public notice portal to invite objections from legal heirs/lenders.",
-                department=dept_mcd_revenue,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=15,
-                fee_amount=500.0,
-                fee_breakdown={"Public Notice Hosting Fee": 500.0},
-                prerequisites=["del-mut-3"],
-                documents=[],
-                forms=[FormRequirement(form_code="Notice-Sec-128", title="Public Notice of Property Record Transfer", fill_online_url="https://mcdonline.nic.in/public_notices")],
-                verification_source=VerificationSource(
-                    url="https://mcdonline.nic.in/public_notices/mutation_notices",
-                    page_title="MCD Portal - Public Notices under Section 128",
-                    last_scraped_at="2026-09-25T08:00:00Z",
-                    confidence_score=0.95,
-                    is_admin_verified=True
-                )
-            ),
-            TaskStep(
-                id="del-mut-5",
-                task_id="task-del-mutation",
-                step_number=5,
-                title="Zonal Assessor & Collector Approval & Digital Mutation Certificate",
-                description="Joint Assessor and Collector signs digital order transferring property ownership in municipal assessment books and issues QR-verified Mutation Certificate.",
-                department=dept_mcd_revenue,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=5,
-                fee_amount=1000.0,
-                fee_breakdown={"Certificate Generation Fee": 1000.0},
-                prerequisites=["del-mut-4"],
-                documents=[],
-                forms=[FormRequirement(form_code="MCD-MUT-CERT", title="Digital Property Tax Mutation Certificate", fill_online_url="https://mcdonline.nic.in/download_mutation_cert")],
-                verification_source=VerificationSource(
-                    url="https://mcdonline.nic.in/ptax/public/mutation_certificate_verification",
-                    page_title="MCD Online Digital Certificate Verification",
-                    last_scraped_at="2026-09-25T14:00:00Z",
-                    confidence_score=0.99,
-                    is_admin_verified=True
-                )
+                    gazette_ref="Maharashtra Right to Public Services Act 2015"
+                ),
+                is_critical_path=True
             )
         ]
 
-        task3 = CivicTask(
-            id="task-del-mutation",
-            title="Property Tax Mutation & Title Transfer",
-            category="Property & Revenue",
-            municipality="Delhi (MCD)",
-            state="Delhi (NCT)",
-            description="Official statutory sequence for updating property ownership records (Namantaran / Mutation) in Municipal Corporation of Delhi records following purchase, inheritance or gift.",
-            tags=["property tax", "mutation", "mcd", "delhi", "namantaran", "khata transfer", "nil dues certificate", "upic"],
-            steps=task3_steps
+        task_water = CivicTask(
+            id="task-mum-water-connection",
+            title="New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept)",
+            category="Public Utilities & Water",
+            municipality="Mumbai (MCGM / BMC)",
+            state="Maharashtra",
+            description="Statutory municipal pathway to secure fresh piped municipal water supply, road opening permission, water meter calibration, and drainage connection under Section 140 of the Mumbai Municipal Corporation Act.",
+            tags=["water connection", "bmc water", "mcgm", "hydraulic engineer", "water meter", "road opening", "mumbai", "maharashtra", "nal connection", "water supply"],
+            steps=task_water_steps
         )
-        self._tasks[task3.id] = task3
+        self._tasks[task_water.id] = task_water
 
         # -------------------------------------------------------------------------
-        # TASK 4: Tech Services / Retail Micro-Enterprise (Hyderabad GHMC)
+        # TASK 7: Citizen Statutory Certificates (Income, Domicile & Caste - Aaple Sarkar)
         # -------------------------------------------------------------------------
-        dept_ghmc = DepartmentInfo(
-            id="dept-ghmc",
-            name="Greater Hyderabad Municipal Corporation (Citizen Service Centres)",
-            jurisdiction="Hyderabad Metropolitan Area",
-            office_address="GHMC Head Office, Tank Bund Road, Hyderabad - 500063",
-            contact_phone="040-21111111",
-            contact_email="comm_ghmc@ghmc.gov.in",
-            portal_url="https://www.ghmc.gov.in"
-        )
-        dept_ts_labour = DepartmentInfo(
-            id="dept-ts-labour",
-            name="Telangana Labour Department",
-            jurisdiction="Government of Telangana",
-            office_address="Labour Welfare Centre, RTC X Roads, Musheerabad, Hyderabad",
-            contact_phone="040-27602333",
-            contact_email="col.labour@telangana.gov.in",
-            portal_url="https://labour.telangana.gov.in"
-        )
-
-        task4_steps = [
+        task_rts_steps = [
             TaskStep(
-                id="hyd-biz-1",
-                task_id="task-hyd-tech-biz",
+                id="mah-rts-1",
+                task_id="task-mah-rts-certificates",
                 step_number=1,
-                title="Udyam MSME Self-Declaration Registration",
-                description="Instant free national registration for Micro, Small and Medium Enterprises based on Aadhaar and PAN.",
-                department=dept_mca,
+                title="Aaple Sarkar Citizen Profile & Mobile Aadhaar e-KYC",
+                description="Register authenticated user profile on official Government of Maharashtra Aaple Sarkar portal with Aadhaar OTP authentication.",
+                department=dept_aaple_sarkar,
                 submission_mode=SubmissionMode.ONLINE,
                 estimated_days=1,
                 fee_amount=0.0,
-                fee_breakdown={"Zero Government Fee": 0.0},
+                fee_breakdown={"Zero Registration Fee": 0.0},
                 prerequisites=[],
                 documents=[
-                    DocumentRequirement(id="doc-hyd-aadhaar", name="Aadhaar Linked with Mobile", description="For instant OTP verification", is_mandatory=True)
+                    DocumentRequirement(id="doc-rts-aadhaar", name="Aadhaar Card Linked to Mobile", description="For instant OTP verification", is_mandatory=True, category="Identity"),
+                    DocumentRequirement(id="doc-rts-photo", name="Citizen Digital Passport Photograph", description="File size between 20KB-50KB", is_mandatory=True, category="KYC")
                 ],
-                forms=[FormRequirement(form_code="Udyam-01", title="Udyam Registration Portal Application", fill_online_url="https://udyamregistration.gov.in")],
+                forms=[FormRequirement(form_code="Aaple-Register", title="Citizen Registration Portal Form", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/Registration/Register")],
                 verification_source=VerificationSource(
-                    url="https://udyamregistration.gov.in/Government-India/Ministry-MSME-registration.htm",
-                    page_title="Official Ministry of MSME Udyam Registration Portal",
-                    last_scraped_at="2026-09-24T12:00:00Z",
+                    url="https://aaplesarkar.mahaonline.gov.in",
+                    page_title="Aaple Sarkar Portal - Official Maharashtra Citizen Portal",
+                    last_scraped_at="2026-09-26T15:29:00Z",
+                    confidence_score=1.0,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra Right to Public Services Act, 2015"
+                )
+            ),
+            TaskStep(
+                id="mah-rts-2",
+                task_id="task-mah-rts-certificates",
+                step_number=2,
+                title="Income Certificate Application & Talathi Verification (SLA: 15 Days)",
+                description="Apply for statutory Income Certificate from Revenue Department under RTS Act 2015 with Form 16 / salary certificate / Talathi income report.",
+                department=dept_aaple_sarkar,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=15,
+                fee_amount=57.0,
+                fee_breakdown={"Statutory Certificate Fee": 33.60, "MahaOnline Service Charge": 23.40},
+                prerequisites=["mah-rts-1"],
+                documents=[
+                    DocumentRequirement(id="doc-income-proof", name="Salary Slip / Form 16 / ITR / Talathi Income Report", description="Proof of family income for preceding financial year", is_mandatory=True, category="Income Proof"),
+                    DocumentRequirement(id="doc-ration-card", name="Ration Card / Electricity Bill", description="Family tree and residence proof", is_mandatory=True, category="Address Proof")
+                ],
+                forms=[FormRequirement(form_code="ServiceId-1251", title="Income Certificate Application Form", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251")],
+                verification_source=VerificationSource(
+                    url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251",
+                    page_title="Aaple Sarkar Portal - Income Certificate Guidelines & Designated Officers",
+                    last_scraped_at="2026-09-26T15:30:00Z",
+                    confidence_score=1.0,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra RTS Notified Service ID 1251"
+                ),
+                is_critical_path=True
+            ),
+            TaskStep(
+                id="mah-rts-3",
+                task_id="task-mah-rts-certificates",
+                step_number=3,
+                title="Age, Nationality and Domicile Certificate (SLA: 15 Days)",
+                description="Apply for Domicile Certificate confirming 15 years continuous residence in Maharashtra state under Revenue & Forest Department rules.",
+                department=dept_aaple_sarkar,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=15,
+                fee_amount=57.0,
+                fee_breakdown={"Government Fee": 33.60, "Portal Service Charge": 23.40},
+                prerequisites=["mah-rts-1"],
+                documents=[
+                    DocumentRequirement(id="doc-res-15yrs", name="15 Years Residence Proof in Maharashtra", description="School Leaving Certificate, Ration Card, continuous electricity bills or property cards", is_mandatory=True, category="Residence Proof"),
+                    DocumentRequirement(id="doc-birth-cert", name="Municipal Birth Certificate", description="Showing place of birth in Maharashtra", is_mandatory=True, category="Birth Proof")
+                ],
+                forms=[FormRequirement(form_code="ServiceId-1253", title="Age Nationality and Domicile Certificate Form", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253")],
+                verification_source=VerificationSource(
+                    url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253",
+                    page_title="Aaple Sarkar Portal - Age Nationality and Domicile Certificate",
+                    last_scraped_at="2026-09-26T15:31:00Z",
+                    confidence_score=1.0,
+                    is_admin_verified=True,
+                    gazette_ref="Maharashtra RTS Notified Service ID 1253"
+                ),
+                is_critical_path=True
+            ),
+            TaskStep(
+                id="mah-rts-4",
+                task_id="task-mah-rts-certificates",
+                step_number=4,
+                title="Tahsildar Digital Signature & Barcoded Certificate Issuance",
+                description="Designated Officer (Nayab Tahsildar / Tahsildar) verifies application data and issues digitally signed certificate with QR code for instant public verification.",
+                department=dept_aaple_sarkar,
+                submission_mode=SubmissionMode.ONLINE,
+                estimated_days=3,
+                fee_amount=0.0,
+                fee_breakdown={"Zero Issuance Fee": 0.0},
+                prerequisites=["mah-rts-2", "mah-rts-3"],
+                documents=[],
+                forms=[FormRequirement(form_code="DIGI-CERT", title="Barcoded Maharashtra State Certificate PDF", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/TrackApplicationStatus")],
+                verification_source=VerificationSource(
+                    url="https://aaplesarkar.mahaonline.gov.in/en/VerifyCertificate",
+                    page_title="Aaple Sarkar - Online Digital Certificate Authenticity Verification",
+                    last_scraped_at="2026-09-26T15:32:00Z",
                     confidence_score=1.0,
                     is_admin_verified=True
                 )
-            ),
-            TaskStep(
-                id="hyd-biz-2",
-                task_id="task-hyd-tech-biz",
-                step_number=2,
-                title="Telangana Shops & Establishments Registration",
-                description="Mandatory statutory registration for any commercial office, shop or service facility under the Telangana Shops and Establishments Act.",
-                department=dept_ts_labour,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=3,
-                fee_amount=500.0,
-                fee_breakdown={"Registration Fee (1-5 Employees)": 500.0},
-                prerequisites=["hyd-biz-1"],
-                documents=[
-                    DocumentRequirement(id="doc-hyd-lease", name="Office Lease or Electricity Bill", description="Proof of commercial physical address in Telangana", is_mandatory=True)
-                ],
-                forms=[FormRequirement(form_code="Form A - Shops Act", title="Application for Registration of Commercial Establishment", fill_online_url="https://labour.telangana.gov.in")],
-                verification_source=VerificationSource(
-                    url="https://ts-bpass.telangana.gov.in/labour-services",
-                    page_title="TS-iPASS Telangana Single Window - Labour Clearance",
-                    last_scraped_at="2026-09-21T15:30:00Z",
-                    confidence_score=0.97,
-                    is_admin_verified=True
-                )
-            ),
-            TaskStep(
-                id="hyd-biz-3",
-                task_id="task-hyd-tech-biz",
-                step_number=3,
-                title="GHMC Instant Self-Certification Trade License (TS-bPASS)",
-                description="Under Telangana's TS-bPASS reform, low-risk commercial tech enterprises can obtain instant Trade License via online self-declaration.",
-                department=dept_ghmc,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=1,
-                fee_amount=2500.0,
-                fee_breakdown={"Trade License Fee": 2000.0, "Garbage User Charges": 500.0},
-                prerequisites=["hyd-biz-1", "hyd-biz-2"],
-                documents=[
-                    DocumentRequirement(id="doc-ghmc-self", name="TS-bPASS Self-Certification Declaration", description="Acceptance of fire and safety norms", is_mandatory=True)
-                ],
-                forms=[FormRequirement(form_code="GHMC-TS-BPASS-TL", title="Instant Trade License Issuance Form", fill_online_url="https://tsbpass.telangana.gov.in/tradelicense")],
-                verification_source=VerificationSource(
-                    url="https://www.ghmc.gov.in/tradelicense/instant_service.aspx",
-                    page_title="GHMC Official Trade License Portal",
-                    last_scraped_at="2026-09-25T11:00:00Z",
-                    confidence_score=0.99,
-                    is_admin_verified=True,
-                    gazette_ref="Telangana Municipalities Act 2019 Section 274"
-                )
-            ),
-            TaskStep(
-                id="hyd-biz-4",
-                task_id="task-hyd-tech-biz",
-                step_number=4,
-                title="GHMC External Signboard & Nameboard Clearance",
-                description="Self-registration of commercial facade nameplate under permissible size guidelines (within 3x2 meters).",
-                department=dept_ghmc,
-                submission_mode=SubmissionMode.ONLINE,
-                estimated_days=2,
-                fee_amount=1000.0,
-                fee_breakdown={"Signage Fee": 1000.0},
-                prerequisites=["hyd-biz-3"],
-                documents=[],
-                forms=[FormRequirement(form_code="GHMC-ADV-01", title="Signboard Permission Certificate", fill_online_url="https://www.ghmc.gov.in/advt")],
-                verification_source=VerificationSource(
-                    url="https://www.ghmc.gov.in/advt/rules.pdf",
-                    page_title="GHMC Advertisement Fee Schedule",
-                    last_scraped_at="2026-09-20T16:00:00Z",
-                    confidence_score=0.94,
-                    is_admin_verified=True
-                )
             )
         ]
 
-        task4 = CivicTask(
-            id="task-hyd-tech-biz",
-            title="Register an IT & Tech Services Commercial Office",
-            category="Business & Enterprise",
-            municipality="Hyderabad (GHMC)",
-            state="Telangana",
-            description="Rapid self-certification pathway under Telangana's TS-bPASS and TS-iPASS single-window system for starting an IT/ITES consultancy or commercial office.",
-            tags=["it office", "startup", "ghmc", "hyderabad", "ts-bpass", "trade license", "msme", "shops act"],
-            steps=task4_steps
+        task_rts = CivicTask(
+            id="task-mah-rts-certificates",
+            title="Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar)",
+            category="Citizen & Vital Records",
+            municipality="Maharashtra Statewide (Aaple Sarkar RTS)",
+            state="Maharashtra",
+            description="Integrated service roadmap under the Maharashtra Right to Public Services Act (RTS 2015) for obtaining Income Certificate, Age-Nationality-Domicile Certificate, and Caste Certificate with guaranteed statutory SLAs.",
+            tags=["aaple sarkar", "income certificate", "domicile", "caste certificate", "rts act 2015", "tehsildar", "maharashtra", "dakhla", "utpanna dakhla", "rahiwasi dakhla"],
+            steps=task_rts_steps
         )
-        self._tasks[task4.id] = task4
+        self._tasks[task_rts.id] = task_rts
 
 # Singleton database instance
 db = CivicDatabase()

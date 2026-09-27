@@ -1,12 +1,38 @@
 /**
  * Main Civic Task Navigator Application Controller
  * Grounded in Civic Functionalism & Municipal Ledger discipline.
- * 100% Data-Driven & Decoupled Architecture across All Indian Municipalities
+ * 100% Data-Driven & Decoupled Architecture across Maharashtra Municipalities
  * Conforming to GIGW 3.0 / S3WaaS and Stitch Design standards.
  */
+
+const TRANSLATIONS = {
+    en: {
+        find_service: "Find Service",
+        step_roadmap: "Step Roadmap",
+        step_details: "Step Details & Apply",
+        my_progress: "My Progress",
+        admin: "Admin",
+        critical_path: "Highlight Critical Path",
+        share_route: "Share Route",
+        track_app_heading: "Track Existing Application Status",
+        track_btn: "Check Status on Official Portal ↗"
+    },
+    mr: {
+        find_service: "सेवा शोधा",
+        step_roadmap: "प्रक्रिया मार्ग",
+        step_details: "तपशील व अर्ज",
+        my_progress: "माझी प्रगती",
+        admin: "प्रशासन",
+        critical_path: "महत्त्वाचा मार्ग दाखवा",
+        share_route: "मार्ग सामायिक करा",
+        track_app_heading: "तुमच्या अर्जाची सद्यस्थिती तपासा",
+        track_btn: "अधिकृत पोर्टलवर स्थिती तपासा ↗"
+    }
+};
+
 class CivicApp {
     constructor() {
-        this.currentTaskId = 'task-mum-bakery';
+        this.currentTaskId = 'task-mah-small-biz';
         this.currentTask = null;
         this.currentRoadmap = null;
         this.selectedStationId = null;
@@ -16,6 +42,9 @@ class CivicApp {
         this.wayfindingMode = 'subway'; // 'subway' | 'dag'
         this.criticalPathActive = false;
         this.activeDocCategory = 'all';
+
+        // Language state
+        this.currentLang = localStorage.getItem('civic_lang') || 'en';
 
         // Scoped progress & document state (will be loaded per-task)
         this.completedStepIds = new Set();
@@ -56,9 +85,15 @@ class CivicApp {
             window.adminManager = this.admin;
         }
 
-        // Check URL hash for direct tab navigation
+        // Check URL parameters or hash for deep linking
         const initialHash = window.location.hash.replace('#', '');
-        if (initialHash && ['task-lookup', 'roadmap-and-route', 'step-dossier', 'document-locker', 'citizen-ledger', 'registry-admin'].includes(initialHash)) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const taskParam = urlParams.get('task') || (initialHash.startsWith('task-') ? initialHash : null);
+
+        if (taskParam) {
+            this.currentTaskId = taskParam;
+            this.activeTab = 'roadmap-and-route';
+        } else if (initialHash && ['task-lookup', 'roadmap-and-route', 'step-dossier', 'document-locker', 'citizen-ledger', 'registry-admin'].includes(initialHash)) {
             this.activeTab = initialHash;
         }
 
@@ -70,6 +105,9 @@ class CivicApp {
 
         // 3. Switch to initial tab
         this.switchNavTab(this.activeTab);
+
+        // 4. Apply initial language translation
+        this.applyTranslations();
     }
 
     // -------------------------------------------------------------------------
@@ -209,10 +247,30 @@ class CivicApp {
 
     saveTaskCompleted() {
         localStorage.setItem(`civic_completed_steps_${this.currentTaskId}`, JSON.stringify(Array.from(this.completedStepIds)));
+        this.syncProgressToBackend();
     }
 
     saveTaskInProgress() {
         localStorage.setItem(`civic_inprogress_steps_${this.currentTaskId}`, JSON.stringify(Array.from(this.inProgressStepIds)));
+        this.syncProgressToBackend();
+    }
+
+    async syncProgressToBackend() {
+        if (!this.currentTaskId) return;
+        try {
+            await fetch('/api/user/progress', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_id: 'citizen_session',
+                    task_id: this.currentTaskId,
+                    completed_step_ids: Array.from(this.completedStepIds),
+                    in_progress_step_ids: Array.from(this.inProgressStepIds)
+                })
+            });
+        } catch (e) {
+            // Local fallback active
+        }
     }
 
     saveTaskDocs() {
@@ -242,6 +300,298 @@ class CivicApp {
     // GIGW Accessibility: High Contrast Toggle
     toggleHighContrast() {
         document.body.classList.toggle('high-contrast');
+    }
+
+    // -------------------------------------------------------------------------
+    // Bilingual (EN | मराठी) Language Engine
+    // -------------------------------------------------------------------------
+    toggleLanguage() {
+        this.currentLang = (this.currentLang === 'en') ? 'mr' : 'en';
+        localStorage.setItem('civic_lang', this.currentLang);
+        this.applyTranslations();
+    }
+
+    getTaskTitle(t) {
+        if (!t) return '';
+        if (this.currentLang === 'mr' && window.TASK_TRANSLATIONS && window.TASK_TRANSLATIONS[t.id] && window.TASK_TRANSLATIONS[t.id].title) {
+            return window.TASK_TRANSLATIONS[t.id].title;
+        }
+        return t.title || '';
+    }
+
+    getTaskDesc(t) {
+        if (!t) return '';
+        if (this.currentLang === 'mr' && window.TASK_TRANSLATIONS && window.TASK_TRANSLATIONS[t.id] && window.TASK_TRANSLATIONS[t.id].description) {
+            return window.TASK_TRANSLATIONS[t.id].description;
+        }
+        return t.description || '';
+    }
+
+    getTaskMunicipality(t) {
+        if (!t) return '';
+        if (this.currentLang === 'mr') {
+            if (window.TASK_TRANSLATIONS && window.TASK_TRANSLATIONS[t.id] && window.TASK_TRANSLATIONS[t.id].municipality) {
+                return window.TASK_TRANSLATIONS[t.id].municipality;
+            }
+            if (window.MUNI_TRANSLATIONS && window.MUNI_TRANSLATIONS[t.municipality]) {
+                return window.MUNI_TRANSLATIONS[t.municipality];
+            }
+        }
+        return t.municipality || '';
+    }
+
+    getTaskCategory(t) {
+        if (!t) return '';
+        if (this.currentLang === 'mr' && window.TASK_TRANSLATIONS && window.TASK_TRANSLATIONS[t.id] && window.TASK_TRANSLATIONS[t.id].category) {
+            return window.TASK_TRANSLATIONS[t.id].category;
+        }
+        return t.category || '';
+    }
+
+    getStepTitle(step, taskId) {
+        if (!step) return '';
+        const tId = taskId || (this.currentTask && this.currentTask.id);
+        if (this.currentLang === 'mr' && window.TASK_TRANSLATIONS) {
+            if (tId && window.TASK_TRANSLATIONS[tId]?.steps?.[step.id]?.title) {
+                return window.TASK_TRANSLATIONS[tId].steps[step.id].title;
+            }
+            // Fallback: search all tasks for this step ID
+            for (const tKey of Object.keys(window.TASK_TRANSLATIONS)) {
+                if (window.TASK_TRANSLATIONS[tKey]?.steps?.[step.id]?.title) {
+                    return window.TASK_TRANSLATIONS[tKey].steps[step.id].title;
+                }
+            }
+        }
+        return step.title || '';
+    }
+
+    getStepDesc(step, taskId) {
+        if (!step) return '';
+        const tId = taskId || (this.currentTask && this.currentTask.id);
+        if (this.currentLang === 'mr' && window.TASK_TRANSLATIONS) {
+            if (tId && window.TASK_TRANSLATIONS[tId]?.steps?.[step.id]?.description) {
+                return window.TASK_TRANSLATIONS[tId].steps[step.id].description;
+            }
+            // Fallback: search all tasks for this step ID
+            for (const tKey of Object.keys(window.TASK_TRANSLATIONS)) {
+                if (window.TASK_TRANSLATIONS[tKey]?.steps?.[step.id]?.description) {
+                    return window.TASK_TRANSLATIONS[tKey].steps[step.id].description;
+                }
+            }
+        }
+        return step.description || '';
+    }
+
+    getStepDept(step, taskId) {
+        if (!step) return '';
+        const tId = taskId || (this.currentTask && this.currentTask.id);
+        if (this.currentLang === 'mr' && window.TASK_TRANSLATIONS) {
+            if (tId && window.TASK_TRANSLATIONS[tId]?.steps?.[step.id]?.department) {
+                return window.TASK_TRANSLATIONS[tId].steps[step.id].department;
+            }
+            // Fallback: search all tasks for this step ID
+            for (const tKey of Object.keys(window.TASK_TRANSLATIONS)) {
+                if (window.TASK_TRANSLATIONS[tKey]?.steps?.[step.id]?.department) {
+                    return window.TASK_TRANSLATIONS[tKey].steps[step.id].department;
+                }
+            }
+        }
+        return (step.department && step.department.name) || step.department_name || (typeof step.department === 'string' ? step.department : '') || '';
+    }
+
+    getDocName(docName) {
+        if (!docName) return '';
+        if (this.currentLang === 'mr' && window.DOC_TRANSLATIONS) {
+            if (window.DOC_TRANSLATIONS[docName]) {
+                return window.DOC_TRANSLATIONS[docName];
+            }
+            const lower = docName.toLowerCase();
+            for (const [key, val] of Object.entries(window.DOC_TRANSLATIONS)) {
+                if (lower.includes(key.toLowerCase())) {
+                    return val;
+                }
+            }
+        }
+        return docName;
+    }
+
+    applyTranslations() {
+        const lang = this.currentLang;
+        const isMr = (lang === 'mr');
+
+        // 1. Language Toggle Button Label
+        const btnToggle = document.getElementById('label-lang-toggle');
+        if (btnToggle) {
+            btnToggle.innerText = isMr ? 'English' : 'मराठी';
+        }
+
+        // 2. HTML Lang attribute & Document Title
+        document.documentElement.lang = lang;
+        document.title = isMr
+            ? "नागरिक कार्य मार्गदर्शक | महाराष्ट्र शासन नागरिक सेवा मार्गदर्शिका"
+            : "Civic Task Navigator | Government of Maharashtra Citizen Services Guide";
+
+        // 3. Translate all elements with [data-i18n]
+        const uiDict = (window.UI_STRINGS && window.UI_STRINGS[lang]) || (window.UI_STRINGS && window.UI_STRINGS.en) || {};
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (uiDict[key]) {
+                el.innerText = uiDict[key];
+            }
+        });
+
+        // 4. Update search input placeholder
+        const taskInp = document.getElementById('taskQuery');
+        if (taskInp) {
+            taskInp.placeholder = isMr
+                ? "उदा. मला दुकान नोंदणी करायची आहे, किंवा सातबारा फेरफार अर्ज"
+                : "e.g. I want to register a small business, or Apply for 7/12 land extract";
+        }
+
+        // 5. Update Applicant Type Dropdown options
+        const entSelect = document.getElementById('entityClassification');
+        if (entSelect) {
+            const applicantOptions = [
+                { val: "sole-prop", en: "Individual Citizen / Sole Proprietor (एकल नागरिक / व्यापारी)", mr: "एकल नागरिक / व्यापारी (Individual / Sole Proprietor)" },
+                { val: "commercial-pvt", en: "Private Limited Company / LLP", mr: "प्रायव्हेट लिमिटेड कंपनी / एलएलपी (Pvt Ltd / LLP)" },
+                { val: "partnership", en: "Partnership Firm (भागीदारी संस्था)", mr: "भागीदारी संस्था (Partnership Firm)" },
+                { val: "individual-citizen", en: "Student / Resident (दाखला व प्रमाणपत्रे)", mr: "विद्यार्थी / रहिवासी (दाखले व प्रमाणपत्रे)" },
+                { val: "chs", en: "Cooperative Housing Society (CHS)", mr: "सहकारी गृहनिर्माण संस्था (Co-op Housing Society)" }
+            ];
+            const currentVal = entSelect.value;
+            entSelect.innerHTML = applicantOptions.map(opt => `
+                <option value="${opt.val}" ${opt.val === currentVal ? 'selected' : ''}>${isMr ? opt.mr : opt.en}</option>
+            `).join('');
+        }
+
+        // 6. Update Tracker Portal Select options
+        const trackPortalSelect = document.getElementById('select-track-portal');
+        if (trackPortalSelect) {
+            const portalOptions = [
+                { val: "aaple_sarkar", en: "Aaple Sarkar RTS Tracking (Statewide)", mr: "आपले सरकार RTS ट्रॅकिंग (महाराष्ट्र राज्यव्यापी)" },
+                { val: "mcgm", en: "MCGM / BMC Citizen Portal (Mumbai)", mr: "बीएमसी / MCGM नागरिक पोर्टल (मुंबई)" },
+                { val: "mahabhumi", en: "MahaBhumi Bhulekh / 7/12 Mutation (Statewide)", mr: "महाभूमी भुलेख / ७/१२ फेरफार (महाराष्ट्र)" },
+                { val: "foscos", en: "FoSCoS Food Safety License (FSSAI)", mr: "अन्न सुरक्षा व मानके परवाना (FSSAI FoSCoS)" }
+            ];
+            const currentVal = trackPortalSelect.value;
+            trackPortalSelect.innerHTML = portalOptions.map(opt => `
+                <option value="${opt.val}" ${opt.val === currentVal ? 'selected' : ''}>${isMr ? opt.mr : opt.en}</option>
+            `).join('');
+        }
+
+        // 7. Update Jurisdiction dropdowns
+        this.populateJurisdictionDropdowns();
+
+        // 8. Re-render Dynamic Views
+        this.renderTasksCatalog();
+        if (this.currentTask) {
+            this.updateHeaderAndStats();
+            this.renderRoadmapStepCards();
+            this.updateStationUI();
+            this.renderCitizenLedger();
+
+            if (this.subwayRenderer && this.currentRoadmap) {
+                this.subwayRenderer.render(
+                    this.currentTask,
+                    this.currentRoadmap,
+                    this.completedStepIds,
+                    this.selectedStationId
+                );
+            }
+            if (this.visualizer && this.currentRoadmap) {
+                this.visualizer.setRoadmapData(this.currentRoadmap);
+            }
+        }
+
+        if (this.admin && typeof this.admin.renderModerationQueue === 'function') {
+            this.admin.renderModerationQueue();
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Share Route & WhatsApp Summary Engine
+    // -------------------------------------------------------------------------
+    openShareModal() {
+        const modal = document.getElementById('share-modal');
+        const input = document.getElementById('share-link-input');
+        const toast = document.getElementById('share-toast');
+        if (toast) toast.classList.add('hidden');
+
+        if (input && this.currentTaskId) {
+            input.value = `${window.location.origin}/?task=${this.currentTaskId}`;
+        }
+        if (modal) modal.style.display = 'flex';
+    }
+
+    closeShareModal() {
+        const modal = document.getElementById('share-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    copyShareLink() {
+        const input = document.getElementById('share-link-input');
+        const toast = document.getElementById('share-toast');
+        if (!input) return;
+
+        input.select();
+        const text = input.value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                if (toast) {
+                    toast.classList.remove('hidden');
+                    setTimeout(() => toast.classList.add('hidden'), 3000);
+                }
+            }).catch(() => {
+                document.execCommand('copy');
+                if (toast) {
+                    toast.classList.remove('hidden');
+                    setTimeout(() => toast.classList.add('hidden'), 3000);
+                }
+            });
+        } else {
+            document.execCommand('copy');
+            if (toast) {
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 3000);
+            }
+        }
+    }
+
+    shareViaWhatsApp() {
+        if (!this.currentTask || !this.currentRoadmap) return;
+        const t = this.currentTask;
+        const r = this.currentRoadmap;
+        const shareUrl = `${window.location.origin}/?task=${this.currentTaskId}`;
+
+        const stepsText = t.steps.map((s, idx) => `• Step ${idx + 1}: ${s.title} (${s.department.name.split('(')[0].trim()})`).join('\n');
+
+        const message = `🏛️ *Civic Task Navigator — Maharashtra*\n\n*${t.title}*\n📍 Jurisdiction: ${t.municipality}\n⏱️ Timeline: ~${r.total_estimated_days} Working Days\n💰 Official Fees: ₹${r.total_estimated_fees}\n\n📋 *Ordered Procedure Steps:*\n${stepsText}\n\n🔗 *Explore interactive roadmap & required documents:*\n${shareUrl}`;
+
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    // -------------------------------------------------------------------------
+    // Application Status Tracker Engine
+    // -------------------------------------------------------------------------
+    trackApplicationStatus() {
+        const tokenInput = document.getElementById('input-track-token');
+        const portalSelect = document.getElementById('select-track-portal');
+        const token = tokenInput ? tokenInput.value.trim() : '';
+        const portal = portalSelect ? portalSelect.value : 'aaple_sarkar';
+
+        let targetUrl = 'https://aaplesarkar.mahaonline.gov.in/en/TrackApplicationStatus';
+        if (portal === 'mcgm') {
+            targetUrl = 'https://portal.mcgm.gov.in';
+        } else if (portal === 'mahabhumi') {
+            targetUrl = 'https://bhulekh.mahabhumi.gov.in';
+        } else if (portal === 'foscos') {
+            targetUrl = 'https://foscos.fssai.gov.in';
+        }
+
+        if (token) {
+            alert(`Opening official tracking gateway for Token #${token}...`);
+        }
+        window.open(targetUrl, '_blank');
     }
 
     switchNavTab(tabName) {
@@ -298,21 +648,38 @@ class CivicApp {
         const container = document.getElementById('directives-ledger-list');
         if (!container || !this.allTasks || this.allTasks.length === 0) return;
 
+        const isMr = (this.currentLang === 'mr');
+
         container.innerHTML = this.allTasks.map((t, idx) => {
             const isActive = t.id === this.currentTaskId;
             const stepCount = (t.steps && t.steps.length) || 0;
-            const daysEst = `${t.total_estimated_days || 15}–${(t.total_estimated_days || 15) + 10} Days`;
+            const daysEst = isMr 
+                ? `${t.total_estimated_days || 15}–${(t.total_estimated_days || 15) + 10} दिवस` 
+                : `${t.total_estimated_days || 15}–${(t.total_estimated_days || 15) + 10} Days`;
             const feesEst = this.formatINR(t.total_fees || 0);
             const indexStr = idx < 9 ? `0${idx + 1}` : `${idx + 1}`;
 
+            const taskTitle = this.getTaskTitle(t);
+            const taskDesc = this.getTaskDesc(t);
+            const taskMuni = this.getTaskMunicipality(t);
+
             // Authorities summary
-            let authorityTags = t.municipality;
+            let authorityTags = taskMuni;
             if (t.steps && t.steps.length > 0) {
-                const uniqueDepts = Array.from(new Set(t.steps.map(s => (s.department && s.department.name ? s.department.name.split('(')[0].trim() : '')))).filter(Boolean);
+                const uniqueDepts = Array.from(new Set(t.steps.map(s => {
+                    const deptName = this.getStepDept(s, t.id);
+                    return deptName ? deptName.split('(')[0].trim() : '';
+                }))).filter(Boolean);
                 if (uniqueDepts.length > 0) {
                     authorityTags = uniqueDepts.slice(0, 3).join(' • ');
                 }
             }
+
+            const activeBadgeText = isMr ? 'सक्रिय प्रक्रिया' : 'Active Focus';
+            const colJurisdiction = isMr ? 'अधिकारक्षेत्र व साखळी' : 'Jurisdiction & Chain';
+            const colSchedule = isMr ? 'अंदाजे कालावधी' : 'Est. Schedule';
+            const colFees = isMr ? 'अधिकृत शुल्क' : 'Total Fees';
+            const btnLoad = isMr ? 'मार्ग पहा' : 'Load Route';
 
             return `
                 <div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 ${isActive ? 'bg-amber-50/50 border-l-4 border-amber-600' : ''}" onclick="window.app.loadTaskAndRoute('${t.id}')">
@@ -322,30 +689,30 @@ class CivicApp {
                         </div>
                         <div>
                             <div class="font-headline text-sm font-semibold text-primary flex items-center gap-2 flex-wrap">
-                                <span>${t.title}</span>
-                                ${isActive ? '<span class="bg-amber-100 text-amber-900 font-label-sm text-[10px] px-1.5 py-0.5 font-bold uppercase border border-amber-300">Active Focus</span>' : ''}
-                                <span class="bg-surface-container text-secondary font-code text-[10px] px-1.5 py-0.5 border border-outline-variant">${t.municipality}</span>
+                                <span>${taskTitle}</span>
+                                ${isActive ? `<span class="bg-amber-100 text-amber-900 font-label-sm text-[10px] px-1.5 py-0.5 font-bold uppercase border border-amber-300">${activeBadgeText}</span>` : ''}
+                                <span class="bg-surface-container text-secondary font-code text-[10px] px-1.5 py-0.5 border border-outline-variant">${taskMuni}</span>
                             </div>
                             <div class="font-body text-xs text-on-surface-variant mt-0.5 max-w-2xl line-clamp-2">
-                                ${t.description}
+                                ${taskDesc}
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center gap-6 shrink-0 text-xs font-headline">
                         <div class="text-right hidden sm:block">
-                            <div class="text-secondary text-[11px] uppercase">Jurisdiction &amp; Chain</div>
+                            <div class="text-secondary text-[11px] uppercase">${colJurisdiction}</div>
                             <div class="font-code text-primary font-semibold truncate max-w-[180px]">${authorityTags}</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-secondary text-[11px] uppercase">Est. Schedule</div>
+                            <div class="text-secondary text-[11px] uppercase">${colSchedule}</div>
                             <div class="font-code text-primary font-semibold">${daysEst}</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-secondary text-[11px] uppercase">Total Fees</div>
+                            <div class="text-secondary text-[11px] uppercase">${colFees}</div>
                             <div class="font-code text-primary font-bold">${feesEst}</div>
                         </div>
                         <button class="${isActive ? 'bg-amber-700 text-white' : 'bg-surface-container text-primary hover:bg-primary hover:text-on-primary'} px-3 py-1.5 text-xs font-semibold transition-colors border border-outline-variant shrink-0" onclick="event.stopPropagation(); window.app.loadTaskAndRoute('${t.id}')">
-                            Load Route
+                            ${btnLoad}
                         </button>
                     </div>
                 </div>
@@ -356,15 +723,17 @@ class CivicApp {
     populateJurisdictionDropdowns() {
         if (!this.allTasks || this.allTasks.length === 0) return;
 
+        const isMr = (this.currentLang === 'mr');
         // Extract unique municipalities
         const uniqueMunis = Array.from(new Set(this.allTasks.map(t => t.municipality))).filter(Boolean);
 
         // 1. Top Navbar Jurisdiction Dropdown
         const navSelect = document.getElementById('select-jurisdiction');
         if (navSelect) {
-            navSelect.innerHTML = uniqueMunis.map(m => `
-                <option value="${m}" ${this.currentTask && this.currentTask.municipality === m ? 'selected' : ''}>${m}</option>
-            `).join('');
+            navSelect.innerHTML = uniqueMunis.map(m => {
+                const label = isMr ? (window.MUNI_TRANSLATIONS?.[m] || m) : m;
+                return `<option value="${m}" ${this.currentTask && this.currentTask.municipality === m ? 'selected' : ''}>${label}</option>`;
+            }).join('');
 
             // Clean event listener
             navSelect.onchange = (e) => {
@@ -379,9 +748,13 @@ class CivicApp {
         // 2. Search Intake Jurisdiction Dropdown
         const searchSelect = document.getElementById('jurisdictionSelect');
         if (searchSelect) {
+            const allLabel = isMr ? 'सर्व महानगरपालिका / अधिकारक्षेत्र (महाराष्ट्र)' : 'All Municipal Jurisdictions (National)';
             searchSelect.innerHTML = `
-                <option value="">All Municipal Jurisdictions (National)</option>
-                ${uniqueMunis.map(m => `<option value="${m}">${m}</option>`).join('')}
+                <option value="">${allLabel}</option>
+                ${uniqueMunis.map(m => {
+                    const label = isMr ? (window.MUNI_TRANSLATIONS?.[m] || m) : m;
+                    return `<option value="${m}">${label}</option>`;
+                }).join('')}
             `;
         }
     }
@@ -466,23 +839,29 @@ class CivicApp {
         const r = this.currentRoadmap;
         if (!t || !r) return;
 
+        const isMr = (this.currentLang === 'mr');
+        const taskTitle = this.getTaskTitle(t);
+        const taskDesc = this.getTaskDesc(t);
+        const taskMuni = this.getTaskMunicipality(t);
+        const taskCat = this.getTaskCategory(t);
+
         // Roadmap title & description
         const elTitle = document.getElementById('roadmap-heading-title');
         const elDesc = document.getElementById('roadmap-heading-desc');
         const elRouteId = document.getElementById('route-id-badge');
         const elRouteClass = document.getElementById('route-class-badge');
 
-        if (elTitle) elTitle.innerText = `Route Map: ${t.title}`;
-        if (elDesc) elDesc.innerText = t.description;
-        if (elRouteId) elRouteId.innerText = `ROUTE #${t.id.toUpperCase().replace('TASK-', '')}`;
-        if (elRouteClass) elRouteClass.innerText = t.category;
+        if (elTitle) elTitle.innerText = isMr ? `प्रक्रिया मार्ग: ${taskTitle}` : `Route Map: ${t.title}`;
+        if (elDesc) elDesc.innerText = taskDesc;
+        if (elRouteId) elRouteId.innerText = isMr ? `मार्ग #${t.id.toUpperCase().replace('TASK-', '')}` : `ROUTE #${t.id.toUpperCase().replace('TASK-', '')}`;
+        if (elRouteClass) elRouteClass.innerText = taskCat;
 
         // Dynamic Inter-Agency Code under subway map
         const elInterCode = document.getElementById('subway-interagency-code');
         if (elInterCode) {
             const muniCode = (t.municipality || 'MUNI').split(' ')[0].toUpperCase();
             const catCode = (t.category || 'STATUTORY').toUpperCase().replace(/[^A-Z]/g, '-').slice(0, 10);
-            elInterCode.innerText = `INTER-AGENCY CODE: ${catCode}-${muniCode}-2026`;
+            elInterCode.innerText = isMr ? `आंतर-विभाग सांकेतांक: ${catCode}-${muniCode}-2026` : `INTER-AGENCY CODE: ${catCode}-${muniCode}-2026`;
         }
 
         // Summary stats ribbon
@@ -510,9 +889,12 @@ class CivicApp {
         if (elBlocker) {
             const firstPending = t.steps.find(s => !this.completedStepIds.has(s.id));
             if (firstPending) {
-                elBlocker.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span> ${firstPending.department.name.split('(')[0]}`;
+                const deptName = this.getStepDept(firstPending, t.id);
+                elBlocker.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 shrink-0"></span> ${deptName.split('(')[0]}`;
             } else {
-                elBlocker.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-600 shrink-0"></span> All Milestones Cleared`;
+                elBlocker.innerHTML = isMr
+                    ? `<span class="w-2 h-2 rounded-full bg-emerald-600 shrink-0"></span> सर्व टप्पे यशस्वीरित्या पूर्ण`
+                    : `<span class="w-2 h-2 rounded-full bg-emerald-600 shrink-0"></span> All Milestones Cleared`;
             }
         }
 
@@ -527,12 +909,13 @@ class CivicApp {
                     ? 'mb-4 p-3 bg-purple-50 border border-purple-300 text-purple-950 font-headline text-xs flex items-center justify-between gap-3 shadow-sm'
                     : 'mb-4 p-3 bg-blue-50 border border-blue-300 text-blue-950 font-headline text-xs flex items-center justify-between gap-3 shadow-sm';
                 const icon = isSynth ? 'auto_awesome' : 'translate';
+                const dismissLabel = isMr ? 'बंद करा' : 'Dismiss';
                 elNlpBanner.innerHTML = `
                     <div class="flex items-center gap-2">
                         <span class="material-symbols-outlined text-[18px] ${isSynth ? 'text-purple-700' : 'text-blue-700'}">${icon}</span>
                         <span>${this.lastSearchNotice.message}</span>
                     </div>
-                    <button class="text-secondary hover:text-primary underline text-[11px]" onclick="document.getElementById('nlp-intent-banner').style.display='none'">Dismiss</button>
+                    <button class="text-secondary hover:text-primary underline text-[11px]" onclick="document.getElementById('nlp-intent-banner').style.display='none'">${dismissLabel}</button>
                 `;
             } else {
                 elNlpBanner.classList.add('hidden');
@@ -546,20 +929,23 @@ class CivicApp {
         const countBadge = document.getElementById('rail-milestones-count');
         if (!container || !this.currentTask) return;
 
+        const isMr = (this.currentLang === 'mr');
         const steps = this.currentTask.steps;
-        if (countBadge) countBadge.innerText = `${steps.length} Stops`;
+        if (countBadge) countBadge.innerText = isMr ? `${steps.length} टप्पे` : `${steps.length} Stops`;
 
         container.innerHTML = steps.map((s, idx) => {
             const isCompleted = this.completedStepIds.has(s.id);
             const isSelected = this.selectedStationId === s.id;
+            const stepTitle = this.getStepTitle(s, this.currentTask.id);
+            const deptName = this.getStepDept(s, this.currentTask.id);
             
-            let statusBadge = '<span class="font-headline text-[10px] text-secondary">Upcoming</span>';
+            let statusBadge = isMr ? '<span class="font-headline text-[10px] text-secondary">प्रलंबित</span>' : '<span class="font-headline text-[10px] text-secondary">Upcoming</span>';
             let dotBg = 'bg-surface-container-highest text-secondary';
             if (isCompleted) {
-                statusBadge = '<span class="font-headline text-[10px] text-emerald-800 font-bold">✓ Cleared</span>';
+                statusBadge = isMr ? '<span class="font-headline text-[10px] text-emerald-800 font-bold">✓ पूर्ण</span>' : '<span class="font-headline text-[10px] text-emerald-800 font-bold">✓ Cleared</span>';
                 dotBg = 'bg-emerald-700 text-white';
             } else if (isSelected) {
-                statusBadge = '<span class="font-headline text-[10px] text-amber-800 font-bold">Active</span>';
+                statusBadge = isMr ? '<span class="font-headline text-[10px] text-amber-800 font-bold">सक्रिय</span>' : '<span class="font-headline text-[10px] text-amber-800 font-bold">Active</span>';
                 dotBg = 'bg-amber-500 text-white';
             }
 
@@ -568,8 +954,8 @@ class CivicApp {
                     <div class="flex items-center gap-2">
                         <span class="w-5 h-5 rounded-full ${dotBg} flex items-center justify-center font-code text-[10px] font-bold">${idx + 1}</span>
                         <div class="truncate max-w-[140px]">
-                            <div class="font-headline text-xs font-semibold text-primary truncate">${s.title}</div>
-                            <div class="font-code text-[10px] text-secondary truncate">${s.department.name.split('(')[0]}</div>
+                            <div class="font-headline text-xs font-semibold text-primary truncate">${stepTitle}</div>
+                            <div class="font-code text-[10px] text-secondary truncate">${deptName.split('(')[0]}</div>
                         </div>
                     </div>
                     <div>${statusBadge}</div>
@@ -599,8 +985,13 @@ class CivicApp {
         const step = this.currentTask.steps.find(s => s.id === this.selectedStationId) || this.currentTask.steps[0];
         if (!step) return;
 
+        const isMr = (this.currentLang === 'mr');
         const isCompleted = this.completedStepIds.has(step.id);
         const stateCode = (this.currentTask.state || this.currentTask.municipality || 'IN').substring(0, 2).toUpperCase();
+        const stepTitle = this.getStepTitle(step, this.currentTask.id);
+        const stepDesc = this.getStepDesc(step, this.currentTask.id);
+        const deptName = this.getStepDept(step, this.currentTask.id);
+        const muniName = this.getTaskMunicipality(this.currentTask);
 
         // 1. Update Active Station Dossier Card on Roadmap view
         const badgeStep = document.getElementById('station-badge-step');
@@ -613,31 +1004,41 @@ class CivicApp {
         const checklistEl = document.getElementById('station-checklist');
         const docketRef = document.getElementById('station-docket-ref');
 
-        if (badgeStep) badgeStep.innerText = `STOP 0${step.step_number} / ${(step.department.jurisdiction || this.currentTask.municipality).toUpperCase()}`;
-        if (badgeAgency) badgeAgency.innerText = `Agency: ${step.department.name}`;
-        if (titleEl) titleEl.innerText = step.title;
-        if (descEl) descEl.innerText = step.description;
-        if (slaEl) slaEl.innerText = `${step.estimated_days} Days`;
-        if (feeEl) feeEl.innerText = step.fee_amount > 0 ? this.formatINR(step.fee_amount) : 'Exempt';
-        if (docketRef) docketRef.innerText = `DOCKET REF: ${stateCode}-${step.id.toUpperCase()}-2026`;
+        if (badgeStep) badgeStep.innerText = isMr 
+            ? `टप्पा 0${step.step_number} / ${muniName}`
+            : `STOP 0${step.step_number} / ${(step.department.jurisdiction || this.currentTask.municipality).toUpperCase()}`;
+        if (badgeAgency) badgeAgency.innerText = isMr ? `विभाग: ${deptName}` : `Agency: ${step.department.name}`;
+        if (titleEl) titleEl.innerText = stepTitle;
+        if (descEl) descEl.innerText = stepDesc;
+        if (slaEl) slaEl.innerText = isMr ? `${step.estimated_days} दिवस` : `${step.estimated_days} Days`;
+        if (feeEl) feeEl.innerText = step.fee_amount > 0 ? this.formatINR(step.fee_amount) : (isMr ? 'विनामूल्य' : 'Exempt');
+        if (docketRef) docketRef.innerText = isMr ? `डॉकेट संदर्भ: ${stateCode}-${step.id.toUpperCase()}-2026` : `DOCKET REF: ${stateCode}-${step.id.toUpperCase()}-2026`;
 
         if (badgeStatus) {
             if (isCompleted) {
                 badgeStatus.className = 'bg-emerald-100 text-emerald-900 font-headline text-xs px-2.5 py-0.5 font-bold uppercase flex items-center gap-1';
-                badgeStatus.innerHTML = '<span class="material-symbols-outlined text-[14px]">done_all</span> Satisfied &amp; Verified';
+                badgeStatus.innerHTML = isMr
+                    ? '<span class="material-symbols-outlined text-[14px]">done_all</span> पूर्ण व प्रमाणित'
+                    : '<span class="material-symbols-outlined text-[14px]">done_all</span> Satisfied &amp; Verified';
             } else {
                 badgeStatus.className = 'bg-amber-100 text-amber-900 font-headline text-xs px-2.5 py-0.5 font-bold uppercase flex items-center gap-1';
-                badgeStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-600 animate-ping"></span> In Progress';
+                badgeStatus.innerHTML = isMr
+                    ? '<span class="w-2 h-2 rounded-full bg-amber-600 animate-ping"></span> प्रक्रियेत'
+                    : '<span class="w-2 h-2 rounded-full bg-amber-600 animate-ping"></span> In Progress';
             }
         }
 
         if (checklistEl) {
-            checklistEl.innerHTML = step.documents.map(d => `
+            checklistEl.innerHTML = step.documents.map(d => {
+                const docLabel = this.getDocName(d.name);
+                const reqLabel = d.is_mandatory ? (isMr ? 'अनिवार्य' : 'Mandatory') : (isMr ? 'पर्यायी' : 'Optional');
+                return `
                 <label class="flex items-start gap-1.5 font-body text-xs text-on-surface cursor-pointer">
                     <span class="material-symbols-outlined ${isCompleted ? 'text-emerald-700' : 'text-amber-600'} text-[18px]">${isCompleted ? 'check_box' : 'indeterminate_check_box'}</span>
-                    <span>${d.name} (${d.is_mandatory ? 'Mandatory' : 'Optional'})</span>
+                    <span>${docLabel} (${reqLabel})</span>
                 </label>
-            `).join('') || '<div class="text-xs text-secondary font-headline">No prior physical filings required for this station.</div>';
+            `;
+            }).join('') || `<div class="text-xs text-secondary font-headline">${isMr ? 'या टप्प्यासाठी पूर्व कागदपत्रे आवश्यक नाहीत.' : 'No prior physical filings required for this station.'}</div>`;
         }
 
         // Pre-fill Citizen Application / Challan Input with saved data
@@ -653,6 +1054,96 @@ class CivicApp {
 
         // 3. Update Drawer content
         this.populateDrawer(step);
+
+        // 4. Update Dynamic Roadmap Steps List
+        this.renderRoadmapStepCards();
+    }
+
+    renderRoadmapStepCards() {
+        const container = document.getElementById('roadmap-steps-container');
+        if (!container || !this.currentTask) return;
+
+        const isMr = (this.currentLang === 'mr');
+
+        container.innerHTML = this.currentTask.steps.map((s, idx) => {
+            const isCompleted = this.completedStepIds.has(s.id);
+            const isSelected = this.selectedStationId === s.id;
+            const prereqs = s.prerequisites || [];
+            const prereqsMet = prereqs.every(pId => this.completedStepIds.has(pId));
+            const stepTitle = this.getStepTitle(s, this.currentTask.id);
+            const stepDesc = this.getStepDesc(s, this.currentTask.id);
+            const deptName = this.getStepDept(s, this.currentTask.id);
+
+            let statusBadge = '';
+            let dotBg = '';
+            if (isCompleted) {
+                statusBadge = isMr
+                    ? '<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">✓ पूर्ण</span>'
+                    : '<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">✓ Completed</span>';
+                dotBg = 'bg-emerald-700 text-white';
+            } else if (!prereqsMet) {
+                statusBadge = isMr
+                    ? '<span class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full font-medium">मागील टप्प्यांची प्रतीक्षा</span>'
+                    : '<span class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full font-medium">Waiting on Prerequisite</span>';
+                dotBg = 'bg-slate-300 text-slate-700';
+            } else if (isSelected) {
+                statusBadge = isMr
+                    ? '<span class="bg-amber-100 text-amber-900 text-xs px-2.5 py-1 rounded-full font-semibold">● अर्ज करण्यास सज्ज</span>'
+                    : '<span class="bg-amber-100 text-amber-900 text-xs px-2.5 py-1 rounded-full font-semibold">● Ready to Apply</span>';
+                dotBg = 'bg-amber-500 text-white';
+            } else {
+                statusBadge = isMr
+                    ? '<span class="bg-blue-50 text-blue-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-blue-200">सुरू करण्यास सज्ज</span>'
+                    : '<span class="bg-blue-50 text-blue-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-blue-200">Ready to Start</span>';
+                dotBg = 'bg-primary text-white';
+            }
+
+            const feeText = s.fee_amount > 0 ? this.formatINR(s.fee_amount) : (isMr ? 'विनामूल्य / शून्य शुल्क' : 'Free / Nil');
+            const slaText = isMr ? `${s.estimated_days} दिवस (SLA)` : `${s.estimated_days} Days SLA`;
+            const docText = isMr ? `${(s.documents || []).length} कागदपत्रे` : `${(s.documents || []).length} Documents`;
+            const criticalPathText = isMr ? '⚡ महत्त्वाचा मार्ग' : '⚡ Critical Path';
+            const btnDetailsText = isMr ? 'तपशील व अर्ज' : 'View Details & Apply';
+            const btnDoneText = isCompleted ? (isMr ? 'पूर्ण झाले' : 'Completed') : (isMr ? 'झाले म्हणून खूण करा' : 'Mark Done');
+
+            return `
+                <div class="bg-surface-container-lowest border ${isSelected ? 'border-amber-500 ring-2 ring-amber-400/20' : 'border-outline-variant'} rounded-md p-5 shadow-sm hover:shadow transition-all" id="step-card-${s.id}">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full ${dotBg} flex items-center justify-center font-code text-xs font-bold shrink-0">
+                                ${isCompleted ? '✓' : idx + 1}
+                            </span>
+                            <div>
+                                <h3 class="font-headline text-base font-semibold text-primary cursor-pointer hover:text-amber-800" onclick="window.app.selectStation('${s.id}')">${stepTitle}</h3>
+                                <p class="font-headline text-xs text-secondary">${deptName} • ${s.department.jurisdiction || this.currentTask.municipality}</p>
+                            </div>
+                        </div>
+                        <div class="self-start sm:self-auto">${statusBadge}</div>
+                    </div>
+
+                    <p class="font-body text-xs text-on-surface-variant mt-3 leading-relaxed">${stepDesc}</p>
+
+                    <div class="mt-4 pt-3 border-t border-outline-variant/30 flex flex-wrap items-center justify-between gap-3 text-xs">
+                        <div class="flex items-center gap-4 text-secondary font-headline">
+                            <span>⏱️ <strong>${slaText}</strong></span>
+                            <span>💰 <strong>${feeText}</strong></span>
+                            <span>📄 <strong>${docText}</strong></span>
+                            ${s.is_critical_path ? `<span class="text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${criticalPathText}</span>` : ''}
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="window.app.selectStation('${s.id}'); window.app.switchNavTab('step-dossier');" class="bg-surface-container hover:bg-surface-container-high text-primary font-headline text-xs font-semibold px-3 py-1.5 rounded transition-colors flex items-center gap-1 border border-outline-variant">
+                                <span>${btnDetailsText}</span>
+                                <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                            </button>
+                            <button onclick="window.app.toggleStepComplete('${s.id}')" class="${isCompleted ? 'bg-emerald-700 hover:bg-emerald-800 text-white' : 'bg-primary hover:bg-primary-container text-white'} font-headline text-xs font-semibold px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-xs">
+                                <span class="material-symbols-outlined text-[14px]">${isCompleted ? 'check' : 'check_circle'}</span>
+                                <span>${btnDoneText}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 
     // -------------------------------------------------------------------------
@@ -661,7 +1152,14 @@ class CivicApp {
     populateDossierView(step) {
         const isCompleted = this.completedStepIds.has(step.id);
         const task = this.currentTask;
+        const isMr = (this.currentLang === 'mr');
         const muniCode = (task.municipality || 'IN').split(' ')[0].toUpperCase();
+        const stepTitle = this.getStepTitle(step, task.id);
+        const stepDesc = this.getStepDesc(step, task.id);
+        const deptName = this.getStepDept(step, task.id);
+        const muniName = this.getTaskMunicipality(task);
+        const taskTitle = this.getTaskTitle(task);
+        const taskCat = this.getTaskCategory(task);
 
         const routeCrumb = document.getElementById('dossier-route-crumb');
         const stepCrumb = document.getElementById('dossier-step-crumb');
@@ -677,30 +1175,36 @@ class CivicApp {
         const provLink = document.getElementById('dossier-provenance-link');
         const provLinkText = document.getElementById('dossier-provenance-link-text');
 
-        if (routeCrumb) routeCrumb.innerText = task.title;
-        if (stepCrumb) stepCrumb.innerText = `Stop 0${step.step_number} (${step.title})`;
-        if (refCode) refCode.innerText = `REF: ${muniCode}-${step.id.toUpperCase()}-2026`;
-        if (stageIdx) stageIdx.innerText = `STAGE 0${step.step_number} / 0${task.steps.length}`;
-        if (agencyName) agencyName.innerText = `${step.department.name} (${step.department.jurisdiction})`;
-        if (mainTitle) mainTitle.innerText = `Step 0${step.step_number}: ${step.title}`;
-        if (mainDesc) mainDesc.innerText = step.description;
+        if (routeCrumb) routeCrumb.innerText = taskTitle;
+        if (stepCrumb) stepCrumb.innerText = isMr ? `टप्पा 0${step.step_number} (${stepTitle})` : `Stop 0${step.step_number} (${step.title})`;
+        if (refCode) refCode.innerText = isMr ? `नोंद संदर्भ: ${muniCode}-${step.id.toUpperCase()}-2026` : `REF: ${muniCode}-${step.id.toUpperCase()}-2026`;
+        if (stageIdx) stageIdx.innerText = isMr ? `टप्पा 0${step.step_number} / 0${task.steps.length}` : `STAGE 0${step.step_number} / 0${task.steps.length}`;
+        if (agencyName) agencyName.innerText = `${deptName} (${muniName})`;
+        if (mainTitle) mainTitle.innerText = isMr ? `टप्पा 0${step.step_number}: ${stepTitle}` : `Step 0${step.step_number}: ${step.title}`;
+        if (mainDesc) mainDesc.innerText = stepDesc;
 
-        if (statusText) statusText.innerText = isCompleted ? 'Cleared & Verified on File' : 'In Progress: Action Required';
+        if (statusText) statusText.innerText = isCompleted 
+            ? (isMr ? 'प्रमाणित व दप्तरी नोंदणीकृत ✓' : 'Cleared & Verified on File') 
+            : (isMr ? 'प्रक्रियेत: कार्यवाही आवश्यक' : 'In Progress: Action Required');
         if (statusDot) statusDot.className = isCompleted ? 'w-2.5 h-2.5 rounded-full bg-emerald-600' : 'w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse';
-        if (statusSla) statusSla.innerText = `Target Statutory Window: ${step.estimated_days} Working Days`;
+        if (statusSla) statusSla.innerText = isMr ? `नियत सेवा हमी कालावधी (RTS): ${step.estimated_days} कामकाजाचे दिवस` : `Target Statutory Window: ${step.estimated_days} Working Days`;
 
         // Verification Freshness Sentinel & Crowd Confirmation
         const gazetteTag = document.getElementById('dossier-gazette-tag');
         const verifiedDate = document.getElementById('dossier-verified-date');
         const crowdCount = document.getElementById('dossier-crowd-count');
-        const statutoryAuth = step.last_gazette_notification || (step.verification_source && step.verification_source.gazette_ref) || `${task.category} Statutory Regulations`;
+        const statutoryAuth = step.last_gazette_notification || (step.verification_source && step.verification_source.gazette_ref) || (isMr ? `${taskCat} वैधानिक नियमावली` : `${task.category} Statutory Regulations`);
 
         if (gazetteTag) gazetteTag.innerText = statutoryAuth;
         if (verifiedDate) verifiedDate.innerText = this.formatDateIN(step.verification_source ? step.verification_source.last_scraped_at : null);
-        if (crowdCount) crowdCount.innerText = `${step.community_verifications || 14} citizens successfully processed this milestone across ${task.municipality} this month`;
+        if (crowdCount) crowdCount.innerText = isMr 
+            ? `या महिन्यात ${muniName} मध्ये ${step.community_verifications || 14} नागरिकांनी हा टप्पा यशस्वीरित्या पूर्ण केला` 
+            : `${step.community_verifications || 14} citizens successfully processed this milestone across ${task.municipality} this month`;
 
         if (provText) {
-            provText.innerHTML = `Verified against <strong>${statutoryAuth}</strong> as of <strong>${this.formatDateIN(step.verification_source?.last_scraped_at)}</strong>.`;
+            provText.innerHTML = isMr
+                ? `<strong>${statutoryAuth}</strong> आणि <strong>${this.formatDateIN(step.verification_source?.last_scraped_at)}</strong> नुसार अधिकृतपणे प्रमाणित.`
+                : `Verified against <strong>${statutoryAuth}</strong> as of <strong>${this.formatDateIN(step.verification_source?.last_scraped_at)}</strong>.`;
         }
         if (provLink && provLinkText && step.verification_source) {
             provLink.href = step.verification_source.url || '#';
@@ -712,9 +1216,13 @@ class CivicApp {
         const antiToutText = document.getElementById('dossier-anti-tout-text');
         const receiptMandate = document.getElementById('dossier-receipt-mandate');
         
-        const defaultChannel = `${step.department.name} Official Treasury E-Challan / Bharatkosh`;
-        const defaultAdvisory = step.anti_tout_advisory || `Official Advisory: Never pay cash to middlemen. All statutory fees for ${step.department.name} must be deposited via verified Government E-Receipt / GRN.`;
-        const defaultReceipt = step.official_receipt_mandate || 'Zero Cash Mandate: Computerized Government Treasury E-Receipt required.';
+        const defaultChannel = isMr ? `${deptName} अधिकृत शासकीय ई-चलन / राजकोष (Gras MahaKosh)` : `${step.department.name} Official Treasury E-Challan / Bharatkosh`;
+        const defaultAdvisory = isMr 
+            ? `अधिकृत सूचना: कोणत्याही दलालाला रोख रक्कम देऊ नका. ${deptName} चे सर्व शासकीय शुल्क अधिकृत शासकीय ई-पावती / जीआरएन (GRN) द्वारेच जमा करावे.`
+            : step.anti_tout_advisory || `Official Advisory: Never pay cash to middlemen. All statutory fees for ${step.department.name} must be deposited via verified Government E-Receipt / GRN.`;
+        const defaultReceipt = isMr 
+            ? 'रोख व्यवहार बंदी: संगणकीकृत शासकीय ई-पावती अनिवार्य.' 
+            : (step.official_receipt_mandate || 'Zero Cash Mandate: Computerized Government Treasury E-Receipt required.');
 
         if (paymentChan) paymentChan.innerText = step.statutory_payment_channel || defaultChannel;
         if (antiToutText) antiToutText.innerText = defaultAdvisory;
@@ -727,18 +1235,21 @@ class CivicApp {
             if (!step.prerequisites || step.prerequisites.length === 0) {
                 prereqGrid.innerHTML = `
                     <div class="col-span-2 bg-surface-container-lowest p-3 border border-outline-variant text-xs text-secondary font-headline">
-                        ✓ Station Initializer: Root procedural milestone under ${task.municipality} statutory rules.
+                        ${isMr ? `✓ प्रारंभिक टप्पा: ${muniName} च्या वैधानिक नियमांनुसार थेट अर्ज करता येणारा टप्पा.` : `✓ Station Initializer: Root procedural milestone under ${task.municipality} statutory rules.`}
                     </div>
                 `;
-                if (prereqStatus) prereqStatus.innerText = 'CHAIN STATUS: ROOT MILESTONE';
+                if (prereqStatus) prereqStatus.innerText = isMr ? 'साखळी स्थिती: प्रारंभिक टप्पा' : 'CHAIN STATUS: ROOT MILESTONE';
             } else {
                 const totalReq = step.prerequisites.length;
                 const clearedReq = step.prerequisites.filter(p => this.completedStepIds.has(p)).length;
-                if (prereqStatus) prereqStatus.innerText = `CHAIN STATUS: ${clearedReq}/${totalReq} SATISFIED`;
+                if (prereqStatus) prereqStatus.innerText = isMr ? `साखळी स्थिती: ${clearedReq}/${totalReq} पूर्ण` : `CHAIN STATUS: ${clearedReq}/${totalReq} SATISFIED`;
 
                 prereqGrid.innerHTML = step.prerequisites.map(pId => {
                     const prereqStep = task.steps.find(s => s.id === pId);
                     const isPrereqDone = this.completedStepIds.has(pId);
+                    const pTitle = prereqStep ? this.getStepTitle(prereqStep, task.id) : pId;
+                    const badgeLabel = isMr ? (isPrereqDone ? 'पूर्ण' : 'प्रलंबित') : (isPrereqDone ? 'Cleared' : 'Pending');
+                    const subLabel = isMr ? 'मागील टप्पा पूर्तता' : 'Prerequisite Clearance';
                     return `
                         <div class="bg-surface-container-lowest p-3 border border-outline-variant flex items-center justify-between">
                             <div class="flex items-center gap-2.5">
@@ -746,12 +1257,12 @@ class CivicApp {
                                     ${isPrereqDone ? '✓' : '•'}
                                 </span>
                                 <div>
-                                    <div class="font-headline text-xs font-semibold text-primary">${prereqStep ? prereqStep.title : pId}</div>
-                                    <div class="font-code text-[10px] text-secondary">Prerequisite Clearance</div>
+                                    <div class="font-headline text-xs font-semibold text-primary">${pTitle}</div>
+                                    <div class="font-code text-[10px] text-secondary">${subLabel}</div>
                                 </div>
                             </div>
                             <span class="font-headline text-[10px] ${isPrereqDone ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-amber-50 text-amber-900 border border-amber-300'} px-2 py-0.5 font-semibold">
-                                ${isPrereqDone ? 'Cleared' : 'Pending'}
+                                ${badgeLabel}
                             </span>
                         </div>
                     `;
@@ -764,7 +1275,7 @@ class CivicApp {
         const formsCount = document.getElementById('dossier-forms-count');
         if (formsContainer) {
             const forms = step.forms || [];
-            if (formsCount) formsCount.innerText = `${forms.length} Prescribed Instruments`;
+            if (formsCount) formsCount.innerText = isMr ? `${forms.length} विहित नमुने` : `${forms.length} Prescribed Instruments`;
             formsContainer.innerHTML = forms.map(f => `
                 <div class="py-3 first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
                     <div class="space-y-0.5 max-w-xl">
@@ -772,15 +1283,15 @@ class CivicApp {
                             <span class="font-code text-xs font-semibold bg-surface-container px-2 py-0.5 border border-outline-variant text-primary">${f.form_code}</span>
                             <h3 class="font-headline text-sm font-semibold text-primary">${f.title}</h3>
                         </div>
-                        <p class="font-body text-xs text-on-surface-variant leading-relaxed">Official administrative instrument required for filing under municipal procedure code.</p>
-                        <div class="font-code text-[11px] text-secondary">Authorized Format: Digital E-Filing or PDF Document</div>
+                        <p class="font-body text-xs text-on-surface-variant leading-relaxed">${isMr ? 'शासकीय व महानगरपालिका नियमांनुसार अर्जासाठी आवश्यक अधिकृत विहित नमुना.' : 'Official administrative instrument required for filing under municipal procedure code.'}</p>
+                        <div class="font-code text-[11px] text-secondary">${isMr ? 'अधिकृत स्वरूप: डिजिटल ई-फाइलिंग किंवा पीडीएफ दस्तऐवज' : 'Authorized Format: Digital E-Filing or PDF Document'}</div>
                     </div>
                     <a class="inline-flex items-center justify-center gap-1.5 bg-surface-container-lowest text-primary border border-outline hover:bg-surface-container-low px-4 py-2 font-headline text-xs font-semibold transition-colors shrink-0" href="${f.download_url || f.fill_online_url || '#'}" target="_blank">
                         <span class="material-symbols-outlined text-[16px]">download</span>
-                        <span>Official Instrument (${f.download_url ? 'PDF' : 'E-Portal'})</span>
+                        <span>${isMr ? `अधिकृत नमुना (${f.download_url ? 'PDF डाउनलोड' : 'ई-पोर्टल'})` : `Official Instrument (${f.download_url ? 'PDF' : 'E-Portal'})`}</span>
                     </a>
                 </div>
-            `).join('') || '<div class="text-xs text-secondary font-headline">No separate form instruments prescribed. Proceed with direct declaration.</div>';
+            `).join('') || `<div class="text-xs text-secondary font-headline">${isMr ? 'स्वतंत्र नमुना आवश्यक नाही. थेट स्वयंघोषणापत्रासह अर्ज करा.' : 'No separate form instruments prescribed. Proceed with direct declaration.'}</div>`;
         }
 
         // Evidence & Required Filings
@@ -788,23 +1299,26 @@ class CivicApp {
         const evidenceCount = document.getElementById('dossier-evidence-count');
         if (evidenceContainer) {
             const docs = step.documents || [];
-            if (evidenceCount) evidenceCount.innerText = `${docs.length} Evidence Criteria`;
-            evidenceContainer.innerHTML = docs.map(d => `
+            if (evidenceCount) evidenceCount.innerText = isMr ? `${docs.length} आवश्यक कागदपत्रे` : `${docs.length} Evidence Criteria`;
+            evidenceContainer.innerHTML = docs.map(d => {
+                const docName = this.getDocName(d.name);
+                return `
                 <div class="p-3 bg-surface-container-lowest border border-outline-variant flex flex-col md:flex-row items-start justify-between gap-3">
                     <div class="space-y-0.5 max-w-xl">
                         <div class="flex items-center gap-2">
                             <span class="material-symbols-outlined text-amber-700 text-[18px]">pending</span>
-                            <span class="font-headline text-sm font-semibold text-primary">${d.name}</span>
+                            <span class="font-headline text-sm font-semibold text-primary">${docName}</span>
                         </div>
-                        <p class="font-body text-xs text-on-surface-variant leading-relaxed">${d.description || 'Statutory proof required by inspection window.'}</p>
-                        <div class="font-code text-[11px] text-outline">CRITERIA: Must be authenticated and digitally verified</div>
+                        <p class="font-body text-xs text-on-surface-variant leading-relaxed">${d.description || (isMr ? 'तपासणीसाठी आवश्यक वैधानिक पुरावा.' : 'Statutory proof required by inspection window.')}</p>
+                        <div class="font-code text-[11px] text-outline">${isMr ? 'निकष: स्वाक्षरी केलेले व डिजिटल स्वरूपात प्रमाणित असणे आवश्यक' : 'CRITERIA: Must be authenticated and digitally verified'}</div>
                     </div>
                     <div class="shrink-0 flex flex-col items-start md:items-end gap-1">
-                        <span class="font-headline text-[10px] bg-amber-50 text-amber-900 border border-amber-300 px-2 py-0.5 font-semibold">Action Required</span>
-                        <button class="font-headline text-xs text-primary underline hover:text-secondary font-medium mt-1" onclick="alert('Document checklist updated for: ${d.name}')">Upload / Verify</button>
+                        <span class="font-headline text-[10px] bg-amber-50 text-amber-900 border border-amber-300 px-2 py-0.5 font-semibold">${isMr ? (d.is_mandatory ? 'अनिवार्य' : 'ऐच्छिक') : (d.is_mandatory ? 'Mandatory' : 'Optional')}</span>
+                        <button class="font-headline text-xs text-primary underline hover:text-secondary font-medium mt-1" onclick="alert('${isMr ? 'कागदपत्र यादी अद्ययावत केली: ' + docName : 'Document checklist updated for: ' + docName}')">${isMr ? 'तयार ठेवा' : 'Upload / Verify'}</button>
                     </div>
                 </div>
-            `).join('') || '<div class="text-xs text-secondary font-headline">No additional document filings mandated for this step.</div>';
+            `;
+            }).join('') || `<div class="text-xs text-secondary font-headline">${isMr ? 'या टप्प्यासाठी अतिरिक्त कागदपत्रांची आवश्यकता नाही.' : 'No additional document filings mandated for this step.'}</div>`;
         }
 
         // Fee Breakdown Table (in INR ₹)
@@ -816,9 +1330,9 @@ class CivicApp {
             if (entries.length === 0) {
                 feeTableBody.innerHTML = `
                     <tr>
-                        <td class="py-2.5 px-4 font-semibold text-primary">Standard Statutory Processing Fee</td>
-                        <td class="py-2.5 px-4 text-secondary">${task.category} Tariff Schedule</td>
-                        <td class="py-2.5 px-4 text-right font-code">Per Unit</td>
+                        <td class="py-2.5 px-4 font-semibold text-primary">${isMr ? 'मानक शासकीय प्रक्रिया शुल्क' : 'Standard Statutory Processing Fee'}</td>
+                        <td class="py-2.5 px-4 text-secondary">${isMr ? `${taskCat} शुल्क अनुसूची` : `${task.category} Tariff Schedule`}</td>
+                        <td class="py-2.5 px-4 text-right font-code">${isMr ? 'प्रति अर्ज' : 'Per Unit'}</td>
                         <td class="py-2.5 px-4 text-right font-code font-semibold text-primary">${this.formatINR(step.fee_amount)}</td>
                     </tr>
                 `;
@@ -826,8 +1340,8 @@ class CivicApp {
                 feeTableBody.innerHTML = entries.map(([key, val]) => `
                     <tr>
                         <td class="py-2.5 px-4 font-semibold text-primary">${key}</td>
-                        <td class="py-2.5 px-4 text-secondary">${task.category} Statutory Basis</td>
-                        <td class="py-2.5 px-4 text-right font-code">Per Filing Schedule</td>
+                        <td class="py-2.5 px-4 text-secondary">${isMr ? `${taskCat} वैधानिक आधार` : `${task.category} Statutory Basis`}</td>
+                        <td class="py-2.5 px-4 text-right font-code">${isMr ? 'अनुसूचीनुसार' : 'Per Filing Schedule'}</td>
                         <td class="py-2.5 px-4 text-right font-code font-semibold text-primary">${this.formatINR(val)}</td>
                     </tr>
                 `).join('');
@@ -838,7 +1352,7 @@ class CivicApp {
         // Guidelines & Pitfalls
         const guidelinesText = document.getElementById('dossier-guidelines-text');
         if (guidelinesText) {
-            guidelinesText.innerText = step.tips_and_pitfalls || `Ensure all submissions conform to ${task.municipality} public service standards and valid registration documents.`;
+            guidelinesText.innerText = step.tips_and_pitfalls || (isMr ? `सर्व कागदपत्रे ${muniName} च्या अधिकृत मानकांनुसार आणि वैध नोंदणीनुसार असल्याची खात्री करा.` : `Ensure all submissions conform to ${task.municipality} public service standards and valid registration documents.`);
         }
 
         // Office Details in Right Rail (Directly Bound from step.department)
@@ -854,16 +1368,16 @@ class CivicApp {
 
         const cleanMuni = (task.municipality || 'Civic').toLowerCase().replace(/[^a-z]/g, '');
 
-        if (officeAddress) officeAddress.innerText = step.department.office_address || `${step.department.name} Administrative Headquarters, ${task.municipality}`;
-        if (officeWindow) officeWindow.innerText = `${step.department.name} — Civic Facilitation Counter`;
-        if (officeCity) officeCity.innerText = step.department.jurisdiction || task.municipality;
-        if (officeHours) officeHours.innerText = step.department.working_hours || 'Monday – Friday: 10:00 AM – 4:00 PM IST';
+        if (officeAddress) officeAddress.innerText = step.department.office_address || `${deptName} प्रशासकीय मुख्यालय, ${muniName}`;
+        if (officeWindow) officeWindow.innerText = `${deptName} — ${isMr ? 'नागरी सुविधा केंद्र' : 'Civic Facilitation Counter'}`;
+        if (officeCity) officeCity.innerText = muniName;
+        if (officeHours) officeHours.innerText = isMr ? 'सोमवार ते शुक्रवार: सकाळी १०:०० ते दुपारी ४:००' : (step.department.working_hours || 'Monday – Friday: 10:00 AM – 4:00 PM IST');
         if (officeBorough) officeBorough.innerText = (step.department.jurisdiction || task.municipality).toUpperCase();
-        if (ombudsPhone) ombudsPhone.innerText = step.department.contact_phone || '1800-GOV-HELP (Toll-Free)';
+        if (ombudsPhone) ombudsPhone.innerText = step.department.contact_phone || '1800-120-8040 (टोल-फ्री)';
         if (ombudsEmail) ombudsEmail.innerText = step.department.contact_email || `support.${cleanMuni}@gov.in`;
 
-        if (cellTitle) cellTitle.innerText = `${step.department.name} Facilitation Desk`;
-        if (cellDesc) cellDesc.innerText = `Dedicated administrative officers at ${step.department.name} assist applicants with verification protocols and procedural documentation.`;
+        if (cellTitle) cellTitle.innerText = isMr ? `${deptName} नागरिक सहाय्यता कक्ष` : `${step.department.name} Facilitation Desk`;
+        if (cellDesc) cellDesc.innerText = isMr ? `${deptName} चे अधिकारी पडताळणी प्रक्रिया आणि कागदपत्रांच्या छाननीमध्ये नागरिकांना सहाय्य करतात.` : `Dedicated administrative officers at ${step.department.name} assist applicants with verification protocols and procedural documentation.`;
 
         // Action button state
         const advanceBtn = document.getElementById('btn-advance-route');
@@ -871,15 +1385,21 @@ class CivicApp {
         if (advanceBtn && advanceLabel) {
             if (isCompleted) {
                 advanceBtn.className = 'w-full bg-emerald-800 text-on-primary px-4 py-3 font-headline text-xs font-semibold tracking-wide border border-emerald-900 transition-colors flex items-center justify-center gap-1.5';
-                advanceLabel.innerText = 'Milestone Cleared & Verified';
+                advanceLabel.innerText = isMr ? 'टप्पा पूर्ण व प्रमाणित झाला ✓' : 'Milestone Cleared & Verified';
             } else {
                 advanceBtn.className = 'w-full bg-primary text-on-primary hover:bg-primary-container px-4 py-3 font-headline text-xs font-semibold tracking-wide border border-primary transition-colors flex items-center justify-center gap-1.5';
-                advanceLabel.innerText = 'Mark Step Complete & Advance';
+                advanceLabel.innerText = isMr ? 'टप्पा पूर्ण झाला म्हणून नोंदवा व पुढे चला' : 'Mark Step Complete & Advance';
             }
         }
     }
 
     populateDrawer(step) {
+        const isMr = (this.currentLang === 'mr');
+        const stepTitle = this.getStepTitle(step, this.currentTask.id);
+        const stepDesc = this.getStepDesc(step, this.currentTask.id);
+        const deptName = this.getStepDept(step, this.currentTask.id);
+        const muniName = this.getTaskMunicipality(this.currentTask);
+
         const badge = document.getElementById('drawer-step-badge');
         const title = document.getElementById('drawer-title');
         const conf = document.getElementById('drawer-confidence');
@@ -895,33 +1415,35 @@ class CivicApp {
         const fees = document.getElementById('drawer-fee-breakdown');
         const btnComplete = document.getElementById('btn-toggle-complete');
 
-        if (badge) badge.innerText = `Step ${step.step_number}`;
-        if (title) title.innerText = step.title;
+        if (badge) badge.innerText = isMr ? `टप्पा ${step.step_number}` : `Step ${step.step_number}`;
+        if (title) title.innerText = stepTitle;
         if (conf && step.verification_source) conf.innerText = `${(step.verification_source.confidence_score * 100).toFixed(0)}% Match`;
         if (url && step.verification_source) {
             url.href = step.verification_source.url || '#';
             url.innerText = step.verification_source.url || 'portal.gov.in';
         }
-        if (gaz) gaz.innerText = `Statutory Authority: ${step.last_gazette_notification || (step.verification_source && step.verification_source.gazette_ref) || 'State Public Service Code'}`;
-        if (dept) dept.innerText = step.department.name;
-        if (addr) addr.innerText = step.department.office_address || `${step.department.name}, ${this.currentTask.municipality}`;
-        if (hours) hours.innerText = step.department.working_hours || 'Mon-Fri 10:00 AM - 4:00 PM IST';
-        if (sla) sla.innerText = `${step.estimated_days} Days`;
-        if (desc) desc.innerText = step.description;
+        if (gaz) gaz.innerText = isMr ? `वैधानिक प्राधिकरण: ${step.last_gazette_notification || 'महाराष्ट्र लोकसेवा हक्क अधिनियम'}` : `Statutory Authority: ${step.last_gazette_notification || (step.verification_source && step.verification_source.gazette_ref) || 'State Public Service Code'}`;
+        if (dept) dept.innerText = deptName;
+        if (addr) addr.innerText = step.department.office_address || `${deptName}, ${muniName}`;
+        if (hours) hours.innerText = isMr ? 'सोम-शुक्र सकाळी १०:०० ते दुपारी ४:००' : (step.department.working_hours || 'Mon-Fri 10:00 AM - 4:00 PM IST');
+        if (sla) sla.innerText = isMr ? `${step.estimated_days} दिवस` : `${step.estimated_days} Days`;
+        if (desc) desc.innerText = stepDesc;
 
         if (docs) {
-            docs.innerHTML = step.documents.map(d => `<div class="bg-surface-container-lowest p-2 border border-outline-variant">• <strong>${d.name}</strong></div>`).join('') || 'None';
+            docs.innerHTML = step.documents.map(d => `<div class="bg-surface-container-lowest p-2 border border-outline-variant">• <strong>${this.getDocName(d.name)}</strong></div>`).join('') || (isMr ? 'काहीही नाही' : 'None');
         }
         if (forms) {
-            forms.innerHTML = step.forms.map(f => `<div class="bg-surface-container-lowest p-2 border border-outline-variant">• <strong>${f.form_code}</strong>: ${f.title}</div>`).join('') || 'None';
+            forms.innerHTML = step.forms.map(f => `<div class="bg-surface-container-lowest p-2 border border-outline-variant">• <strong>${f.form_code}</strong>: ${f.title}</div>`).join('') || (isMr ? 'काहीही नाही' : 'None');
         }
         if (fees) {
-            fees.innerHTML = Object.entries(step.fee_breakdown).map(([k, v]) => `<div>${k}: <strong>${this.formatINR(v)}</strong></div>`).join('') || `Total: ${this.formatINR(step.fee_amount)}`;
+            fees.innerHTML = Object.entries(step.fee_breakdown).map(([k, v]) => `<div>${k}: <strong>${this.formatINR(v)}</strong></div>`).join('') || `${isMr ? 'एकूण' : 'Total'}: ${this.formatINR(step.fee_amount)}`;
         }
 
         if (btnComplete) {
             const isCompleted = this.completedStepIds.has(step.id);
-            btnComplete.innerHTML = isCompleted ? '<span class="material-symbols-outlined text-[16px]">done_all</span><span>Completed ✓</span>' : '<span class="material-symbols-outlined text-[16px]">check_circle</span><span>Mark Step Completed</span>';
+            const compLabel = isMr ? 'पूर्ण झाले ✓' : 'Completed ✓';
+            const markLabel = isMr ? 'टप्पा पूर्ण झाला म्हणून नोंदवा' : 'Mark Step Completed';
+            btnComplete.innerHTML = isCompleted ? `<span class="material-symbols-outlined text-[16px]">done_all</span><span>${compLabel}</span>` : `<span class="material-symbols-outlined text-[16px]">check_circle</span><span>${markLabel}</span>`;
             btnComplete.className = isCompleted ? 'flex-1 bg-emerald-800 text-on-primary font-headline text-xs font-semibold py-2.5 px-3 flex items-center justify-center gap-1.5' : 'flex-1 bg-primary hover:bg-primary-container text-on-primary font-headline text-xs font-semibold py-2.5 px-3 flex items-center justify-center gap-1.5 transition-colors';
         }
     }
@@ -992,6 +1514,10 @@ class CivicApp {
         await this.loadRoadmap(this.currentTaskId);
     }
 
+    async toggleStepComplete(stepId) {
+        return this.toggleStepCompletion(stepId);
+    }
+
     async toggleStepCompletion(stepId) {
         if (this.completedStepIds.has(stepId)) {
             this.completedStepIds.delete(stepId);
@@ -1012,29 +1538,49 @@ class CivicApp {
     }
 
     toggleWayfindingView(mode) {
-        this.wayfindingMode = mode;
         const subwayWrapper = document.getElementById('subway-diagram-wrapper');
         const dagWrapper = document.getElementById('dag-canvas-wrapper');
         const btnSubway = document.getElementById('btn-mode-subway');
         const btnDag = document.getElementById('btn-mode-dag');
 
+        if (mode === 'cards') {
+            if (subwayWrapper) subwayWrapper.style.display = 'none';
+            if (dagWrapper) dagWrapper.style.display = 'none';
+            return;
+        }
+
         if (mode === 'subway') {
+            const isCurrentlyShown = subwayWrapper && subwayWrapper.style.display === 'block';
+            if (isCurrentlyShown && this.wayfindingMode === 'subway') {
+                if (subwayWrapper) subwayWrapper.style.display = 'none';
+                return;
+            }
+            this.wayfindingMode = 'subway';
             if (subwayWrapper) subwayWrapper.style.display = 'block';
             if (dagWrapper) dagWrapper.style.display = 'none';
             if (btnSubway) {
-                btnSubway.className = 'px-3 py-1.5 font-headline text-xs font-semibold bg-primary text-on-primary';
+                btnSubway.className = 'px-3 py-1.5 rounded font-semibold bg-primary text-white';
             }
             if (btnDag) {
-                btnDag.className = 'px-3 py-1.5 font-headline text-xs font-semibold text-secondary hover:text-primary';
+                btnDag.className = 'px-3 py-1.5 rounded font-semibold text-gray-700 hover:text-primary';
             }
-        } else {
+            if (this.subwayRenderer && this.currentTask && this.currentRoadmap) {
+                this.subwayRenderer.render(
+                    this.currentTask,
+                    this.currentRoadmap,
+                    this.completedStepIds,
+                    this.selectedStationId
+                );
+            }
+        } else if (mode === 'dag') {
+            this.wayfindingMode = 'dag';
             if (subwayWrapper) subwayWrapper.style.display = 'none';
             if (dagWrapper) dagWrapper.style.display = 'block';
             if (btnSubway) {
-                btnSubway.className = 'px-3 py-1.5 font-headline text-xs font-semibold text-secondary hover:text-primary';
+                btnSubway.className = 'px-3 py-1.5 rounded font-semibold text-gray-700 hover:text-primary';
             }
             if (btnDag) {
-                btnDag.className = 'px-3 py-1.5 font-headline text-xs font-semibold bg-primary text-on-primary';
+                btnDag.className = 'px-3 py-1.5 rounded font-semibold bg-primary text-white';
             }
             setTimeout(() => this.visualizer.fitToScreen(), 50);
         }
@@ -1066,81 +1612,103 @@ class CivicApp {
     // Dynamic Citizen Compliance Ledger
     // -------------------------------------------------------------------------
     renderCitizenLedger() {
-        const tbody = document.getElementById('citizen-ledger-table-body');
-        const totalCount = document.getElementById('ledger-total-milestones');
-        const clearedCount = document.getElementById('ledger-cleared-milestones');
-        const feeCount = document.getElementById('ledger-total-fees');
-        const actDesc = document.getElementById('ledger-act-desc');
+        if (!this.currentTask) return;
 
-        if (!tbody || !this.currentTask) return;
-
+        const isMr = (this.currentLang === 'mr');
         const task = this.currentTask;
-        const steps = task.steps;
-        const cleared = steps.filter(s => this.completedStepIds.has(s.id)).length;
-        const totalFees = steps.reduce((sum, s) => sum + s.fee_amount, 0);
+        const steps = task.steps || [];
+        const clearedSteps = steps.filter(s => this.completedStepIds.has(s.id));
+        const cleared = clearedSteps.length;
+        const totalFees = steps.reduce((sum, s) => sum + (s.fee_amount || 0), 0);
+        const paidFees = clearedSteps.reduce((sum, s) => sum + (s.fee_amount || 0), 0);
+        const pendingFees = Math.max(0, totalFees - paidFees);
+        const pendingSteps = steps.filter(s => !this.completedStepIds.has(s.id));
+        const remainingDays = pendingSteps.reduce((sum, s) => sum + (s.estimated_days || 0), 0);
 
-        if (totalCount) totalCount.innerText = `${steps.length} Stations`;
-        if (clearedCount) clearedCount.innerText = `${cleared} Cleared (${Math.round((cleared / steps.length) * 100)}%)`;
-        if (feeCount) feeCount.innerText = `${this.formatINR(totalFees)} Base`;
+        // Header metrics
+        const elTaskTitle = document.getElementById('ledger-task-title');
+        const elCleared = document.getElementById('ledger-steps-cleared');
+        const elTotal = document.getElementById('ledger-steps-total');
+        const elTotalFees = document.getElementById('ledger-total-fees');
+        const elPaidFees = document.getElementById('ledger-fees-paid');
+        const elPendingFees = document.getElementById('ledger-fees-pending');
+        const elDaysRemaining = document.getElementById('ledger-days-remaining');
 
-        // Dynamic State Public Service Guarantee Act
-        if (actDesc) {
-            let actName = `${task.municipality} Citizen Charter & Public Service Delivery Guarantee`;
-            const state = (task.state || '').toLowerCase();
-            const muni = (task.municipality || '').toLowerCase();
+        if (elTaskTitle) elTaskTitle.innerText = this.getTaskTitle(task);
+        if (elCleared) elCleared.innerText = `${cleared}`;
+        if (elTotal) elTotal.innerText = `${steps.length}`;
+        if (elTotalFees) elTotalFees.innerText = this.formatINR(totalFees);
+        if (elPaidFees) elPaidFees.innerText = this.formatINR(paidFees);
+        if (elPendingFees) elPendingFees.innerText = this.formatINR(pendingFees);
+        if (elDaysRemaining) elDaysRemaining.innerText = `${remainingDays} ${isMr ? 'दिवस' : 'Days'}`;
 
-            if (state.includes('maharashtra') || muni.includes('mumbai') || muni.includes('pune')) {
-                actName = 'Maharashtra Right to Public Services Act 2015';
-            } else if (state.includes('karnataka') || muni.includes('bengaluru')) {
-                actName = 'Karnataka Sakala Services Act 2011';
-            } else if (state.includes('delhi')) {
-                actName = 'Delhi Right of Citizen to Time Bound Delivery of Services Act 2011';
-            } else if (state.includes('telangana') || muni.includes('hyderabad')) {
-                actName = 'Telangana Citizen Charter & TS-iPASS Public Services Guarantee';
-            }
-            actDesc.innerText = `Cryptographically audited municipal filing log conforming to ${actName}. Certified receipts carry SHA-256 verification hashes.`;
+        // 1. Render Left Steps Checklist
+        const stepsContainer = document.getElementById('ledger-steps-list');
+        if (stepsContainer) {
+            stepsContainer.innerHTML = steps.map((s, idx) => {
+                const isDone = this.completedStepIds.has(s.id);
+                const stepTitle = this.getStepTitle(s, task.id);
+                const deptName = this.getStepDept(s, task.id);
+                const feeText = s.fee_amount > 0 ? this.formatINR(s.fee_amount) : (isMr ? 'विनामूल्य' : 'Free');
+                const slaText = isMr ? `${s.estimated_days} दिवस` : `${s.estimated_days} Days`;
+                const statusBadge = isDone
+                    ? `<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-semibold font-headline">${isMr ? '✓ पूर्ण' : '✓ Completed'}</span>`
+                    : `<span class="bg-amber-100 text-amber-900 text-[11px] px-2 py-0.5 rounded font-semibold font-headline">${isMr ? 'प्रलंबित' : 'Pending'}</span>`;
+                const btnDetails = isMr ? 'तपशील' : 'Details';
+
+                return `
+                    <div class="p-3.5 border border-outline-variant rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${isDone ? 'bg-emerald-50/30' : 'bg-surface-container-lowest'}">
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" ${isDone ? 'checked' : ''} onchange="window.app.toggleStepComplete('${s.id}')" class="mt-1 w-4 h-4 text-emerald-700 rounded border-outline focus:ring-emerald-600 cursor-pointer">
+                            <div>
+                                <div class="font-headline text-xs font-semibold text-primary flex items-center gap-2">
+                                    <span class="${isDone ? 'line-through text-gray-500' : ''}">${idx + 1}. ${stepTitle}</span>
+                                </div>
+                                <div class="font-body text-[11px] text-secondary mt-0.5">${deptName} • ⏱️ ${slaText} • 💰 ${feeText}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+                            ${statusBadge}
+                            <button onclick="window.app.selectStation('${s.id}'); window.app.switchNavTab('step-dossier');" class="bg-surface-container hover:bg-surface-container-high text-primary px-2.5 py-1 rounded text-[11px] font-semibold font-headline border border-outline-variant">
+                                ${btnDetails} ↗
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-        const stateCode = (task.state || task.municipality || 'IN').substring(0, 2).toUpperCase();
+        // 2. Render Right Document Locker List
+        const docsContainer = document.getElementById('ledger-docs-list');
+        if (docsContainer) {
+            const allDocs = (this.currentRoadmap && this.currentRoadmap.consolidated_documents) || [];
+            if (allDocs.length === 0) {
+                docsContainer.innerHTML = `<div class="p-4 text-xs text-secondary font-headline">${isMr ? 'या प्रक्रियेसाठी अतिरिक्त कागदपत्रे आवश्यक नाहीत.' : 'No statutory documents required for this procedure.'}</div>`;
+            } else {
+                docsContainer.innerHTML = allDocs.map(d => {
+                    const isReady = this.checkedDocIds.has(d.name);
+                    const docName = this.getDocName(d.name);
+                    const safeName = d.name.replace(/'/g, "\\'");
+                    const badge = isReady
+                        ? `<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-semibold font-headline">${isMr ? '✓ तयार' : '✓ In File'}</span>`
+                        : `<span class="bg-amber-100 text-amber-900 text-[10px] px-2 py-0.5 rounded font-semibold font-headline">${isMr ? 'गहाळ' : 'Missing'}</span>`;
+                    const mandatoryLabel = d.is_mandatory ? (isMr ? 'अनिवार्य' : 'Mandatory') : (isMr ? 'ऐच्छिक' : 'Optional');
 
-        tbody.innerHTML = steps.map((s, idx) => {
-            const isDone = this.completedStepIds.has(s.id);
-            const statusHtml = isDone 
-                ? '<span class="chip chip-verified">✓ Satisfied &amp; Logged</span>'
-                : '<span class="chip chip-action-required">Action Required</span>';
-
-            const savedAppRef = this.stepApplicationNumbers[s.id];
-            const deptJurisdiction = (s.department && s.department.jurisdiction ? s.department.jurisdiction : task.municipality).toUpperCase();
-            const dateStr = isDone 
-                ? `${this.formatDateIN(new Date().toISOString())} [NODE: ${deptJurisdiction}]` 
-                : 'Pending Filing';
-
-            const docketRefCode = savedAppRef 
-                ? savedAppRef 
-                : `${stateCode}-${s.id.toUpperCase()}-2026`;
-
-            return `
-                <tr>
-                    <td class="font-code font-bold text-primary">0${idx + 1}</td>
-                    <td>
-                        <div class="font-headline font-semibold text-primary text-xs">${s.title}</div>
-                        <div class="font-body text-xs text-secondary mt-0.5 truncate max-w-md">${s.description}</div>
-                    </td>
-                    <td class="font-headline text-xs">${s.department.name.split('(')[0]}</td>
-                    <td class="font-code text-xs text-secondary">${docketRefCode}</td>
-                    <td class="font-code text-xs font-semibold text-primary">${this.formatINR(s.fee_amount)}</td>
-                    <td>
-                        <div>${statusHtml}</div>
-                        <div class="font-code text-[10px] text-secondary mt-0.5">${dateStr}</div>
-                    </td>
-                    <td class="text-right">
-                        <button class="bg-surface-container text-primary hover:bg-primary hover:text-on-primary px-3 py-1 font-headline text-xs font-semibold transition-colors border border-outline-variant" onclick="window.app.selectStation('${s.id}'); window.app.switchNavTab('step-dossier');">
-                            Dossier
-                        </button>
-                    </td>
-                </tr>
-            `;
-        }).join('');
+                    return `
+                        <div class="p-3 border border-outline-variant rounded-md flex items-center justify-between gap-3 ${isReady ? 'bg-emerald-50/20' : 'bg-surface-container-lowest'}">
+                            <label class="flex items-start gap-2.5 cursor-pointer flex-1">
+                                <input type="checkbox" ${isReady ? 'checked' : ''} onchange="window.app.toggleDocumentReady('${safeName}')" class="mt-1 w-4 h-4 text-emerald-700 rounded border-outline focus:ring-emerald-600">
+                                <div>
+                                    <div class="font-headline text-xs font-semibold text-primary ${isReady ? 'line-through text-gray-500' : ''}">${docName}</div>
+                                    <div class="font-code text-[10px] text-secondary mt-0.5">${mandatoryLabel} • ${d.category || 'General'}</div>
+                                </div>
+                            </label>
+                            <div class="shrink-0">${badge}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -1160,11 +1728,12 @@ class CivicApp {
 
         // Show loading spinner on button
         const originalBtnHtml = btnSubmit ? btnSubmit.innerHTML : '';
+        const isMr = (this.currentLang === 'mr');
         if (btnSubmit) {
             btnSubmit.disabled = true;
             btnSubmit.innerHTML = `
                 <span class="material-symbols-outlined text-[18px] animate-spin">sync</span>
-                <span>Resolving Statutory Intent...</span>
+                <span>${isMr ? 'वैधानिक प्रक्रिया शोधत आहे...' : 'Resolving Statutory Intent...'}</span>
             `;
         }
 
@@ -1190,12 +1759,16 @@ class CivicApp {
                 if (data.hinglish_detected) {
                     this.lastSearchNotice = {
                         type: 'hinglish',
-                        message: `Hinglish query detected: Interpreted and mapped to statutory terms ("${data.normalized_query}").`
+                        message: isMr 
+                            ? `स्थानिक भाषा शब्द शोधले: अधिकृत वैधानिक संज्ञेशी जोडले ("${data.normalized_query}").`
+                            : `Hinglish query detected: Interpreted and mapped to statutory terms ("${data.normalized_query}").`
                     };
                 } else if (data.synthesis) {
                     this.lastSearchNotice = {
                         type: 'synthesized',
-                        message: `Zero-shot statutory route dynamically synthesized for "${data.original_query}". Formulated pursuant to statutory rules.`
+                        message: isMr
+                            ? `"${data.original_query}" साठी वैधानिक नियमांनुसार प्रक्रिया मार्ग तयार केला.`
+                            : `Zero-shot statutory route dynamically synthesized for "${data.original_query}". Formulated pursuant to statutory rules.`
                     };
                 } else {
                     this.lastSearchNotice = null;
@@ -1206,18 +1779,22 @@ class CivicApp {
                 await this.loadTaskAndRoute('task-mum-bakery');
             }
         } catch (err) {
-            console.error('NLP Intent Resolution failed, falling back to local heuristic:', err);
+            console.error('NLP Intent Resolution failed, falling back to Maharashtra heuristic:', err);
             const qLower = q.toLowerCase();
-            if (qLower.includes('delhi') || qLower.includes('mutation')) {
-                await this.loadTaskAndRoute('task-del-mutation');
-            } else if (qLower.includes('bengaluru') || qLower.includes('bbmp')) {
-                await this.loadTaskAndRoute('task-blr-restaurant');
-            } else if (qLower.includes('hyderabad') || qLower.includes('ghmc') || qLower.includes('tech')) {
-                await this.loadTaskAndRoute('task-hyd-tech-biz');
-            } else if (qLower.includes('construction') || qLower.includes('autodcr')) {
+            if (qLower.includes('pune') || qLower.includes('pmc')) {
+                await this.loadTaskAndRoute('task-pune-restaurant');
+            } else if (qLower.includes('7/12') || qLower.includes('satbara') || qLower.includes('mutation') || qLower.includes('ferfar')) {
+                await this.loadTaskAndRoute('task-mah-712-mutation');
+            } else if (qLower.includes('water') || qLower.includes('pani') || qLower.includes('nal')) {
+                await this.loadTaskAndRoute('task-mum-water-connection');
+            } else if (qLower.includes('certificate') || qLower.includes('dakhla') || qLower.includes('aaple sarkar') || qLower.includes('income')) {
+                await this.loadTaskAndRoute('task-mah-rts-certificates');
+            } else if (qLower.includes('construction') || qLower.includes('autodcr') || qLower.includes('building')) {
                 await this.loadTaskAndRoute('task-mum-construction');
-            } else {
+            } else if (qLower.includes('bakery') || qLower.includes('bandra')) {
                 await this.loadTaskAndRoute('task-mum-bakery');
+            } else {
+                await this.loadTaskAndRoute('task-mah-small-biz');
             }
         } finally {
             if (btnSubmit) {
@@ -1225,6 +1802,14 @@ class CivicApp {
                 btnSubmit.innerHTML = originalBtnHtml;
             }
         }
+    }
+
+    fillQuery(text) {
+        const inp = document.getElementById('taskQuery');
+        if (inp) {
+            inp.value = text;
+        }
+        this.performSearch();
     }
 
     renderNlpResolutionFeedback(data) {
@@ -1237,13 +1822,14 @@ class CivicApp {
         }
 
         container.classList.remove('hidden');
+        const isMr = (this.currentLang === 'mr');
 
         let hinglishBadgeHtml = '';
         if (data.hinglish_detected) {
             hinglishBadgeHtml = `
                 <div class="flex items-center gap-2 p-2 bg-amber-50 border border-amber-300 text-amber-900 rounded-none text-xs">
                     <span class="material-symbols-outlined text-[16px] text-amber-700">translate</span>
-                    <span><strong>Hinglish / Regional Terms Detected:</strong> Interpreted as: <em class="font-code text-[11px] font-semibold">${data.normalized_query}</em></span>
+                    <span><strong>${isMr ? 'स्थानिक व बोलीभाषा शब्द शोधले:' : 'Hinglish / Regional Terms Detected:'}</strong> ${isMr ? 'या संदर्भात अर्थ लावला:' : 'Interpreted as:'} <em class="font-code text-[11px] font-semibold">${data.normalized_query}</em></span>
                 </div>
             `;
         }
@@ -1254,30 +1840,39 @@ class CivicApp {
             const badgeClass = isSynth
                 ? 'bg-purple-100 text-purple-900 border border-purple-300'
                 : (pct >= 70 ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-blue-100 text-blue-900 border border-blue-300');
-            const typeLabel = isSynth ? 'AI Zero-Shot Synthesis' : `${pct}% Semantic Match`;
+            const typeLabel = isSynth 
+                ? (isMr ? 'एआय थेट संश्लेषण' : 'AI Zero-Shot Synthesis') 
+                : `${pct}% ${isMr ? 'जुळणारे परिणाम' : 'Semantic Match'}`;
+
+            const taskTrans = (window.TASK_TRANSLATIONS && window.TASK_TRANSLATIONS[m.task_id]) || {};
+            const title = (isMr && taskTrans.title) ? taskTrans.title : m.title;
+            const muni = (isMr && (taskTrans.municipality || window.MUNI_TRANSLATIONS?.[m.municipality])) ? (taskTrans.municipality || window.MUNI_TRANSLATIONS?.[m.municipality]) : m.municipality;
+            const cat = (isMr && taskTrans.category) ? taskTrans.category : m.category;
+            const btnText = isMr ? 'मार्ग पहा' : 'Load Route';
 
             return `
                 <div class="p-2.5 bg-surface-container-lowest border border-outline-variant hover:border-primary transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div class="space-y-0.5">
                         <div class="flex items-center gap-2 flex-wrap">
                             <span class="font-code text-[10px] px-1.5 py-0.5 font-bold ${badgeClass}">${typeLabel}</span>
-                            <span class="text-xs font-semibold text-primary">${m.title}</span>
+                            <span class="text-xs font-semibold text-primary">${title}</span>
                         </div>
-                        <p class="text-[11px] text-on-surface-variant line-clamp-1">${m.municipality} • ${m.category}</p>
+                        <p class="text-[11px] text-on-surface-variant line-clamp-1">${muni} • ${cat}</p>
                     </div>
                     <button class="bg-primary hover:bg-primary-container text-on-primary text-xs font-semibold px-3 py-1.5 transition-colors shrink-0 flex items-center gap-1"
                             onclick="window.app.loadTaskAndRoute('${m.task_id}')">
-                        <span>Load Route</span>
+                        <span>${btnText}</span>
                         <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
                     </button>
                 </div>
             `;
         }).join('');
 
+        const headerLabel = isMr ? `वैधानिक प्रक्रिया शोधली (${data.matches.length} परिणाम):` : `Statutory Intent Resolved (${data.matches.length} matches):`;
         container.innerHTML = `
             ${hinglishBadgeHtml}
             <div class="font-headline text-[11px] font-semibold text-secondary uppercase tracking-wider">
-                Statutory Intent Resolved (${data.matches.length} matches):
+                ${headerLabel}
             </div>
             <div class="space-y-1.5">
                 ${matchCardsHtml}
@@ -1320,18 +1915,22 @@ class CivicApp {
         const filterContainer = document.getElementById('locker-category-filters');
         
         if (!this.currentRoadmap || !this.currentTask) return;
+        const isMr = (this.currentLang === 'mr');
         const allDocs = this.currentRoadmap.consolidated_documents || [];
         const totalCount = allDocs.length;
         const readyCount = allDocs.filter(d => this.checkedDocIds.has(d.name)).length;
         const pct = totalCount > 0 ? Math.round((readyCount / totalCount) * 100) : 0;
+        const muniName = this.getTaskMunicipality(this.currentTask);
 
         // Dynamic Header Description
         if (headingDesc) {
-            headingDesc.innerText = `Consolidated multi-agency document inventory required across all ${this.currentTask.steps.length} procedural milestones. Audit your physical file or DigiLocker records before visiting ${this.currentTask.municipality} counters to eliminate rejection delays.`;
+            headingDesc.innerText = isMr
+                ? `सर्व ${this.currentTask.steps.length} टप्प्यांसाठी आवश्यक सर्व शासकीय कागदपत्रांची एकत्रित सूची. अर्ज फेटाळला जाऊ नये म्हणून ${muniName} कार्यालयात जाण्यापूर्वी डिजिटल किंवा मूळ कागदपत्रे तयार ठेवा.`
+                : `Consolidated multi-agency document inventory required across all ${this.currentTask.steps.length} procedural milestones. Audit your physical file or DigiLocker records before visiting ${this.currentTask.municipality} counters to eliminate rejection delays.`;
         }
 
         // Update counts & progress
-        if (labelScore) labelScore.innerText = `${readyCount} / ${totalCount} Documents Ready (${pct}%)`;
+        if (labelScore) labelScore.innerText = isMr ? `${readyCount} / ${totalCount} कागदपत्रे तयार (${pct}%)` : `${readyCount} / ${totalCount} Documents Ready (${pct}%)`;
         if (pctScore) pctScore.innerText = `${pct}%`;
         if (progressBar) progressBar.style.width = `${pct}%`;
         
@@ -1343,21 +1942,22 @@ class CivicApp {
         if (deficitAlert) {
             if (readyCount === totalCount && totalCount > 0) {
                 deficitAlert.className = 'text-emerald-900 font-semibold bg-emerald-50 border border-emerald-300 px-2 py-0.5';
-                deficitAlert.innerHTML = '✓ Complete Physical File: All statutory documents prepared for official submission.';
+                deficitAlert.innerHTML = isMr ? '✓ पूर्ण दस्तऐवज संच: सर्व आवश्यक कागदपत्रे तयार आहेत.' : '✓ Complete Physical File: All statutory documents prepared for official submission.';
             } else {
                 deficitAlert.className = 'text-amber-900 font-semibold bg-amber-50 border border-amber-300 px-2 py-0.5';
-                deficitAlert.innerHTML = `⚠ File Deficit: ${totalCount - readyCount} mandatory documents still missing from physical file.`;
+                deficitAlert.innerHTML = isMr ? `⚠ कागदपत्रे अपुरी: ${totalCount - readyCount} अनिवार्य कागदपत्रे अद्याप बाकी आहेत.` : `⚠ File Deficit: ${totalCount - readyCount} mandatory documents still missing from physical file.`;
             }
         }
 
         // Dynamic Category Filter Tabs from actual consolidated_documents
         if (filterContainer) {
             const categories = Array.from(new Set(allDocs.map(d => d.category || 'General'))).filter(Boolean);
+            const allLabel = isMr ? `सर्व कागदपत्रे (${totalCount})` : `All Documents (${totalCount})`;
             
             // Build buttons: 'All' + each non-empty category
             let buttonsHtml = `
                 <button onclick="window.app.filterDocumentLocker('all')" class="locker-filter-btn px-3 py-1.5 ${this.activeDocCategory === 'all' ? 'bg-primary text-on-primary' : 'bg-surface-container text-primary'} font-semibold shrink-0" data-category="all">
-                    All Documents (${totalCount})
+                    ${allLabel}
                 </button>
             `;
 
@@ -1384,7 +1984,7 @@ class CivicApp {
             : allDocs.filter(d => d.category === this.activeDocCategory);
 
         if (filteredDocs.length === 0) {
-            listContainer.innerHTML = '<div class="col-span-2 p-6 bg-surface-container-lowest border border-outline-variant text-secondary text-sm">No documents found in this category.</div>';
+            listContainer.innerHTML = `<div class="col-span-2 p-6 bg-surface-container-lowest border border-outline-variant text-secondary text-sm">${isMr ? 'या श्रेणीत कागदपत्रे नाहीत.' : 'No documents found in this category.'}</div>`;
             return;
         }
 
@@ -1392,10 +1992,14 @@ class CivicApp {
             const isReady = this.checkedDocIds.has(d.name);
             const stepNums = d.required_in_step_numbers || d.required_in_steps || [];
             const stepsLabel = stepNums.length > 0
-                ? stepNums.map(sNum => `Stop 0${sNum}`).join(', ')
-                : 'General Milestone';
+                ? stepNums.map(sNum => (isMr ? `टप्पा 0${sNum}` : `Stop 0${sNum}`)).join(', ')
+                : (isMr ? 'सामान्य टप्पा' : 'General Milestone');
 
             const safeDocName = d.name.replace(/'/g, "\'");
+            const docName = this.getDocName(d.name);
+            const mandatoryLabel = d.is_mandatory ? (isMr ? 'अनिवार्य' : 'Mandatory') : (isMr ? 'ऐच्छिक' : 'Optional');
+            const inBagBadge = isReady ? (isMr ? '✓ तयार' : '✓ In File') : (isMr ? 'गहाळ' : 'Missing');
+            const toggleActionText = isReady ? (isMr ? 'गहाळ म्हणून नोंदवा' : 'Mark as Missing') : (isMr ? 'तयार म्हणून खूण करा' : 'Mark as Ready in Bag');
 
             return `
                 <div class="doc-card ${isReady ? 'ready' : 'missing'} p-4 border border-outline-variant flex flex-col justify-between gap-3 shadow-sm">
@@ -1404,16 +2008,16 @@ class CivicApp {
                             <label class="flex items-start gap-2.5 cursor-pointer flex-1">
                                 <input type="checkbox" ${isReady ? 'checked' : ''} onchange="window.app.toggleDocumentReady('${safeDocName}')" class="mt-1 w-4 h-4 text-emerald-700 rounded border-outline focus:ring-emerald-600">
                                 <div>
-                                    <div class="font-headline text-sm font-semibold text-primary ${isReady ? 'line-through opacity-75' : ''}">${d.name}</div>
+                                    <div class="font-headline text-sm font-semibold text-primary ${isReady ? 'line-through opacity-75' : ''}">${docName}</div>
                                     <div class="flex items-center gap-1.5 flex-wrap mt-1">
                                         <span class="font-code text-[10px] px-1.5 py-0.2 bg-surface-container text-secondary font-semibold border border-outline-variant">${d.category || 'General'}</span>
-                                        ${d.is_mandatory ? '<span class="font-headline text-[10px] px-1.5 py-0.2 bg-red-100 text-red-900 border border-red-300 font-bold">Mandatory</span>' : '<span class="font-headline text-[10px] px-1.5 py-0.2 bg-surface-container text-secondary">Optional</span>'}
-                                        <span class="font-code text-[10px] text-secondary">Required at: <strong>${stepsLabel}</strong></span>
+                                        ${d.is_mandatory ? `<span class="font-headline text-[10px] px-1.5 py-0.2 bg-red-100 text-red-900 border border-red-300 font-bold">${mandatoryLabel}</span>` : `<span class="font-headline text-[10px] px-1.5 py-0.2 bg-surface-container text-secondary">${mandatoryLabel}</span>`}
+                                        <span class="font-code text-[10px] text-secondary">${isMr ? 'आवश्यक:' : 'Required at:'} <strong>${stepsLabel}</strong></span>
                                     </div>
                                 </div>
                             </label>
                             <span class="font-headline text-[11px] px-2 py-0.5 font-bold ${isReady ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-amber-100 text-amber-900 border border-amber-300'} shrink-0">
-                                ${isReady ? '✓ In File' : 'Missing'}
+                                ${inBagBadge}
                             </span>
                         </div>
 
@@ -1424,15 +2028,15 @@ class CivicApp {
                         ${d.validity_rule ? `
                             <div class="ml-6 p-2 bg-surface-container-low border border-outline-variant text-[11px] font-body text-primary flex items-center gap-1.5">
                                 <span class="material-symbols-outlined text-amber-700 text-[14px]">warning</span>
-                                <span><strong>Validity / Format Rule:</strong> ${d.validity_rule}</span>
+                                <span><strong>${isMr ? 'वैधता / स्वरूप नियम:' : 'Validity / Format Rule:'}</strong> ${d.validity_rule}</span>
                             </div>
                         ` : ''}
                     </div>
 
                     <div class="ml-6 pt-2 border-t border-outline-variant flex items-center justify-between text-[11px] font-headline">
-                        <span class="text-secondary font-code">DigiLocker / Self-Attested Copy</span>
+                        <span class="text-secondary font-code">${isMr ? 'डिजीलॉकर / स्व-साक्षांकित प्रत' : 'DigiLocker / Self-Attested Copy'}</span>
                         <button class="text-primary hover:text-secondary font-semibold underline" onclick="window.app.toggleDocumentReady('${safeDocName}')">
-                            ${isReady ? 'Mark as Missing' : 'Mark as Ready in Bag'}
+                            ${toggleActionText}
                         </button>
                     </div>
                 </div>
@@ -1457,7 +2061,8 @@ class CivicApp {
     }
 
     resetDocumentChecklist() {
-        if (confirm('Reset citizen document bag? All documents will be marked as missing for pre-visit audit.')) {
+        const isMr = (this.currentLang === 'mr');
+        if (confirm(isMr ? 'कागदपत्र यादी रीसेट करायची का? सर्व कागदपत्रे पडताळणीसाठी पुन्हा गहाळ म्हणून नोंदवली जातील.' : 'Reset citizen document bag? All documents will be marked as missing for pre-visit audit.')) {
             this.checkedDocIds.clear();
             this.saveTaskDocs();
             this.renderDocumentLocker();
@@ -1474,6 +2079,10 @@ class CivicApp {
         if (!step) return;
 
         this.selectedStationId = step.id;
+        const isMr = (this.currentLang === 'mr');
+        const stepTitle = this.getStepTitle(step, this.currentTask.id);
+        const deptName = this.getStepDept(step, this.currentTask.id);
+        const muniName = this.getTaskMunicipality(this.currentTask);
 
         const elTargetStep = document.getElementById('discrepancy-target-step');
         const elTargetAgency = document.getElementById('discrepancy-target-agency');
@@ -1482,9 +2091,11 @@ class CivicApp {
         const elNotes = document.getElementById('discrepancy-notes');
         const elContact = document.getElementById('discrepancy-contact');
 
-        if (elTargetStep) elTargetStep.innerText = `Stop 0${step.step_number}: ${step.title}`;
-        if (elTargetAgency) elTargetAgency.innerText = `${step.department.name} — ${step.department.office_address || step.department.jurisdiction || this.currentTask.municipality}`;
-        if (elRecordedVal) elRecordedVal.value = `Official Fee: ${this.formatINR(step.fee_amount)} | SLA: ${step.estimated_days} Days`;
+        if (elTargetStep) elTargetStep.innerText = isMr ? `टप्पा ०${step.step_number}: ${stepTitle}` : `Stop 0${step.step_number}: ${step.title}`;
+        if (elTargetAgency) elTargetAgency.innerText = `${deptName} — ${step.department.office_address || step.department.jurisdiction || muniName}`;
+        if (elRecordedVal) elRecordedVal.value = isMr 
+            ? `अधिकृत शासकीय शुल्क: ${this.formatINR(step.fee_amount)} | हमी कालावधी: ${step.estimated_days} दिवस` 
+            : `Official Fee: ${this.formatINR(step.fee_amount)} | SLA: ${step.estimated_days} Days`;
         if (elDemandedVal) elDemandedVal.value = '';
         if (elNotes) elNotes.value = '';
         if (elContact) elContact.value = '';
@@ -1504,13 +2115,14 @@ class CivicApp {
     }
 
     async submitDiscrepancyReport() {
+        const isMr = (this.currentLang === 'mr');
         const cat = document.getElementById('discrepancy-category')?.value || 'Fee Discrepancy';
         const demanded = document.getElementById('discrepancy-demanded-val')?.value.trim() || '';
         const notes = document.getElementById('discrepancy-notes')?.value.trim() || '';
         const contact = document.getElementById('discrepancy-contact')?.value.trim() || '';
 
         if (!demanded || !notes) {
-            alert('Please specify the demanded value and factual observations.');
+            alert(isMr ? 'कृपया प्रत्यक्ष मागणी केलेले शुल्क आणि तुमचे निरीक्षण नमूद करा.' : 'Please specify the demanded value and factual observations.');
             return;
         }
 
@@ -1529,18 +2141,20 @@ class CivicApp {
 
             if (resp.ok) {
                 const auditRef = Math.floor(100000 + Math.random() * 900000);
-                const targetMuni = (this.currentTask && this.currentTask.municipality) || 'Municipal';
-                alert(`Citizen Discrepancy Report submitted successfully.\n\nAudit Ref: #DISC-${auditRef}\nTransmitted to ${targetMuni} Grievance & Vigilance Cell for administrative verification.`);
+                const targetMuni = (this.currentTask && this.getTaskMunicipality(this.currentTask)) || 'Municipal';
+                alert(isMr 
+                    ? `नागरिक तक्रार अहवाल यशस्वीरित्या नोंदवला गेला.\n\nऑडिट संदर्भ: #DISC-${auditRef}\nप्रशासकीय पडताळणीसाठी ${targetMuni} दक्षता कक्षाकडे पाठवला गेला.`
+                    : `Citizen Discrepancy Report submitted successfully.\n\nAudit Ref: #DISC-${auditRef}\nTransmitted to ${targetMuni} Grievance & Vigilance Cell for administrative verification.`);
                 this.closeDiscrepancyModal();
                 if (this.admin && typeof this.admin.loadFeedback === 'function') {
                     this.admin.loadFeedback();
                 }
             } else {
-                alert('Failed to submit report. Please try again.');
+                alert(isMr ? 'अहवाल सादर करण्यात त्रुटी आली. कृपया पुन्हा प्रयत्न करा.' : 'Failed to submit report. Please try again.');
             }
         } catch (e) {
             console.error('Feedback submit error', e);
-            alert('Connection error submitting report.');
+            alert(isMr ? 'कनेक्शन त्रुटी. अहवाल सादर होऊ शकला नाही.' : 'Connection error submitting report.');
         }
     }
 }
