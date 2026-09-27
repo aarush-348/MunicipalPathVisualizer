@@ -432,9 +432,9 @@ class CivicDatabase:
                     DocumentRequirement(id="doc-elec-bill", name="Recent Commercial Electricity Bill (MSEDCL / Tata / Adani)", description="Issued within last 2 months showing consumer number and commercial tariff", is_mandatory=True, category="Premise Address Proof"),
                     DocumentRequirement(id="doc-owner-noc", name="NOC from Landlord / Society", description="No Objection Certificate for commercial usage of property", is_mandatory=True, category="Clearance NOC")
                 ],
-                forms=[FormRequirement(form_code="IGR-INDEX-II", title="E-Registration Certified Index-II Copy", fill_online_url="https://igrmaharashtra.gov.in")],
+                forms=[FormRequirement(form_code="IGR-INDEX-II", title="E-Registration Certified Index-II Copy", fill_online_url="https://esearchigr.maharashtra.gov.in/esearch/")],
                 verification_source=VerificationSource(
-                    url="https://igrmaharashtra.gov.in/e-Search",
+                    url="https://esearchigr.maharashtra.gov.in/esearch/",
                     page_title="IGR Maharashtra - Public Data & Registered Document Verification",
                     last_scraped_at="2026-09-25T11:30:00Z",
                     confidence_score=0.98,
@@ -447,23 +447,23 @@ class CivicDatabase:
                 task_id="task-mah-small-biz",
                 step_number=3,
                 title="Maharashtra Gumasta License / Form A Intimation (LMS MahaOnline)",
-                description="Statutory registration under Maharashtra Shops and Establishments (Regulation of Employment and Conditions of Service) Act, 2017. For 0-9 employees, instant Form A intimation receipt; for 10+ employees, Form F registration certificate.",
+                description="Statutory registration under Maharashtra Shops and Establishments (Regulation of Employment and Conditions of Service) Act, 2017. For 0-9 employees: Form A Intimation (Zero Statutory Fee, instant deemed receipt); for 10+ employees: Form F Registration Certificate.",
                 department=dept_mah_labour,
                 submission_mode=SubmissionMode.ONLINE,
-                estimated_days=3,
-                fee_amount=650.0,
-                fee_breakdown={"State Portal Scrutiny Fee": 500.0, "MahaOnline Facilitation Charges": 150.0},
+                estimated_days=1,
+                fee_amount=0.0,
+                fee_breakdown={"Zero Fee for <10 Workers (Form A)": 0.0, "MahaOnline Form F Scrutiny (>=10 Workers)": 650.0},
                 prerequisites=["mah-biz-1", "mah-biz-2"],
                 documents=[
                     DocumentRequirement(id="doc-shop-photo", name="Photo of Shop / Establishment with Signboard", description="Clear photo showing front facade of shop with signboard in Marathi (Devanagari script)", is_mandatory=True, category="Premise Proof"),
-                    DocumentRequirement(id="doc-aadhaar-biz", name="Applicant Self-Certified KYC & Passport Photo", description="High-resolution digital scan", is_mandatory=True, category="Identity Proof")
+                    DocumentRequirement(id="doc-aadhaar-biz", name="Applicant Self-Certified KYC & Passport Photo", description="High-resolution digital scan", is_mandatory=True, category="Identity Proof", is_alternative_group=True, group_name="Applicant Identity (Any 1)", alternative_options=["Aadhaar Card", "Voter ID Card", "Passport", "Driving License"])
                 ],
                 forms=[
-                    FormRequirement(form_code="Form A (Intimation)", title="Intimation of Establishment (0-9 Employees)", fill_online_url="https://lms.mahaonline.gov.in"),
+                    FormRequirement(form_code="Form A (Intimation)", title="Intimation of Establishment (0-9 Employees)", fill_online_url="https://lms.mahaonline.gov.in", offline_fallback_url="/static/forms/form_a_gumasta.pdf"),
                     FormRequirement(form_code="Form F (Registration)", title="Application for Registration (10+ Employees)", fill_online_url="https://lms.mahaonline.gov.in")
                 ],
                 verification_source=VerificationSource(
-                    url="https://lms.mahaonline.gov.in/Home/DownloadForms",
+                    url="https://lms.mahaonline.gov.in/",
                     page_title="Maharashtra Labour Management System - Citizen Charter",
                     last_scraped_at="2026-09-26T14:00:00Z",
                     confidence_score=0.99,
@@ -471,7 +471,7 @@ class CivicDatabase:
                     gazette_ref="Maharashtra Act No. LXI of 2017 (Shops & Establishments)"
                 ),
                 tips_and_pitfalls="Under the 2017 amended Act, establishments with 0-9 workers do not need periodic renewal; Form A intimation is valid perpetually.",
-                anti_tout_advisory="Do not pay middlemen ₹3,000-₹5,000 for Gumasta. The government fee is ₹650 on LMS MahaOnline."
+                anti_tout_advisory="Do not pay middlemen ₹3,000-₹5,000 for Gumasta. Form A for under 10 employees is 100% free of charge on LMS MahaOnline."
             ),
             TaskStep(
                 id="mah-biz-4",
@@ -489,9 +489,9 @@ class CivicDatabase:
                     DocumentRequirement(id="doc-ptec-pan", name="Entity PAN Card & Gumasta Intimation", description="Mandatory for linking PT tax account", is_mandatory=True, category="Tax Identity"),
                     DocumentRequirement(id="doc-bank-proof", name="Cancelled Cheque or Bank Passbook Front Page", description="Showing IFSC and account number", is_mandatory=True, category="Banking")
                 ],
-                forms=[FormRequirement(form_code="Form II (PTEC)", title="Application for Certificate of Enrolment under PT Act", fill_online_url="https://mahagst.gov.in")],
+                forms=[FormRequirement(form_code="Form II (PTEC)", title="Application for Certificate of Enrolment under PT Act", fill_online_url="https://mahagst.gov.in/en/e-services/pt-services")],
                 verification_source=VerificationSource(
-                    url="https://mahagst.gov.in/en/professional-tax",
+                    url="https://mahagst.gov.in/en/e-services/pt-services",
                     page_title="MahaGST - Professional Tax Registration Guidelines",
                     last_scraped_at="2026-09-25T16:00:00Z",
                     confidence_score=0.98,
@@ -533,7 +533,7 @@ class CivicDatabase:
                 step_number=6,
                 title="Commercial Current Bank Account & E-Payment Merchant Integration",
                 description="Open business current account with authorized scheduled commercial bank in Maharashtra using verified Udyam, Gumasta Form A/F, and PAN.",
-                department=dept_mca_mum,
+                department=DepartmentInfo(id="dept-banking", name="Reserve Bank of India & Scheduled Commercial Banks", jurisdiction="Maharashtra & Nationwide", office_address="Commercial Bank Branch", portal_url="https://rbi.org.in"),
                 submission_mode=SubmissionMode.HYBRID,
                 estimated_days=2,
                 fee_amount=0.0,
@@ -617,7 +617,7 @@ class CivicDatabase:
                 ],
                 forms=[FormRequirement(form_code="Form F / Form A", title="Application for Registration of Shops & Establishments", fill_online_url="https://lms.mahaonline.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://lms.mahaonline.gov.in/Home/CitizenServices",
+                    url="https://lms.mahaonline.gov.in/",
                     page_title="Maharashtra Labour Dept - Shops & Establishments Portal",
                     last_scraped_at="2026-09-23T14:15:00Z",
                     confidence_score=0.98,
@@ -700,7 +700,7 @@ class CivicDatabase:
                 ],
                 forms=[FormRequirement(form_code="MPCB-Form-I", title="Combined Application for CTE & CTO under Water & Air Acts", fill_online_url="https://mpcb.gov.in")],
                 verification_source=VerificationSource(
-                    url="https://mpcb.gov.in/consent/categorization-industries",
+                    url="https://mpcb.gov.in/node/69",
                     page_title="MPCB Comprehensive Categorization of Industries - Bakeries & Confectioneries (Green Category)",
                     last_scraped_at="2026-09-22T09:10:00Z",
                     confidence_score=0.97,
@@ -946,9 +946,9 @@ class CivicDatabase:
                     DocumentRequirement(id="doc-pr-card", name="Certified Digital Property Card (PR Card)", description="Showing current CTS number, area in sq. meters, and registered holder names", is_mandatory=True, category="Land Title"),
                     DocumentRequirement(id="doc-cts-sheet", name="Demarcated CTS Sheet from Superintendent of Land Records", description="Authenticated land boundary coordinates", is_mandatory=True, category="Survey Map")
                 ],
-                forms=[FormRequirement(form_code="PR-CARD-ONLINE", title="Digital Property Card Download", fill_online_url="https://mahabhumi.gov.in")],
+                forms=[FormRequirement(form_code="PR-CARD-ONLINE", title="Digital Property Card Download", fill_online_url="https://mahabhumi.gov.in/mahabhumilink/")],
                 verification_source=VerificationSource(
-                    url="https://mahabhumi.gov.in/e-Records",
+                    url="https://mahabhumi.gov.in/mahabhumilink/",
                     page_title="MahaBhumi - Digital Land Records & Property Cards",
                     last_scraped_at="2026-09-24T16:00:00Z",
                     confidence_score=0.99,
@@ -972,9 +972,9 @@ class CivicDatabase:
                     DocumentRequirement(id="doc-cad-drawings", name="AutoDCR Pre-Checked Architectural CAD Plans", description="Pre-validated by AutoDCR scrutiny software conforming to DCPR-2034 rules", is_mandatory=True, category="Building Plans"),
                     DocumentRequirement(id="doc-super-arch", name="Architect & Structural Engineer Supervision Undertaking", description="Form of supervision under Section 342 MMC Act", is_mandatory=True, category="Professional Undertakings")
                 ],
-                forms=[FormRequirement(form_code="AutoDCR Form A", title="Application for Development Permission & Building Sanction", fill_online_url="https://autodcr.mcgm.gov.in")],
+                forms=[FormRequirement(form_code="AutoDCR Form A", title="Application for Development Permission & Building Sanction", fill_online_url="https://autodcr.mcgm.gov.in/bpams/")],
                 verification_source=VerificationSource(
-                    url="https://autodcr.mcgm.gov.in/eodb-dashboard",
+                    url="https://autodcr.mcgm.gov.in/bpams/",
                     page_title="BMC AutoDCR Portal - Ease of Doing Business Dashboard",
                     last_scraped_at="2026-09-25T17:00:00Z",
                     confidence_score=0.99,
@@ -1000,7 +1000,7 @@ class CivicDatabase:
                 ],
                 forms=[],
                 verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/eodb-approvals",
+                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlEODBOBPS",
                     page_title="BMC Single Window Clearances for Building Proposals",
                     last_scraped_at="2026-09-24T18:00:00Z",
                     confidence_score=0.98,
@@ -1022,9 +1022,9 @@ class CivicDatabase:
                 documents=[
                     DocumentRequirement(id="doc-plinth-survey", name="Plinth Completion Certificate by Structural Engineer", description="Certifying foundation conforms to structural safety and earthquake resistant design", is_mandatory=True, category="Structural Integrity")
                 ],
-                forms=[FormRequirement(form_code="Appendix C", title="Notice of Completion of Plinth", fill_online_url="https://autodcr.mcgm.gov.in")],
+                forms=[FormRequirement(form_code="Appendix C", title="Notice of Completion of Plinth", fill_online_url="https://autodcr.mcgm.gov.in/bpams/", offline_fallback_url="/static/forms/cc_procedure.pdf")],
                 verification_source=VerificationSource(
-                    url="https://autodcr.mcgm.gov.in/guidelines/cc_procedure.pdf",
+                    url="https://autodcr.mcgm.gov.in/bpams/",
                     page_title="BMC AutoDCR Guidelines - Grant of Commencement Certificate",
                     last_scraped_at="2026-09-23T11:00:00Z",
                     confidence_score=0.99,
@@ -1093,9 +1093,9 @@ class CivicDatabase:
                     DocumentRequirement(id="doc-reg-deed", name="Registered Conveyance / Sale Deed Copy", description="With Sub-Registrar stamp and volume number", is_mandatory=True, category="Title Deed"),
                     DocumentRequirement(id="doc-index-ii", name="Certified Index II from IGR Portal", description="Showing transaction summary and consideration", is_mandatory=True, category="Title Deed")
                 ],
-                forms=[FormRequirement(form_code="IGR-INDEX-II", title="Certified Copy of Book No. 1 Index II", fill_online_url="https://igrmaharashtra.gov.in")],
+                forms=[FormRequirement(form_code="IGR-INDEX-II", title="Certified Copy of Book No. 1 Index II", fill_online_url="https://esearchigr.maharashtra.gov.in/esearch/")],
                 verification_source=VerificationSource(
-                    url="https://igrmaharashtra.gov.in/e-Search",
+                    url="https://esearchigr.maharashtra.gov.in/esearch/",
                     page_title="IGR Maharashtra - Online Registered Document Verification",
                     last_scraped_at="2026-09-25T10:00:00Z",
                     confidence_score=0.99,
@@ -1119,9 +1119,9 @@ class CivicDatabase:
                     DocumentRequirement(id="doc-curr-712", name="Current Digital 7/12 (Satbara) & 8A Extract", description="Showing current seller/transferor name in Gaon Namuna 7", is_mandatory=True, category="Land Record"),
                     DocumentRequirement(id="doc-aadhaar-buyer", name="Aadhaar Cards of All New Purchasers / Heirs", description="For recording legal names in land records", is_mandatory=True, category="Identity")
                 ],
-                forms=[FormRequirement(form_code="E-Hakk-Form-149", title="Application for E-Ferfar Mutation Entry", fill_online_url="https://mahabhumi.gov.in/e-Hakk")],
+                forms=[FormRequirement(form_code="E-Hakk-Form-149", title="Application for E-Ferfar Mutation Entry", fill_online_url="https://pune.mahabhumi.gov.in/ehakk/", offline_fallback_url="/static/forms/form_8_mutation.pdf")],
                 verification_source=VerificationSource(
-                    url="https://mahabhumi.gov.in/e-Ferfar/rules.pdf",
+                    url="https://mahabhumi.gov.in/mahabhumilink/",
                     page_title="MahaBhumi - E-Ferfar Citizen Portal Guidelines",
                     last_scraped_at="2026-09-26T12:00:00Z",
                     confidence_score=0.99,
@@ -1262,9 +1262,9 @@ class CivicDatabase:
                 documents=[
                     DocumentRequirement(id="doc-plumber-cert", name="Licensed Plumber Undertaking & License Copy", description="Empaneled with Municipal Corporation of Greater Mumbai", is_mandatory=True, category="Professional Undertakings")
                 ],
-                forms=[FormRequirement(form_code="Form W-2", title="Plumber Certificate of Internal Water Fitting", fill_online_url="https://portal.mcgm.gov.in")],
+                forms=[FormRequirement(form_code="Form W-2", title="Plumber Certificate of Internal Water Fitting", fill_online_url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlservices")],
                 verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/water-services",
+                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlservices",
                     page_title="BMC Hydraulic Engineer Dept - Water Connection Forms",
                     last_scraped_at="2026-09-24T12:00:00Z",
                     confidence_score=0.98,
@@ -1309,9 +1309,9 @@ class CivicDatabase:
                 documents=[
                     DocumentRequirement(id="doc-trench-plan", name="Trenching Route Map with Traffic Police NOC", description="If trenching along major arterial carriageway", is_mandatory=True, category="Traffic & Roads")
                 ],
-                forms=[FormRequirement(form_code="RoW-Trench-01", title="Right of Way Road Opening Permission", fill_online_url="https://portal.mcgm.gov.in")],
+                forms=[FormRequirement(form_code="RoW-Trench-01", title="Right of Way Road Opening Permission", fill_online_url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlEODBWater")],
                 verification_source=VerificationSource(
-                    url="https://portal.mcgm.gov.in/eodb-trenching",
+                    url="https://portal.mcgm.gov.in/irj/portal/anonymous/qlEODBWater",
                     page_title="BMC Road Opening & Trenching Policy",
                     last_scraped_at="2026-09-23T15:00:00Z",
                     confidence_score=0.98,
@@ -1376,8 +1376,27 @@ class CivicDatabase:
                 fee_breakdown={"Zero Registration Fee": 0.0},
                 prerequisites=[],
                 documents=[
-                    DocumentRequirement(id="doc-rts-aadhaar", name="Aadhaar Card Linked to Mobile", description="For instant OTP verification", is_mandatory=True, category="Identity"),
-                    DocumentRequirement(id="doc-rts-photo", name="Citizen Digital Passport Photograph", description="File size between 20KB-50KB", is_mandatory=True, category="KYC")
+                    DocumentRequirement(
+                        id="doc-rts-poi",
+                        name="Proof of Identity (Choose Any 1)",
+                        description="Any 1 valid government photo identification",
+                        is_mandatory=True,
+                        category="Proof of Identity",
+                        is_alternative_group=True,
+                        group_name="Proof of Identity (Choose Any 1)",
+                        alternative_options=["Aadhaar Card", "Voter ID Card", "Passport", "Driving License", "PAN Card"]
+                    ),
+                    DocumentRequirement(
+                        id="doc-rts-poa",
+                        name="Proof of Address (Choose Any 1)",
+                        description="Any 1 valid residential address proof in Maharashtra",
+                        is_mandatory=True,
+                        category="Proof of Address",
+                        is_alternative_group=True,
+                        group_name="Proof of Address (Choose Any 1)",
+                        alternative_options=["Electricity Bill", "Ration Card", "Registered Rent Agreement", "Telephone Bill", "Water Bill"]
+                    ),
+                    DocumentRequirement(id="doc-rts-photo", name="Citizen Digital Passport Photograph", description="File size between 20KB-50KB", is_mandatory=True, category="Mandatory Photo")
                 ],
                 forms=[FormRequirement(form_code="Aaple-Register", title="Citizen Registration Portal Form", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/Registration/Register")],
                 verification_source=VerificationSource(
@@ -1387,7 +1406,18 @@ class CivicDatabase:
                     confidence_score=1.0,
                     is_admin_verified=True,
                     gazette_ref="Maharashtra Right to Public Services Act, 2015"
-                )
+                ),
+                designated_officer="Assistant Project Manager / Helpdesk In-Charge (1 Day)",
+                designated_officer_sla_days=1,
+                first_appellate_officer="District e-Governance Project Manager (DePM) (15 Days)",
+                second_appellate_officer="MahaOnline State Operations Head (30 Days)",
+                appeal_form_url="https://aaplesarkar.mahaonline.gov.in/en/RTSAppeals",
+                is_hybrid_setu=False,
+                portal_navigation_guide=[
+                    "1. Click 'Apply on Official Portal ↗' to access the Aaple Sarkar registration gateway.",
+                    "2. Select Option 1 (Aadhaar OTP verification) for instant profile creation.",
+                    "3. Enter the 6-digit Aadhaar OTP received on your mobile and complete profile registration."
+                ]
             ),
             TaskStep(
                 id="mah-rts-2",
@@ -1396,16 +1426,27 @@ class CivicDatabase:
                 title="Income Certificate Application & Talathi Verification (SLA: 15 Days)",
                 description="Apply for statutory Income Certificate from Revenue Department under RTS Act 2015 with Form 16 / salary certificate / Talathi income report.",
                 department=dept_aaple_sarkar,
-                submission_mode=SubmissionMode.ONLINE,
+                submission_mode=SubmissionMode.HYBRID,
                 estimated_days=15,
                 fee_amount=57.0,
                 fee_breakdown={"Statutory Certificate Fee": 33.60, "MahaOnline Service Charge": 23.40},
                 prerequisites=["mah-rts-1"],
                 documents=[
-                    DocumentRequirement(id="doc-income-proof", name="Salary Slip / Form 16 / ITR / Talathi Income Report", description="Proof of family income for preceding financial year", is_mandatory=True, category="Income Proof"),
-                    DocumentRequirement(id="doc-ration-card", name="Ration Card / Electricity Bill", description="Family tree and residence proof", is_mandatory=True, category="Address Proof")
+                    DocumentRequirement(
+                        id="doc-income-proof",
+                        name="Proof of Income (Choose Any 1)",
+                        description="Proof of family income for preceding financial year",
+                        is_mandatory=True,
+                        category="Income Proof",
+                        is_alternative_group=True,
+                        group_name="Proof of Income (Choose Any 1)",
+                        alternative_options=["Employer Salary Certificate / Form 16", "Income Tax Return (ITR) Acknowledgment", "Talathi Income Verification Report", "Self-Declaration Affidavit before Tahsildar"]
+                    ),
+                    DocumentRequirement(id="doc-ration-card", name="Ration Card / Family Proof", description="Family tree and residence proof", is_mandatory=True, category="Address Proof")
                 ],
-                forms=[FormRequirement(form_code="ServiceId-1251", title="Income Certificate Application Form", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251")],
+                forms=[
+                    FormRequirement(form_code="ServiceId-1251", title="Income Certificate Application Form", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251", offline_fallback_url="/static/forms/income_declaration.pdf")
+                ],
                 verification_source=VerificationSource(
                     url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251",
                     page_title="Aaple Sarkar Portal - Income Certificate Guidelines & Designated Officers",
@@ -1414,6 +1455,18 @@ class CivicDatabase:
                     is_admin_verified=True,
                     gazette_ref="Maharashtra RTS Notified Service ID 1251"
                 ),
+                designated_officer="Tahsildar / Nayab Tahsildar (15 Days)",
+                designated_officer_sla_days=15,
+                first_appellate_officer="Sub-Divisional Officer (SDO) (30 Days)",
+                second_appellate_officer="District Collector / Divisional Commissioner (30 Days)",
+                appeal_form_url="https://aaplesarkar.mahaonline.gov.in/en/RTSAppeals",
+                is_hybrid_setu=True,
+                portal_navigation_guide=[
+                    "1. Click 'Apply on Official Portal ↗' and log in with your Aadhaar OTP on Aaple Sarkar.",
+                    "2. In the left navigation menu, select 'Revenue Department' -> 'Revenue Services'.",
+                    "3. Click Service ID #1251 (Issue of Income Certificate) and upload your income proof.",
+                    "4. If Talathi panchnama is required, visit your local Aaple Sarkar Seva Kendra (Setu Kendra) for biometric recording."
+                ],
                 is_critical_path=True
             ),
             TaskStep(
@@ -1423,16 +1476,25 @@ class CivicDatabase:
                 title="Age, Nationality and Domicile Certificate (SLA: 15 Days)",
                 description="Apply for Domicile Certificate confirming 15 years continuous residence in Maharashtra state under Revenue & Forest Department rules.",
                 department=dept_aaple_sarkar,
-                submission_mode=SubmissionMode.ONLINE,
+                submission_mode=SubmissionMode.HYBRID,
                 estimated_days=15,
                 fee_amount=57.0,
                 fee_breakdown={"Government Fee": 33.60, "Portal Service Charge": 23.40},
                 prerequisites=["mah-rts-1"],
                 documents=[
-                    DocumentRequirement(id="doc-res-15yrs", name="15 Years Residence Proof in Maharashtra", description="School Leaving Certificate, Ration Card, continuous electricity bills or property cards", is_mandatory=True, category="Residence Proof"),
+                    DocumentRequirement(
+                        id="doc-res-15yrs",
+                        name="15 Years Residence Proof (Choose Any 1)",
+                        description="Continuous 15-year residence proof in Maharashtra state",
+                        is_mandatory=True,
+                        category="Residence Proof",
+                        is_alternative_group=True,
+                        group_name="15 Years Residence Proof (Choose Any 1)",
+                        alternative_options=["School / College Leaving Certificate showing 15 years", "Consecutive 15-Year Electricity Bills", "Registered Sale Deed / Property Card over 15 years old", "Ration Card showing continuous stay"]
+                    ),
                     DocumentRequirement(id="doc-birth-cert", name="Municipal Birth Certificate", description="Showing place of birth in Maharashtra", is_mandatory=True, category="Birth Proof")
                 ],
-                forms=[FormRequirement(form_code="ServiceId-1253", title="Age Nationality and Domicile Certificate Form", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253")],
+                forms=[FormRequirement(form_code="ServiceId-1253", title="Age Nationality and Domicile Certificate Form", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253", offline_fallback_url="/static/forms/income_declaration.pdf")],
                 verification_source=VerificationSource(
                     url="https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253",
                     page_title="Aaple Sarkar Portal - Age Nationality and Domicile Certificate",
@@ -1441,6 +1503,18 @@ class CivicDatabase:
                     is_admin_verified=True,
                     gazette_ref="Maharashtra RTS Notified Service ID 1253"
                 ),
+                designated_officer="Tahsildar / Executive Magistrate (15 Days)",
+                designated_officer_sla_days=15,
+                first_appellate_officer="Sub-Divisional Officer (SDO) (30 Days)",
+                second_appellate_officer="District Collector / Divisional Commissioner (30 Days)",
+                appeal_form_url="https://aaplesarkar.mahaonline.gov.in/en/RTSAppeals",
+                is_hybrid_setu=True,
+                portal_navigation_guide=[
+                    "1. Click 'Apply on Official Portal ↗' and log in with your credentials on Aaple Sarkar.",
+                    "2. Select 'Revenue Department' -> 'Age, Nationality & Domicile Certificate (Service ID 1253)'.",
+                    "3. Upload 15-year continuous residence proof and school leaving certificate.",
+                    "4. If requested for verification, present originals at your Taluka Setu Kendra / Tahsil Office."
+                ],
                 is_critical_path=True
             ),
             TaskStep(
@@ -1456,14 +1530,27 @@ class CivicDatabase:
                 fee_breakdown={"Zero Issuance Fee": 0.0},
                 prerequisites=["mah-rts-2", "mah-rts-3"],
                 documents=[],
-                forms=[FormRequirement(form_code="DIGI-CERT", title="Barcoded Maharashtra State Certificate PDF", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/TrackApplicationStatus")],
+                forms=[FormRequirement(form_code="DIGI-CERT", title="Barcoded Maharashtra State Certificate PDF", fill_online_url="https://aaplesarkar.mahaonline.gov.in/en/TrackApplicationStatus", offline_fallback_url="/static/forms/income_declaration.pdf")],
                 verification_source=VerificationSource(
-                    url="https://aaplesarkar.mahaonline.gov.in/en/VerifyCertificate",
+                    url="https://aaplesarkar.mahaonline.gov.in/en/TrackApplicationStatus",
                     page_title="Aaple Sarkar - Online Digital Certificate Authenticity Verification",
                     last_scraped_at="2026-09-26T15:32:00Z",
                     confidence_score=1.0,
                     is_admin_verified=True
-                )
+                ),
+                # Statutory RTS Act 2015 & Hybrid Submission Enhancements
+                designated_officer="Tahsildar / Nayab Tahsildar (15 Days)",
+                designated_officer_sla_days=15,
+                first_appellate_officer="Sub-Divisional Officer (SDO) / Sub-Divisional Magistrate (30 Days)",
+                second_appellate_officer="District Collector / Maharashtra State RTS Commission (30 Days)",
+                appeal_form_url="https://aaplesarkar.mahaonline.gov.in/en/RTSAppeals",
+                is_hybrid_setu=True,
+                portal_navigation_guide=[
+                    "1. Click 'Apply on Official Portal ↗' and log in with your Aadhaar OTP on Aaple Sarkar.",
+                    "2. In the left navigation menu, select 'Revenue Department' -> 'Revenue Services'.",
+                    "3. Select Service ID #1251 (Income Certificate) or Service ID #1253 (Domicile Certificate).",
+                    "4. If Talathi demands physical verification or genealogy proof, visit your local Aaple Sarkar Seva Kendra (Setu Kendra)."
+                ]
             )
         ]
 

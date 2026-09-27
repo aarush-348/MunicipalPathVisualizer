@@ -154,7 +154,24 @@ const UI_STRINGS = {
     share_direct_link: "Direct Web Link",
     share_copy_btn: "Copy",
     share_whatsapp_btn: "Share Summary via WhatsApp",
-    share_toast: "Link copied to clipboard!"
+    share_toast: "Link copied to clipboard!",
+    share_whatsapp: "📲 WhatsApp",
+
+    // Statutory RTS 2015 & Hybrid Reality
+    rts_ladder_title: "⚖️ Rights Under Maharashtra RTS Act 2015 & Appeal Ladder",
+    designated_officer_label: "Designated Officer (SLA)",
+    first_appellate_label: "First Appellate Officer",
+    second_appellate_label: "Second Appellate Officer",
+    appeal_online_btn: "File Online RTS Appeal ↗",
+    hybrid_setu_badge: "🏛️ In-Person Verification / Setu Visit Required",
+    setu_locator_btn: "Find Nearest Setu Kendra 📍",
+    portal_guide_title: "ℹ️ Official Portal Navigation Steps (Aaple Sarkar)",
+    offline_form_download: "Download Offline Form PDF ⬇",
+    choose_any_1: "Choose Any 1 Proof",
+    voice_listen: "Listen in Marathi / English",
+    shops_toggle_label: "Workers Count:",
+    shops_under_10: "< 10 Workers (Form A — ₹0 Free)",
+    shops_over_10: "10+ Workers (Form B — Statutory Fee)"
   },
 
   mr: {
@@ -306,7 +323,24 @@ const UI_STRINGS = {
     share_direct_link: "थेट वेब लिंक",
     share_copy_btn: "कॉपी करा",
     share_whatsapp_btn: "व्हॉट्सॲपवर माहिती पाठवा",
-    share_toast: "लिंक क्लिपबोर्डवर कॉपी झाली आहे!"
+    share_toast: "लिंक क्लिपबोर्डवर कॉपी झाली आहे!",
+    share_whatsapp: "📲 व्हॉट्सॲप",
+
+    // Statutory RTS 2015 & Hybrid Reality
+    rts_ladder_title: "⚖️ महाराष्ट्र लोकसेवा हक्क अधिनियम २०१५ व अपीलीय उतरंड",
+    designated_officer_label: "पदनिर्देशित अधिकारी (मुदत)",
+    first_appellate_label: "प्रथम अपीलीय अधिकारी",
+    second_appellate_label: "द्वितीय अपीलीय अधिकारी",
+    appeal_online_btn: "थेट आरटीएस अपील दाखल करा ↗",
+    hybrid_setu_badge: "🏛️ सेतू केंद्र / प्रत्यक्ष पडताळणी आवश्यक",
+    setu_locator_btn: "जवळचे सेतू केंद्र शोधा 📍",
+    portal_guide_title: "ℹ️ अधिकृत पोर्टल मार्गदर्शन (आपले सरकार)",
+    offline_form_download: "ऑफलाईन फॉर्म PDF डाउनलोड करा ⬇",
+    choose_any_1: "कोणताही १ पुरावा निवडा",
+    voice_listen: "मराठीत ऐका",
+    shops_toggle_label: "कर्मचारी संख्या:",
+    shops_under_10: "< १० कामगार (नमुना अ — विनामूल्य)",
+    shops_over_10: "१०+ कामगार (नमुना ब — शासकीय शुल्क)"
   }
 };
 

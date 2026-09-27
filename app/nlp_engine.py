@@ -1178,10 +1178,10 @@ SYNTHESIS_TEMPLATES: List[Dict[str, Any]] = [
     },
     {
         "id_slug": "birth-certificate",
-        "patterns": ["birth certificate", "janam praman patra", "birth registration", "rbd act", "janm certificate", "newborn registration"],
-        "title": "Birth Certificate Registration (RBD Act 1969)",
+        "patterns": ["birth certificate", "janam praman patra", "birth registration", "rbd act", "janm certificate", "newborn registration", "birth certificate correction", "birth correction", "name correction in birth certificate", "vital statistics", "bmc k-west", "andheri ward", "k-west", "ward birth certificate", "death certificate correction", "vital record correction"],
+        "title": "Birth Certificate Registration & Record Correction (RBD Act 1969)",
         "category": "Vital Statistics & Civil Registration",
-        "description": "Compulsory registration of birth within 21 days under the Registration of Births and Deaths Act 1969 via the Municipal Health Department or Gram Panchayat.",
+        "description": "Compulsory registration and statutory correction of birth records under the Registration of Births and Deaths Act 1969 via Municipal Health Department / Ward Registrar.",
         "departments": [
             {"name": "Municipal Health Department / Civil Registrar", "jurisdiction": "Municipal Corporation", "address": "Municipal Health Office", "url": "https://crsorgi.gov.in"}
         ],
@@ -1198,9 +1198,9 @@ SYNTHESIS_TEMPLATES: List[Dict[str, Any]] = [
                 "tips": "Registration after 21 days requires a late registration fee; after 1 year requires court order."
             },
             {
-                "title": "Birth Certificate Issuance by Registrar",
+                "title": "Birth Certificate Issuance & Record Correction by Registrar",
                 "dept_idx": 0, "mode": SubmissionMode.HYBRID, "days": 7, "fee": 0.0,
-                "desc": "Municipal registrar verifies hospital records and issues official birth certificate.",
+                "desc": "Municipal registrar verifies hospital records and issues official birth certificate or executes formal clerical correction under Section 15 of RBD Act.",
                 "docs": [], "forms": [{"code": "BC-Cert", "title": "Official Birth Certificate", "url": "https://crsorgi.gov.in"}],
                 "tips": "Obtain multiple certified copies — required for school admission, passport, and Aadhaar enrollment."
             }
@@ -1243,7 +1243,7 @@ SYNTHESIS_TEMPLATES: List[Dict[str, Any]] = [
     },
     {
         "id_slug": "income-domicile-caste-certificate",
-        "patterns": ["income certificate", "domicile certificate", "caste certificate", "caste validity", "tehsildar certificate", "rts certificate", "utpanna dakhla", "rahiwasi dakhla", "jaticha dakhla"],
+        "patterns": ["income certificate", "domicile certificate", "caste certificate", "caste validity", "non-creamy layer", "non creamy layer", "non-creamy", "ncl", "baramati", "tehsildar certificate", "rts certificate", "utpanna dakhla", "rahiwasi dakhla", "jaticha dakhla", "caste validity certificate", "dakhla", "adhivas", "nationality certificate", "haveli taluka", "chhatrapati sambhajinagar"],
         "title": "Income / Domicile / Caste Validity Certificate (State RTS / Tehsildar)",
         "category": "Revenue & Administration",
         "description": "Application for Income Certificate, Domicile Certificate, or Caste Validity Certificate under the Right to Service (RTS) Act via Tehsildar / SDM / District Collectorate.",
@@ -1319,8 +1319,8 @@ SYNTHESIS_TEMPLATES: List[Dict[str, Any]] = [
     },
     {
         "id_slug": "property-mutation",
-        "patterns": ["property mutation", "property transfer", "khata transfer", "e ferfar", "7 12 extract", "property tax transfer", "title transfer", "property registration"],
-        "title": "Property Tax Title Transfer & Mutation (Khata / E-Ferfar / 7/12)",
+        "patterns": ["property mutation", "property transfer", "khata transfer", "e ferfar", "7 12 extract", "property tax transfer", "title transfer", "property registration", "property tax", "property tax assessment", "property tax rebate", "tax assessment and rebate", "rebate claim", "thane municipal corporation property tax", "pmc pune property tax", "peth area property tax", "malmatta kar", "gharkarpatti"],
+        "title": "Property Tax Title Transfer, Assessment & Mutation (Khata / E-Ferfar / 7/12)",
         "category": "Property & Revenue",
         "description": "Transfer of property title and tax liability upon sale, inheritance, or gift via Municipal Property Tax department and Talathi / Sub-Registrar for mutation in revenue records.",
         "departments": [
@@ -1975,6 +1975,8 @@ class NLPIntentEngine:
 
         for task in tasks:
             task_id = task.id
+            if task_id.startswith("task-synth-") or getattr(task, "is_synthetic", False):
+                continue
             text_parts = [
                 task.title,
                 task.description,
@@ -2043,6 +2045,14 @@ class NLPIntentEngine:
                 detected_municipality = muni_target
                 break
 
+        # Step 4b: Domain-specific Negative Intent Penalties to prevent misrouting
+        query_tokens_set = set(query_tokens)
+        q_text = " " + normalized.lower() + " "
+        
+        is_vital_records = any(w in query_tokens_set for w in {"birth", "death", "correction", "namkaran", "janma", "mrutyu", "vital"}) or "birth certificate" in q_text or "death certificate" in q_text
+        is_statutory_cert = any(w in query_tokens_set for w in {"domicile", "caste", "income", "dakhla", "adhivas", "nationality", "ncl", "pramanpatra", "validity"}) or "non-creamy" in q_text or "non creamy" in q_text or "caste validity" in q_text
+        is_property_tax = any(w in query_tokens_set for w in {"tax", "kar", "rebate", "assessment", "malmatta", "gharkarpatti"}) and any(w in query_tokens_set for w in {"property", "house", "building", "pmc", "tmc", "mcgm", "peth", "name", "transfer", "mutation", "kar"})
+
         # Step 5: Compute cosine similarity against all indexed tasks
         scored: List[Tuple[str, float, List[str]]] = []
         for task_id, task_vec in self._tf_idf_vectors.items():
@@ -2050,7 +2060,6 @@ class NLPIntentEngine:
 
             # Boost: exact token overlap bonus (excluding generic tokens)
             task_tokens_set = set(self._tokenize(self._task_corpus[task_id]))
-            query_tokens_set = set(query_tokens)
             meaningful_overlap = (task_tokens_set & query_tokens_set) - GENERIC_CIVIC_TOKENS
             overlap = task_tokens_set & query_tokens_set
             overlap_bonus = len(meaningful_overlap) * 0.05
@@ -2072,6 +2081,12 @@ class NLPIntentEngine:
                 if qt in mun_lower or qt in state_lower:
                     mun_bonus += 0.12
 
+            # Boost: title character n-gram match and exact token match
+            title_tokens_set = set(self._tokenize(meta["title"]))
+            title_meaningful_overlap = (title_tokens_set & query_tokens_set) - GENERIC_CIVIC_TOKENS
+            title_token_bonus = len(title_meaningful_overlap) * 0.22
+            title_bonus = self._ngram_overlap_score(normalized, meta["title"].lower(), n=3)
+
             # Strict Locality Guardrail:
             # If user mentioned a locality (e.g. "bandra" -> "mumbai", "kothrud" -> "pune", "indiranagar" -> "bengaluru"),
             # ensure absolute disqualification on tasks from other cities.
@@ -2083,19 +2098,32 @@ class NLPIntentEngine:
                     "all" in mun_lower
                 )
                 if is_match:
-                    mun_bonus += 0.35  # Strong bonus for matching locality
+                    # Decouple locality bonus: only grant full bonus if there is non-trivial semantic or title relevance
+                    if sim > 0.03 or title_token_bonus > 0.05 or (meaningful_overlap - {"bmc", "pmc", "mcgm", "pune", "mumbai"}):
+                        mun_bonus += 0.35  # Strong bonus for matching locality
+                    else:
+                        mun_bonus += 0.05  # Modest baseline without topical match
                 else:
                     # Specific city mismatch (e.g. user queried Bandra/Mumbai, task belongs to Pune/Bengaluru/Delhi)
                     # Disqualify task completely so it can never false-positive match
                     continue
 
-            # Boost: title character n-gram match and exact token match
-            title_tokens_set = set(self._tokenize(meta["title"]))
-            title_meaningful_overlap = (title_tokens_set & query_tokens_set) - GENERIC_CIVIC_TOKENS
-            title_token_bonus = len(title_meaningful_overlap) * 0.22
-            title_bonus = self._ngram_overlap_score(normalized, meta["title"].lower(), n=3)
+            # Hard Negative Intent Guardrails
+            task_title_lower = meta["title"].lower()
+            negative_penalty = 0.0
+            if is_vital_records:
+                if any(w in task_title_lower for w in ["bakery", "restaurant", "cafe", "small business", "construction", "building", "water supply", "mutation", "7/12", "7-12", "retail", "enterprise"]):
+                    negative_penalty += 3.0
+            if is_statutory_cert:
+                if any(w in task_title_lower for w in ["bakery", "restaurant", "cafe", "construction", "building", "water supply", "plumber", "retail", "small business", "enterprise"]):
+                    negative_penalty += 3.0
+            if is_property_tax:
+                if any(w in task_title_lower for w in ["bakery", "restaurant", "cafe", "food", "dining", "water connection", "small business", "retail", "enterprise", "gumasta", "building plan"]):
+                    negative_penalty += 3.0
+                if "agricultural" in task_title_lower and any(w in query_tokens_set for w in ["municipal", "thane", "pmc", "mcgm", "corporation", "peth", "city", "tax"]):
+                    negative_penalty += 3.0
 
-            final_score = sim + overlap_bonus + tag_bonus + mun_bonus + (title_bonus * 0.35) + title_token_bonus
+            final_score = sim + overlap_bonus + tag_bonus + mun_bonus + (title_bonus * 0.35) + title_token_bonus - negative_penalty
             scored.append((task_id, final_score, list(overlap)))
 
         scored.sort(key=lambda x: x[1], reverse=True)
@@ -2126,7 +2154,7 @@ class NLPIntentEngine:
         # Activate synthesis if top catalog match is weak, or if synthesis matches strongly
         synth_result, synth_score = self._match_or_synthesize(original, normalized, municipality_hint, detected_municipality)
         if synth_result:
-            if top_score < 0.85 or synth_score >= top_score:
+            if top_score < 0.75 or synth_score >= (top_score - 0.10):
                 # Dynamically construct and register the CivicTask into the runtime database
                 synthesized_task = self._register_synthesized_civic_task(synth_result, municipality_hint, detected_municipality)
                 
@@ -2420,7 +2448,89 @@ Ensure no circular dependencies and realistic Indian statutory acts (e.g. MMC Ac
         slug = f"gen-{slug_raw}"
 
         # Classify domain
-        if any(w in q for w in ["pet", "veterinary", "animal", "vet", "dog", "cat", "clinic"]):
+        if any(w in q for w in ["non-creamy", "non creamy", "ncl", "creamy layer", "caste validity"]):
+            title = f"OBC / VJNT / SBC Non-Creamy Layer (NCL) Certificate & Tehsildar Verification ({target_muni})"
+            category = "Statutory & Revenue Certificates"
+            desc = f"Statutory certification under the Maharashtra Right to Public Services Act (RTS 2015) and State Social Justice Department establishing non-creamy layer status."
+            departments = [
+                {"name": f"Tehsildar & Sub-Divisional Officer (SDO - {target_muni})", "jurisdiction": target_muni, "url": "https://aaplesarkar.mahaonline.gov.in"},
+                {"name": f"District Social Welfare & Caste Scrutiny Committee", "jurisdiction": target_muni, "url": "https://sjsa.maharashtra.gov.in"}
+            ]
+            steps = [
+                {
+                    "title": "Aaple Sarkar Portal Filing with 3-Year Income Proof (SDO Baramati / Tehsil)",
+                    "dept_idx": 0, "mode": SubmissionMode.ONLINE, "days": 5, "fee": 57.0,
+                    "desc": "Submit Form 3 on Aaple Sarkar with father's 3 consecutive financial years Form 16 / ITR / Talathi report (< ₹8 Lakh gross annual income).",
+                    "docs": [
+                        {"name": "Previous 3 Financial Years Form 16 / ITR / Talathi Panchnama", "cat": "Income Proof", "desc": "Substantiating non-creamy layer threshold."},
+                        {"name": "Original Caste Certificate issued by Sub-Divisional Officer (SDO)", "cat": "Statutory Certificate", "desc": "Prerequisite caste certification."}
+                    ],
+                    "forms": [{"code": "Aaple-NCL-1", "title": "Application for Non-Creamy Layer Certificate", "url": "https://aaplesarkar.mahaonline.gov.in"}],
+                    "tips": "Ensure non-creamy layer validity is requested for 3 financial years (valid until 31st March)."
+                },
+                {
+                    "title": "Talathi & Circle Officer Physical Verification & Genealogy Scrutiny",
+                    "dept_idx": 0, "mode": SubmissionMode.HYBRID, "days": 10, "fee": 0.0,
+                    "desc": "Talathi inspects agricultural landholding, municipal property records, and family genealogy to verify backward class residency in Maharashtra prior to 1967.",
+                    "docs": [
+                        {"name": "1967 Proof of Residence in Maharashtra (School LC / Land Records)", "cat": "Residence Proof", "desc": "Ancestral residency evidence in Maharashtra state."}
+                    ],
+                    "forms": [],
+                    "tips": "Visit local Setu Kendra / ASSK if biometric fingerprint scan or physical document stamping is requested."
+                },
+                {
+                    "title": "Sub-Divisional Officer (SDO) Digital Signature & Barcoded Certificate Issuance",
+                    "dept_idx": 0, "mode": SubmissionMode.ONLINE, "days": 6, "fee": 0.0,
+                    "desc": "SDO digitally signs barcoded Non-Creamy Layer certificate with QR code for state and central admissions and recruitment.",
+                    "docs": [],
+                    "forms": [{"code": "NCL-CERT", "title": "Official Non-Creamy Layer Certificate PDF", "url": "https://aaplesarkar.mahaonline.gov.in"}],
+                    "tips": "Download the barcoded certificate directly from the Aaple Sarkar Track Application Status tab."
+                }
+            ]
+            est_days, est_fee = 21, 57.0
+            helpline = "Aaple Sarkar Toll-Free: 1800-120-8040 / SDO Citizen Desk"
+        elif any(w in q for w in ["vending", "vending license", "street food", "hawker", "stall", "svanidhi", "vada pav", "pani puri"]):
+            title = f"Street Food Vending Certificate & PM SVANidhi Urban Hawker Permit ({target_muni})"
+            category = "Municipal Trade & Urban Livelihoods"
+            desc = f"Statutory registration and vending authorization under Street Vendors (Protection of Livelihood and Regulation of Street Vending) Act 2014 and PM SVANidhi scheme."
+            departments = [
+                {"name": f"{target_muni} Town Vending Committee (TVC)", "jurisdiction": target_muni, "url": "https://pmsvanidhi.mohua.gov.in"},
+                {"name": f"{target_muni} Public Health Department", "jurisdiction": target_muni, "url": "https://aaplesarkar.mahaonline.gov.in"}
+            ]
+            steps = [
+                {
+                    "title": "Town Vending Committee (TVC) Street Vendor Biometric Survey & Identity Card",
+                    "dept_idx": 0, "mode": SubmissionMode.HYBRID, "days": 7, "fee": 100.0,
+                    "desc": "Register with Ward Town Vending Committee (TVC) during local biometric enumeration survey for hawking pitch demarcation.",
+                    "docs": [
+                        {"name": "Aadhaar Card Linked to Mobile", "cat": "Identity & KYC", "desc": "For biometric PM SVANidhi enrollment."},
+                        {"name": "Vending Stall Photographs with Ward Geotag", "cat": "Premise Proof", "desc": "Showing stationary stall or mobile pushcart location."}
+                    ],
+                    "forms": [{"code": "TVC-Form-1", "title": "Application for Certificate of Vending (CoV)", "url": "https://pmsvanidhi.mohua.gov.in"}],
+                    "tips": "Operating within designated non-vending zones (within 100m of railway stations, hospitals, municipal schools) is prohibited."
+                },
+                {
+                    "title": "FSSAI Street Food Vendor Basic Registration (FoSCoS Petty Food Business)",
+                    "dept_idx": 1, "mode": SubmissionMode.ONLINE, "days": 5, "fee": 100.0,
+                    "desc": "Mandatory annual food safety registration for petty food vendors with annual turnover under ₹12 Lakhs.",
+                    "docs": [
+                        {"name": "Vendor Passport Photograph & Govt Identity Card", "cat": "Identity & KYC", "desc": "For food handler identification."}
+                    ],
+                    "forms": [{"code": "FSSAI-Form-A", "title": "Application for Petty Food Business Registration", "url": "https://foscos.fssai.gov.in"}],
+                    "tips": "Display the green FSSAI 14-digit registration certificate laminated on the front of the food stall."
+                },
+                {
+                    "title": "Certificate of Vending (CoV) & PM SVANidhi Digital QR Code Issuance",
+                    "dept_idx": 0, "mode": SubmissionMode.ONLINE, "days": 5, "fee": 0.0,
+                    "desc": "Ward Officer issues photo Certificate of Vending and unlocks collateral-free working capital loan under PM SVANidhi.",
+                    "docs": [],
+                    "forms": [{"code": "CoV-Permit", "title": "Municipal Certificate of Vending & ID Card", "url": "https://pmsvanidhi.mohua.gov.in"}],
+                    "tips": "Digital transactions earn monthly cashback incentives of up to ₹100 directly in vendor's bank account."
+                }
+            ]
+            est_days, est_fee = 17, 200.0
+            helpline = "PM SVANidhi Helpdesk: 011-23062372 / Municipal Ward Vending Desk"
+        elif re.search(r'\b(pet|veterinary|animal|vet|dog|cats?|canine|feline)\b', q) and not re.search(r'\b(certificate|application|validity|caste|income|layer|creamy|tax)\b', q):
             title = f"Establishment & Statutory Licensing of Pet Clinic ({target_muni})"
             category = "Veterinary Healthcare & Clinical Services"
             desc = f"Statutory multi-agency clearance pathway under the Indian Veterinary Council Act 1984, Bio-Medical Waste Management Rules 2016, and {target_muni} Municipal Health Trade Bye-laws."
@@ -2770,9 +2880,7 @@ Ensure no circular dependencies and realistic Indian statutory acts (e.g. MMC Ac
         # Register into runtime database (in-memory + SQLite persistence)
         db.add_task(civic_task)
 
-        # Re-index NLP engine so subsequent queries know this task
-        self.index_tasks(db.get_all_tasks())
-
+        # Note: Do not re-index primary catalog index to avoid polluting subsequent unrelated queries
         return civic_task
 
 

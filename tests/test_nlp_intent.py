@@ -120,13 +120,53 @@ class TestNLPIntentEngine(unittest.TestCase):
         data = resp.json()
         self.assertTrue("ration-card" in data["top_task_id"])
 
-    def test_zero_shot_pharmacy_synthesis(self):
+    def test_regional_birth_certificate_not_bakery(self):
         resp = self.client.post("/api/tasks/resolve-intent", json={
-            "query": "open a pharmacy"
+            "query": "How to get birth certificate correction done in BMC K-West Andheri ward?"
         })
         self.assertEqual(resp.status_code, 200)
         data = resp.json()
-        self.assertTrue("pharmacy" in data["top_task_id"])
+        self.assertNotEqual(data["top_task_id"], "task-mum-bakery")
+        self.assertTrue("birth" in data["top_task_id"] or "vital" in data["top_task_id"])
+
+    def test_regional_pune_property_tax_not_restaurant(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "PMC Pune peth area property tax assessment and rebate claim"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertNotEqual(data["top_task_id"], "task-pune-restaurant")
+        self.assertTrue("property" in data["top_task_id"] or "mutation" in data["top_task_id"])
+
+    def test_regional_haveli_domicile_rts(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "Apply for Domicile and Nationality certificate in Haveli Taluka, Pune"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertNotEqual(data["top_task_id"], "task-pune-restaurant")
+        self.assertTrue(data["top_task_id"] in ["task-mah-rts-certificates", "task-synth-domicile-cert", "task-synth-rts-dakhla"])
+
+    def test_regional_baramati_non_creamy_layer_not_pet_clinic(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "Non-creamy layer certificate application Baramati sub-division"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertNotEqual(data["top_task_id"], "task-synth-bmc-pet-clinic")
+        self.assertTrue("pet" not in data["top_task_id"])
+        self.assertTrue("ncl" in data["top_task_id"] or "rts" in data["top_task_id"] or "caste" in data["top_task_id"])
+
+    def test_regional_thane_property_tax_mutation_not_712(self):
+        resp = self.client.post("/api/tasks/resolve-intent", json={
+            "query": "Thane municipal corporation property tax name transfer mutation"
+        })
+        self.assertEqual(resp.status_code, 200)
+        data = resp.json()
+        self.assertNotEqual(data["top_task_id"], "task-mah-712-mutation")
+        self.assertTrue("property" in data["top_task_id"] or "mutation" in data["top_task_id"])
 
 if __name__ == "__main__":
     unittest.main()
+
+

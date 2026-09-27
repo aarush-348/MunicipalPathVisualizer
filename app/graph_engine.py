@@ -224,7 +224,11 @@ class CivicGraphEngine:
                         issuing_authority=d.issuing_authority,
                         is_mandatory=d.is_mandatory,
                         required_in_step_ids=[s.id],
-                        required_in_step_numbers=[s.step_number]
+                        required_in_step_numbers=[s.step_number],
+                        is_alternative_group=d.is_alternative_group,
+                        group_name=d.group_name,
+                        alternative_options=d.alternative_options,
+                        file_spec=d.file_spec
                     )
                 else:
                     if s.id not in doc_map[doc_key].required_in_step_ids:

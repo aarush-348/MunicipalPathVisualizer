@@ -564,10 +564,166 @@ class CivicApp {
         const shareUrl = `${window.location.origin}/?task=${this.currentTaskId}`;
 
         const stepsText = t.steps.map((s, idx) => `• Step ${idx + 1}: ${s.title} (${s.department.name.split('(')[0].trim()})`).join('\n');
+        const docsList = (r.consolidated_documents || []).slice(0, 5).map(d => d.name).join(', ');
 
-        const message = `🏛️ *Civic Task Navigator — Maharashtra*\n\n*${t.title}*\n📍 Jurisdiction: ${t.municipality}\n⏱️ Timeline: ~${r.total_estimated_days} Working Days\n💰 Official Fees: ₹${r.total_estimated_fees}\n\n📋 *Ordered Procedure Steps:*\n${stepsText}\n\n🔗 *Explore interactive roadmap & required documents:*\n${shareUrl}`;
+        const message = `🏛️ *Maharashtra Civic Roadmap: ${t.title}*\n📍 *Municipality:* ${t.municipality}\n⏱️ *Total Time:* ~${r.total_estimated_days} Working Days | 💰 *Official Fees:* ₹${r.total_estimated_fees}\n\n📋 *Ordered Procedure Steps:*\n${stepsText}\n\n📄 *Required Documents (Sample):* ${docsList}${r.consolidated_documents && r.consolidated_documents.length > 5 ? ' & more' : ''}\n\n🔗 *View Full Interactive Map & Official Links:*\n${shareUrl}`;
 
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    // -------------------------------------------------------------------------
+    // Web Speech API Native Marathi / Hindi / English Voice Reader
+    // -------------------------------------------------------------------------
+    speakCurrentStep() {
+        if (!this.currentTask) return;
+        const step = (this.currentTask.steps.find(s => s.id === this.selectedStationId)) || this.currentTask.steps[0];
+        if (!step) return;
+        const stepTitle = this.getStepTitle(step, this.currentTask.id);
+        const stepDesc = this.getStepDesc(step, this.currentTask.id);
+        this.speakStepInstruction(stepTitle, stepDesc);
+    }
+
+    speakStepInstruction(title, desc) {
+        if (!window.speechSynthesis) {
+            alert('Voice guidance is not supported on this browser.');
+            return;
+        }
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+            return;
+        }
+
+        const isMr = (this.currentLang === 'mr');
+        const text = `${title}. ${desc}`;
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Intelligently find Marathi (mr-IN) or Indian English/Hindi voice
+        const voices = window.speechSynthesis.getVoices() || [];
+        const preferredLang = isMr ? 'mr-IN' : 'en-IN';
+        const matchVoice = voices.find(v => v.lang === preferredLang || v.lang.startsWith(isMr ? 'mr' : 'en')) ||
+                           voices.find(v => v.lang.startsWith('hi')) || voices[0];
+
+        if (matchVoice) utterance.voice = matchVoice;
+        utterance.rate = 0.95;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // -------------------------------------------------------------------------
+    // Setu Kendra & Aaple Sarkar Seva Kendra (ASSK) Locator
+    // -------------------------------------------------------------------------
+    openSetuLocatorModal() {
+        const modal = document.getElementById('setu-locator-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            const sel = document.getElementById('select-setu-district');
+            this.renderSetuCenters(sel ? sel.value : 'mumbai');
+        }
+    }
+
+    closeSetuLocatorModal() {
+        const modal = document.getElementById('setu-locator-modal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    renderSetuCenters(district) {
+        const container = document.getElementById('setu-centers-list');
+        if (!container) return;
+        const isMr = (this.currentLang === 'mr');
+
+        const SETU_DATA = {
+            mumbai: [
+                { name: "BMC Citizen Facilitation Center (CFC) K-West Andheri", addr: "Paliram Path, Near Andheri Station, Andheri West, Mumbai 400058", phone: "022-26239131", timing: "09:00 AM - 05:00 PM" },
+                { name: "Aaple Sarkar Seva Kendra H-West Bandra", addr: "Saint Martin Road, Bandra West, Mumbai 400050", phone: "022-26422311", timing: "10:00 AM - 05:30 PM" },
+                { name: "Mumbai Collectorate Setu Suvidha Kendra", addr: "Old Custom House, Fort, Mumbai 400001", phone: "022-22661231", timing: "10:00 AM - 05:00 PM" },
+                { name: "CFC Kurla L-Ward Citizen Center", addr: "S.G. Barve Marg, Kurla West, Mumbai 400070", phone: "022-26505103", timing: "09:30 AM - 04:30 PM" }
+            ],
+            pune: [
+                { name: "Tahsil Setu Kendra Haveli / Pune City", addr: "Sub-Divisional Office, Shukrawar Peth, Sarasbaug Road, Pune 411002", phone: "020-24440011", timing: "10:00 AM - 05:00 PM" },
+                { name: "PMC Citizen Facilitation Center Kothrud Ward", addr: "Paud Road, Ideal Colony, Kothrud, Pune 411038", phone: "020-25431200", timing: "09:30 AM - 05:00 PM" },
+                { name: "Baramati Sub-Division Setu Office", addr: "Administrative Building, Court Road, Baramati 413102", phone: "02112-222415", timing: "10:00 AM - 05:30 PM" },
+                { name: "PCMC Setu Center Pimpri", addr: "Pimpri Chinchwad Municipal HQ, Mumbai-Pune Road, Pimpri 411018", phone: "020-27425511", timing: "10:00 AM - 05:00 PM" }
+            ],
+            thane: [
+                { name: "TMC Citizen Facilitation Center Pachpakhadi", addr: "Almeida Road, Panchpakhadi, Thane West 400602", phone: "022-25331590", timing: "09:30 AM - 05:00 PM" },
+                { name: "Thane Collectorate Setu Kendra", addr: "Court Naka, Station Road, Thane West 400601", phone: "022-25344041", timing: "10:00 AM - 05:00 PM" },
+                { name: "Kalyan Dombivli KDMC Setu Center", addr: "Shankar Rao Chowk, Kalyan West 421301", phone: "0251-2204064", timing: "10:00 AM - 05:00 PM" }
+            ],
+            nagpur: [
+                { name: "NMC Dharampeth Ward Citizen Service Center", addr: "West High Court Road, Dharampeth, Nagpur 440010", phone: "0712-2567001", timing: "10:00 AM - 05:00 PM" },
+                { name: "Nagpur Collectorate Setu Kendra", addr: "Civil Lines, Near High Court, Nagpur 440001", phone: "0712-2564201", timing: "10:00 AM - 05:00 PM" }
+            ],
+            nashik: [
+                { name: "NMC Rajiv Gandhi Bhavan CFC", addr: "Sharanpur Road, Nashik 422002", phone: "0253-2575631", timing: "10:00 AM - 05:00 PM" },
+                { name: "Nashik Tahsil Setu Kendra", addr: "Old Agra Road, Near CBS, Nashik 422001", phone: "0253-2574100", timing: "10:00 AM - 05:00 PM" }
+            ],
+            aurangabad: [
+                { name: "Chhatrapati Sambhajinagar Collectorate Setu Kendra", addr: "Subedari Guest House Road, Chhatrapati Sambhajinagar 431001", phone: "0240-2334220", timing: "10:00 AM - 05:00 PM" }
+            ]
+        };
+
+        const centers = SETU_DATA[district] || SETU_DATA.mumbai;
+        container.innerHTML = centers.map(c => `
+            <div class="py-2.5 space-y-1">
+                <div class="font-bold text-primary flex items-center justify-between">
+                    <span>📍 ${c.name}</span>
+                    <span class="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-300 px-1.5 py-0.2 rounded font-semibold">${isMr ? 'सक्रिय केंद्र' : 'Open / Active'}</span>
+                </div>
+                <p class="text-gray-600 text-[11px] leading-relaxed">${c.addr}</p>
+                <div class="flex items-center gap-3 text-secondary text-[11px]">
+                    <span>📞 ${c.phone}</span>
+                    <span>⏱️ ${c.timing}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------------------------------------------------------------------------
+    // Maharashtra Shops & Establishments Act 2017 Intake Workers Toggle
+    // -------------------------------------------------------------------------
+    setWorkerCountTier(tier) {
+        this.workerCountTier = tier;
+        const btnUnder = document.getElementById('btn-workers-under-10');
+        const btnOver = document.getElementById('btn-workers-over-10');
+        if (btnUnder && btnOver) {
+            if (tier === 'under10') {
+                btnUnder.className = 'px-3 py-1.5 text-xs font-bold rounded bg-emerald-700 text-white shadow-2xs';
+                btnOver.className = 'px-3 py-1.5 text-xs font-bold rounded bg-surface-container text-primary border border-outline-variant';
+            } else {
+                btnOver.className = 'px-3 py-1.5 text-xs font-bold rounded bg-amber-700 text-white shadow-2xs';
+                btnUnder.className = 'px-3 py-1.5 text-xs font-bold rounded bg-surface-container text-primary border border-outline-variant';
+            }
+        }
+
+        // Dynamically adjust Form A vs Form B on Gumasta milestone
+        if (this.currentTask && this.currentTask.id === 'task-mah-small-biz') {
+            const step3 = this.currentTask.steps.find(s => s.id === 'mah-biz-3');
+            if (step3) {
+                if (tier === 'under10') {
+                    step3.fee_amount = 0.0;
+                    step3.fee_breakdown = { "Zero Statutory Fee for <10 Workers (Form A)": 0.0 };
+                    step3.title = "Maharashtra Gumasta / Form A Intimation (<10 Workers, Zero Fee)";
+                } else {
+                    step3.fee_amount = 650.0;
+                    step3.fee_breakdown = { "Form F Registration Certificate Scrutiny Fee": 650.0 };
+                    step3.title = "Maharashtra Gumasta / Form F Registration (10+ Workers, Paid)";
+                }
+                this.renderRoadmapStepCards();
+                this.updateStationUI();
+                this.updateHeaderAndStats();
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // RTS Appeal Ladder Accordion Toggle
+    // -------------------------------------------------------------------------
+    toggleRtsAccordion() {
+        const content = document.getElementById('dossier-rts-escalation-content');
+        const icon = document.getElementById('rts-accordion-icon');
+        if (!content) return;
+        const isHidden = content.style.display === 'none';
+        content.style.display = isHidden ? 'block' : 'none';
+        if (icon) icon.innerText = isHidden ? 'expand_more' : 'expand_less';
     }
 
     // -------------------------------------------------------------------------
@@ -824,6 +980,12 @@ class CivicApp {
                     this.completedStepIds,
                     this.selectedStationId
                 );
+            }
+
+            // Shops Act 2017 workers intake toggle visibility
+            const shopsToggle = document.getElementById('shops-act-workers-toggle');
+            if (shopsToggle) {
+                shopsToggle.style.display = (taskId === 'task-mah-small-biz') ? 'flex' : 'none';
             }
 
             if (this.activeTab === 'document-locker') {
@@ -1211,6 +1373,62 @@ class CivicApp {
             provLinkText.innerText = (step.verification_source.url || 'portal.gov.in').replace('https://', '').replace('http://', '');
         }
 
+        // Hybrid Mode (Setu Kendra) Mandatory In-Person Visit Notice
+        const hybridBanner = document.getElementById('dossier-hybrid-banner');
+        if (hybridBanner) {
+            if (step.is_hybrid_setu) {
+                hybridBanner.classList.remove('hidden');
+                hybridBanner.style.display = 'flex';
+            } else {
+                hybridBanner.classList.add('hidden');
+                hybridBanner.style.display = 'none';
+            }
+        }
+
+        // Aaple Sarkar 3-Step Navigation Wayfinding Card
+        const guideCard = document.getElementById('dossier-portal-guide-card');
+        const guideSteps = document.getElementById('dossier-portal-guide-steps');
+        const isAapleSarkar = (step.department?.portal_url && step.department.portal_url.includes('aaplesarkar')) ||
+                              (step.verification_source?.url && step.verification_source.url.includes('aaplesarkar')) ||
+                              (step.forms && step.forms.some(f => (f.fill_online_url || '').includes('aaplesarkar')));
+
+        const guide = step.portal_navigation_guide || (isAapleSarkar ? [
+            isMr ? "१. 'अधिकृत पोर्टलवर अर्ज करा ↗' वर क्लिक करा आणि आधार ओटीपीने आपले सरकारवर लॉग इन करा." : "1. Click 'Apply on Official Portal ↗' and log in with your Aadhaar OTP on Aaple Sarkar.",
+            isMr ? "२. डाव्या बाजूच्या मेनूमधून 'महसूल विभाग' -> 'महसूल सेवा' निवडा." : "2. In the left department menu, select 'Revenue Department' -> 'Revenue Services'.",
+            isMr ? `३. अधिसूचित सेवा निवडा (${step.title}) आणि आवश्यक कागदपत्रे अपलोड करा.` : `3. Search or click Service ID (${step.title}) and proceed to upload documents.`,
+            isMr ? "४. प्रत्यक्ष पडताळणी किंवा बायोमेट्रिकसाठी जवळच्या सेतू केंद्राला भेट द्या." : "4. If in-person biometric/panchnama is mandated, visit your local Setu Suvidha Kendra."
+        ] : null);
+
+        if (guideCard && guideSteps) {
+            if (guide && guide.length > 0) {
+                guideCard.classList.remove('hidden');
+                guideCard.style.display = 'block';
+                guideSteps.innerHTML = guide.map(st => `<div class="flex items-start gap-2 text-indigo-900">• <span>${st}</span></div>`).join('');
+            } else {
+                guideCard.classList.add('hidden');
+                guideCard.style.display = 'none';
+            }
+        }
+
+        // RTS 3-Tier Statutory Appeal Escalation Matrix
+        const rtsCard = document.getElementById('dossier-rts-escalation-card');
+        const rtsDesig = document.getElementById('dossier-rts-designated');
+        const rtsFirst = document.getElementById('dossier-rts-first-appellate');
+        const rtsSecond = document.getElementById('dossier-rts-second-appellate');
+        const rtsBtn = document.getElementById('dossier-rts-appeal-btn');
+
+        if (rtsCard) {
+            const desig = step.designated_officer || (isMr ? `${deptName} पदनिर्देशित अधिकारी (${step.estimated_days} दिवस SLA)` : `Designated Procedural Officer (${step.estimated_days} Days SLA)`);
+            const first = step.first_appellate_officer || (isMr ? "उपविभागीय अधिकारी (SDO) / प्रथम अपीलीय प्राधिकारी (३० दिवस)" : "First Appellate Officer / Sub-Divisional Officer (30 Days)");
+            const second = step.second_appellate_officer || (isMr ? "जिल्हाधिकारी / महाराष्ट्र राज्य लोकसेवा हक्क आयोग (३० दिवस)" : "Second Appellate Authority / State RTS Commission (30 Days)");
+            const appealUrl = step.appeal_form_url || "https://aaplesarkar.mahaonline.gov.in/en/RTSAppeals";
+
+            if (rtsDesig) rtsDesig.innerText = desig;
+            if (rtsFirst) rtsFirst.innerText = first;
+            if (rtsSecond) rtsSecond.innerText = second;
+            if (rtsBtn) rtsBtn.href = appealUrl;
+        }
+
         // Anti-Tout Sovereign Payment Notice
         const paymentChan = document.getElementById('dossier-payment-channel');
         const antiToutText = document.getElementById('dossier-anti-tout-text');
@@ -1276,22 +1494,33 @@ class CivicApp {
         if (formsContainer) {
             const forms = step.forms || [];
             if (formsCount) formsCount.innerText = isMr ? `${forms.length} विहित नमुने` : `${forms.length} Prescribed Instruments`;
-            formsContainer.innerHTML = forms.map(f => `
-                <div class="py-3 first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                    <div class="space-y-0.5 max-w-xl">
-                        <div class="flex items-center gap-2">
-                            <span class="font-code text-xs font-semibold bg-surface-container px-2 py-0.5 border border-outline-variant text-primary">${f.form_code}</span>
-                            <h3 class="font-headline text-sm font-semibold text-primary">${f.title}</h3>
-                        </div>
-                        <p class="font-body text-xs text-on-surface-variant leading-relaxed">${isMr ? 'शासकीय व महानगरपालिका नियमांनुसार अर्जासाठी आवश्यक अधिकृत विहित नमुना.' : 'Official administrative instrument required for filing under municipal procedure code.'}</p>
-                        <div class="font-code text-[11px] text-secondary">${isMr ? 'अधिकृत स्वरूप: डिजिटल ई-फाइलिंग किंवा पीडीएफ दस्तऐवज' : 'Authorized Format: Digital E-Filing or PDF Document'}</div>
-                    </div>
-                    <a class="inline-flex items-center justify-center gap-1.5 bg-surface-container-lowest text-primary border border-outline hover:bg-surface-container-low px-4 py-2 font-headline text-xs font-semibold transition-colors shrink-0" href="${f.download_url || f.fill_online_url || '#'}" target="_blank">
-                        <span class="material-symbols-outlined text-[16px]">download</span>
-                        <span>${isMr ? `अधिकृत नमुना (${f.download_url ? 'PDF डाउनलोड' : 'ई-पोर्टल'})` : `Official Instrument (${f.download_url ? 'PDF' : 'E-Portal'})`}</span>
+            formsContainer.innerHTML = forms.map(f => {
+                const offlineBtn = f.offline_fallback_url ? `
+                    <a class="inline-flex items-center justify-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-300 hover:bg-emerald-100 px-3 py-2 font-headline text-xs font-semibold transition-colors shrink-0" href="${f.offline_fallback_url}" download>
+                        <span class="material-symbols-outlined text-[15px]">file_download</span>
+                        <span>${isMr ? 'ऑफलाईन फॉर्म PDF ⬇' : 'Download Offline Form PDF ⬇'}</span>
                     </a>
-                </div>
-            `).join('') || `<div class="text-xs text-secondary font-headline">${isMr ? 'स्वतंत्र नमुना आवश्यक नाही. थेट स्वयंघोषणापत्रासह अर्ज करा.' : 'No separate form instruments prescribed. Proceed with direct declaration.'}</div>`;
+                ` : '';
+                return `
+                    <div class="py-3 first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div class="space-y-0.5 max-w-xl">
+                            <div class="flex items-center gap-2">
+                                <span class="font-code text-xs font-semibold bg-surface-container px-2 py-0.5 border border-outline-variant text-primary">${f.form_code}</span>
+                                <h3 class="font-headline text-sm font-semibold text-primary">${f.title}</h3>
+                            </div>
+                            <p class="font-body text-xs text-on-surface-variant leading-relaxed">${isMr ? 'शासकीय व महानगरपालिका नियमांनुसार अर्जासाठी आवश्यक अधिकृत विहित नमुना.' : 'Official administrative instrument required for filing under municipal procedure code.'}</p>
+                            <div class="font-code text-[11px] text-secondary">${isMr ? 'अधिकृत स्वरूप: डिजिटल ई-फाइलिंग किंवा पीडीएफ दस्तऐवज' : 'Authorized Format: Digital E-Filing or PDF Document'}</div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0 flex-wrap">
+                            <a class="inline-flex items-center justify-center gap-1.5 bg-surface-container-lowest text-primary border border-outline hover:bg-surface-container-low px-4 py-2 font-headline text-xs font-semibold transition-colors shrink-0" href="${f.download_url || f.fill_online_url || '#'}" target="_blank">
+                                <span class="material-symbols-outlined text-[16px]">download</span>
+                                <span>${isMr ? `अधिकृत नमुना (${f.download_url ? 'PDF' : 'ई-पोर्टल'})` : `Official Instrument (${f.download_url ? 'PDF' : 'E-Portal'})`}</span>
+                            </a>
+                            ${offlineBtn}
+                        </div>
+                    </div>
+                `;
+            }).join('') || `<div class="text-xs text-secondary font-headline">${isMr ? 'स्वतंत्र नमुना आवश्यक नाही. थेट स्वयंघोषणापत्रासह अर्ज करा.' : 'No separate form instruments prescribed. Proceed with direct declaration.'}</div>`;
         }
 
         // Evidence & Required Filings
@@ -1302,6 +1531,34 @@ class CivicApp {
             if (evidenceCount) evidenceCount.innerText = isMr ? `${docs.length} आवश्यक कागदपत्रे` : `${docs.length} Evidence Criteria`;
             evidenceContainer.innerHTML = docs.map(d => {
                 const docName = this.getDocName(d.name);
+
+                if (d.is_alternative_group && d.alternative_options && d.alternative_options.length > 0) {
+                    return `
+                        <div class="p-3.5 bg-amber-50/50 border-2 border-amber-300 rounded flex flex-col gap-2">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-amber-700 text-[18px]">rule</span>
+                                    <span class="font-headline text-xs font-bold text-amber-950">${d.group_name || docName}</span>
+                                </div>
+                                <span class="font-code text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 border border-amber-300 font-bold uppercase">${isMr ? 'कोणताही १ पर्याय' : 'ANY 1 PROOF'}</span>
+                            </div>
+                            <p class="font-body text-xs text-on-surface-variant">${d.description || (isMr ? 'खालीलपैकी कोणताही १ वैध पुरावा सादर करा.' : 'Submit any one of the following valid documents:')}</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                                ${d.alternative_options.map((opt, oIdx) => `
+                                    <label class="flex items-center gap-2 p-2 bg-white border border-outline-variant/60 rounded text-xs cursor-pointer hover:border-primary transition-colors">
+                                        <input type="radio" name="alt-proof-${d.id}" ${oIdx === 0 ? 'checked' : ''} class="text-primary focus:ring-primary cursor-pointer"/>
+                                        <span class="text-primary font-medium">${opt}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                            <div class="text-[11px] text-gray-500 font-code flex items-center justify-between">
+                                <span>${d.file_spec || 'PDF / JPEG under 256 KB'}</span>
+                                <button class="text-xs text-primary underline font-semibold" onclick="alert('${isMr ? 'कागदपत्र निवडले: ' + d.name : 'Document verified: ' + d.name}')">${isMr ? 'तयार ठेवा' : 'Mark Ready'}</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
                 return `
                 <div class="p-3 bg-surface-container-lowest border border-outline-variant flex flex-col md:flex-row items-start justify-between gap-3">
                     <div class="space-y-0.5 max-w-xl">
@@ -2079,6 +2336,15 @@ class CivicApp {
                             <div class="ml-6 p-2 bg-surface-container-low border border-outline-variant text-[11px] font-body text-primary flex items-center gap-1.5">
                                 <span class="material-symbols-outlined text-amber-700 text-[14px]">warning</span>
                                 <span><strong>${isMr ? 'वैधता / स्वरूप नियम:' : 'Validity / Format Rule:'}</strong> ${d.validity_rule}</span>
+                            </div>
+                        ` : ''}
+
+                        ${d.is_alternative_group && d.alternative_options && d.alternative_options.length > 0 ? `
+                            <div class="ml-6 p-2 bg-amber-50/70 border border-amber-300 rounded space-y-1">
+                                <div class="text-[11px] font-bold text-amber-900">${isMr ? 'कोणताही १ पुरावा निवडा (OR Group):' : 'Acceptable Proof Options (Choose Any 1):'}</div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] text-gray-700">
+                                    ${d.alternative_options.map(opt => `<div class="flex items-center gap-1.5 font-headline"><span>🔘</span> <span>${opt}</span></div>`).join('')}
+                                </div>
                             </div>
                         ` : ''}
                     </div>

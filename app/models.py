@@ -32,6 +32,10 @@ class DocumentRequirement(BaseModel):
     validity_rule: Optional[str] = None
     issuing_authority: Optional[str] = None
     sample_template_url: Optional[str] = None
+    is_alternative_group: bool = False
+    group_name: Optional[str] = None # e.g. "Proof of Identity (Any 1)"
+    alternative_options: List[str] = Field(default_factory=list)
+    file_spec: Optional[str] = "PDF / JPEG under 256 KB"
 
 class FormRequirement(BaseModel):
     form_code: str
@@ -39,6 +43,7 @@ class FormRequirement(BaseModel):
     download_url: Optional[str] = None
     fill_online_url: Optional[str] = None
     instructions: Optional[str] = None
+    offline_fallback_url: Optional[str] = None
 
 class DepartmentInfo(BaseModel):
     id: str
@@ -73,6 +78,14 @@ class TaskStep(BaseModel):
     last_gazette_notification: Optional[str] = None
     status: StepStatus = StepStatus.LOCKED
     is_critical_path: bool = False
+    # RTS Act 2015 & Hybrid Submission Enhancements
+    designated_officer: Optional[str] = None
+    designated_officer_sla_days: Optional[int] = None
+    first_appellate_officer: Optional[str] = None
+    second_appellate_officer: Optional[str] = None
+    appeal_form_url: Optional[str] = None
+    is_hybrid_setu: bool = False
+    portal_navigation_guide: Optional[List[str]] = None
 
 class CivicTask(BaseModel):
     id: str
@@ -124,6 +137,10 @@ class ConsolidatedDocument(BaseModel):
     is_mandatory: bool = True
     required_in_step_ids: List[str] = Field(default_factory=list)
     required_in_step_numbers: List[int] = Field(default_factory=list)
+    is_alternative_group: bool = False
+    group_name: Optional[str] = None
+    alternative_options: List[str] = Field(default_factory=list)
+    file_spec: Optional[str] = "PDF / JPEG under 256 KB"
 
 class RoadmapResponse(BaseModel):
     task: CivicTask
