@@ -151,27 +151,29 @@
     .gov-tricolor .green { flex: 1; background-color: #138808; }
 
     .nav-tab-btn {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      padding: 0 1rem;
-      border-bottom: 2px solid transparent;
+      justify-content: center;
+      padding: 0.4rem 0.85rem;
+      border-radius: 0.5rem;
       color: #64748B;
       font-family: 'Inter', sans-serif;
       font-size: 13px;
       font-weight: 500;
+      white-space: nowrap;
       transition: all 0.15s ease;
       cursor: pointer;
       text-decoration: none;
     }
     .nav-tab-btn:hover {
       color: #0F172A;
-      background-color: #F8FAFC;
+      background-color: #F1F5F9;
     }
     .nav-tab-btn.active {
-      border-bottom-color: #0F172A;
       color: #0F172A;
       font-weight: 600;
-      background-color: #F8FAFC;
+      background-color: #F1F5F9;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     }
 
     @media print {
@@ -205,7 +207,10 @@
   <!-- ======================================================================
        HEADER: Institutional Two-Tier Civic Transit Bar
        ====================================================================== -->
-  <header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest border-b border-outline-variant shadow-xs">
+  <!-- ======================================================================
+       HEADER: Civic Precision Clean Navigation Bar
+       ====================================================================== -->
+  <header class="fixed top-0 left-0 right-0 w-full z-50 bg-white border-b border-slate-200/80 shadow-xs">
     
     <!-- Indian National Tricolor Accent Strip -->
     <div class="gov-tricolor">
@@ -214,121 +219,73 @@
       <div class="green"></div>
     </div>
 
-    <!-- Top Municipal Utility & Audit Bar (Height 32px) -->
-    <div class="bg-primary text-on-primary px-margin border-b border-primary-container">
-      <div class="max-w-[1200px] mx-auto h-8 flex items-center justify-between font-label-sm text-label-sm">
-        <div class="flex items-center gap-space-md">
-          <div class="flex items-center gap-space-xs">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
-            <span class="font-code text-code text-primary-fixed">STATUS:</span>
-            <span data-i18n="topbar_status">Ledger Live & Synchronized — Maharashtra RTS Municipal Feeds Active</span>
+    <!-- Main Navigation Bar -->
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo & Jurisdiction Picker -->
+      <div class="flex items-center gap-4 shrink-0">
+        <div class="flex items-center gap-2.5 cursor-pointer" onclick="window.app.switchNavTab('task-lookup')">
+          <div class="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center shadow-xs shrink-0">
+            <span class="material-symbols-outlined text-[20px]">verified</span>
           </div>
-          <span class="text-outline-variant hidden md:inline">|</span>
-          <div class="hidden md:flex items-center gap-space-xs">
-            <span class="text-primary-fixed-dim">FEED LATENCY:</span>
-            <span class="font-code text-code">14ms</span>
+          <div class="flex items-center gap-2">
+            <span class="font-heading font-bold text-slate-900 tracking-tight text-base sm:text-lg whitespace-nowrap" data-i18n="brand_title">Civic Task Navigator</span>
+            <span data-i18n="brand_state" class="bg-amber-50 text-amber-900 border border-amber-200 text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold">MAHARASHTRA</span>
           </div>
         </div>
-        <div class="flex items-center gap-space-lg">
-          <div class="hidden lg:flex items-center gap-space-sm text-primary-fixed-dim">
-            <span class="font-code text-code bg-primary-container px-1.5 py-0.5 border border-on-primary-fixed-variant rounded">/</span>
-            <span>Search</span>
-            <span class="font-code text-code bg-primary-container px-1.5 py-0.5 border border-on-primary-fixed-variant rounded ml-space-xs">ESC</span>
-            <span>Close</span>
-          </div>
-          <span class="text-primary-fixed-dim hidden sm:inline" data-i18n="topbar_helpline">
-            Helpline: <strong class="text-white">1800-120-8040</strong>
-          </span>
-          <span class="bg-amber-400/20 text-amber-300 border border-amber-400/40 text-[10px] px-2 py-0.5 font-bold uppercase rounded-none hidden sm:inline" data-i18n="topbar_antitout">
-            Zero Bribery / Anti-Tout Guarantee
-          </span>
-          <div class="w-5 h-5 rounded-full bg-primary-container border border-on-primary-fixed-variant flex items-center justify-center">
-            <span class="material-symbols-outlined text-primary-fixed text-[14px]">account_balance</span>
+
+        <!-- Active Municipal Jurisdiction Selector -->
+        <div class="hidden 2xl:flex items-center pl-3 border-l border-slate-200">
+          <div class="relative">
+            <select id="select-jurisdiction" class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 py-1 pl-2.5 pr-6 cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-slate-900 max-w-[170px] truncate">
+              <option value="Mumbai (MCGM / BMC)" selected>Brihanmumbai (BMC)</option>
+              <option value="Pune (PMC / PMRDA)">Pune (PMC)</option>
+              <option value="Thane (TMC)">Thane (TMC)</option>
+              <option value="Navi Mumbai (NMMC)">Navi Mumbai (NMMC)</option>
+              <option value="Pimpri Chinchwad (PCMC)">Pimpri Chinchwad (PCMC)</option>
+              <option value="Nagpur (NMC)">Nagpur (NMC)</option>
+              <option value="Nashik (NMC)">Nashik (NMC)</option>
+              <option value="Maharashtra Statewide (Aaple Sarkar RTS)">Aaple Sarkar Statewide</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-1.5 top-1.5 text-[14px] text-slate-400 pointer-events-none">unfold_more</span>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Main Navigation Bar (Height 80px) -->
-    <div class="h-20 bg-surface-container-lowest">
-      <div class="max-w-[1200px] mx-auto h-20 px-margin flex items-center justify-between">
-        
-        <!-- Brand Logo & Jurisdiction Picker -->
-        <div class="flex items-center gap-space-lg">
-          <div class="flex items-center gap-space-md pr-space-lg border-r border-outline-variant cursor-pointer" onclick="window.app.switchNavTab('task-lookup')">
-            <div class="w-11 h-11 bg-primary text-on-primary flex items-center justify-center border border-primary shadow-xs">
-              <span class="material-symbols-outlined text-[24px]">verified</span>
-            </div>
-            <div>
-              <div class="font-headline-sm text-headline-sm text-primary uppercase tracking-tight font-bold flex items-center gap-1.5">
-                <span data-i18n="brand_title">Civic Task Navigator</span>
-                <span data-i18n="brand_state" class="bg-amber-100 text-amber-900 border border-amber-300 text-[10px] px-1.5 py-0.2 font-bold font-code">MAHARASHTRA</span>
-              </div>
-              <div data-i18n="brand_sub" class="font-label-sm text-label-sm text-secondary">
-                Public Municipal Utility & Docket System (नागरिक कार्य मार्गदर्शक)
-              </div>
-            </div>
-          </div>
+      <!-- Clean Text-Only Navigation Tabs (No Icons / No Emojis) -->
+      <nav class="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-1" id="top-nav-tabs">
+        <a class="nav-tab-btn active" data-path="task-lookup" href="#task-lookup">
+          <span data-i18n="find_service">Find Service</span>
+        </a>
+        <a class="nav-tab-btn" data-path="roadmap-and-route" href="#roadmap-and-route">
+          <span data-i18n="step_roadmap">Step Roadmap</span>
+        </a>
+        <a class="nav-tab-btn" data-path="step-dossier" href="#step-dossier">
+          <span data-i18n="step_details">Step Details & Apply</span>
+        </a>
+        <a class="nav-tab-btn" data-path="citizen-ledger" href="#citizen-ledger">
+          <span data-i18n="my_progress">My Progress</span>
+        </a>
+        <a class="nav-tab-btn" data-path="registry-admin" href="#registry-admin">
+          <span data-i18n="admin">Admin</span>
+        </a>
+      </nav>
 
-          <!-- Active Municipal Jurisdiction Selector -->
-          <div class="hidden xl:flex flex-col">
-            <span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Jurisdiction</span>
-            <div class="relative">
-              <select id="select-jurisdiction" class="bg-transparent font-label-md text-label-md text-primary font-semibold appearance-none pr-6 cursor-pointer focus:outline-none">
-                <option value="Mumbai (MCGM / BMC)" selected>Brihanmumbai (BMC) — Mumbai</option>
-                <option value="Pune (PMC / PMRDA)">Pune (PMC) — Pune</option>
-                <option value="Thane (TMC)">Thane (TMC) — Thane</option>
-                <option value="Navi Mumbai (NMMC)">Navi Mumbai (NMMC)</option>
-                <option value="Pimpri Chinchwad (PCMC)">Pimpri Chinchwad (PCMC)</option>
-                <option value="Nagpur (NMC)">Nagpur (NMC)</option>
-                <option value="Nashik (NMC)">Nashik (NMC)</option>
-                <option value="Maharashtra Statewide (Aaple Sarkar RTS)">Aaple Sarkar Statewide</option>
-              </select>
-              <span class="material-symbols-outlined absolute right-0 top-1 text-[16px] text-secondary pointer-events-none">arrow_drop_down</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5 Clean Navigation Tabs -->
-        <nav class="flex items-stretch h-full" id="top-nav-tabs">
-          <a class="nav-tab-btn active" data-path="task-lookup" href="#task-lookup">
-            <span class="material-symbols-outlined text-[18px] mr-1.5">search</span>
-            <span data-i18n="find_service">Task Lookup</span>
-          </a>
-          <a class="nav-tab-btn" data-path="roadmap-and-route" href="#roadmap-and-route">
-            <span class="material-symbols-outlined text-[18px] mr-1.5">alt_route</span>
-            <span data-i18n="step_roadmap">Roadmap & Route</span>
-          </a>
-          <a class="nav-tab-btn" data-path="step-dossier" href="#step-dossier">
-            <span class="material-symbols-outlined text-[18px] mr-1.5">description</span>
-            <span data-i18n="step_details">Step Dossier</span>
-          </a>
-          <a class="nav-tab-btn" data-path="citizen-ledger" href="#citizen-ledger">
-            <span class="material-symbols-outlined text-[18px] mr-1.5">task_alt</span>
-            <span data-i18n="my_progress">Citizen Ledger</span>
-          </a>
-          <a class="nav-tab-btn" data-path="registry-admin" href="#registry-admin">
-            <span class="material-symbols-outlined text-[18px] mr-1.5">admin_panel_settings</span>
-            <span data-i18n="admin">Registry Admin</span>
-          </a>
-        </nav>
-
-        <!-- Right Controls: Language Switcher -->
-        <div class="flex items-center gap-space-sm pl-space-md border-l border-outline-variant">
-          <button id="btn-toggle-lang" onclick="window.app.toggleLanguage()" class="bg-surface-container-low hover:bg-surface-container text-primary font-label-sm text-label-sm px-3 py-1.5 rounded-none font-bold border border-outline-variant flex items-center gap-1.5 transition-colors" title="Switch Language (भाषा बदला)">
-            <span class="material-symbols-outlined text-[15px]">translate</span>
-            <span id="label-lang-toggle">मराठी</span>
-          </button>
-        </div>
-
+      <!-- Right Controls: Language Switcher -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="btn-toggle-lang" onclick="window.app.toggleLanguage()" class="bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-200 flex items-center gap-1.5 transition-colors shadow-2xs" title="Switch Language (भाषा बदला)">
+          <span class="material-symbols-outlined text-[15px]">translate</span>
+          <span id="label-lang-toggle" class="font-semibold">मराठी</span>
+        </button>
       </div>
+
     </div>
   </header>
 
   <!-- ======================================================================
        MAIN CONTENT CONTAINER
        ====================================================================== -->
-  <main class="flex-1 w-full pt-28 pb-16 bg-background" id="main-content">
+  <main class="flex-1 w-full pt-20 pb-16 bg-background" id="main-content">
     <div class="max-w-[1200px] mx-auto px-margin">
 
       <!-- ==================================================================
@@ -448,19 +405,19 @@
                   <div class="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
                     <span class="text-slate-400 font-medium text-[11px] uppercase tracking-wider mr-1" data-i18n="popular_label">Popular:</span>
                     <button type="button" onclick="window.app.fillQuery('I want to register a small business')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      🏪 Small Business Gumasta
+                      Small Business Gumasta
                     </button>
                     <button type="button" onclick="window.app.fillQuery('Commercial Bakery Bandra Mumbai')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      ☕ Bakery / F&B Bandra
+                      Bakery / F&B Bandra
                     </button>
                     <button type="button" onclick="window.app.fillQuery('Apply for Domicile in Haveli Taluka, Pune')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      📜 Domicile / RTS Certificates
+                      Domicile / RTS Certificates
                     </button>
                     <button type="button" onclick="window.app.fillQuery('7/12 extract online digitally signed satbara')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      🌾 7/12 Satbara Mutation
+                      7/12 Satbara Mutation
                     </button>
                     <button type="button" onclick="window.app.fillQuery('PMC Pune peth area property tax assessment and rebate claim')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
-                      🏢 Pune Property Tax
+                      Pune Property Tax
                     </button>
                   </div>
 
