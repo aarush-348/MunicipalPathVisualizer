@@ -838,36 +838,36 @@ class CivicApp {
             const btnLoad = isMr ? 'मार्ग पहा' : 'Load Route';
 
             return `
-                <div class="p-4 hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 ${isActive ? 'bg-amber-50/50 border-l-4 border-amber-600' : ''}" onclick="window.app.loadTaskAndRoute('${t.id}')">
+                <div class="p-4 sm:p-5 hover:bg-slate-50/80 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 last:border-b-0 ${isActive ? 'bg-amber-50/40 border-l-4 border-amber-600' : ''}" onclick="window.app.loadTaskAndRoute('${t.id}')">
                     <div class="flex items-start gap-3">
-                        <div class="w-8 h-8 ${isActive ? 'bg-amber-700 text-white' : 'bg-primary text-on-primary'} flex items-center justify-center font-code text-xs font-bold border border-primary shrink-0">
+                        <div class="w-8 h-8 rounded-lg ${isActive ? 'bg-amber-700 text-white' : 'bg-slate-900 text-white'} flex items-center justify-center font-mono text-xs font-bold shrink-0">
                             ${indexStr}
                         </div>
                         <div>
-                            <div class="font-headline text-sm font-semibold text-primary flex items-center gap-2 flex-wrap">
+                            <div class="font-heading text-sm font-semibold text-slate-900 flex items-center gap-2 flex-wrap">
                                 <span>${taskTitle}</span>
-                                ${isActive ? `<span class="bg-amber-100 text-amber-900 font-label-sm text-[10px] px-1.5 py-0.5 font-bold uppercase border border-amber-300">${activeBadgeText}</span>` : ''}
-                                <span class="bg-surface-container text-secondary font-code text-[10px] px-1.5 py-0.5 border border-outline-variant">${taskMuni}</span>
+                                ${isActive ? `<span class="bg-amber-50 text-amber-900 font-mono text-[10px] px-2 py-0.5 rounded-md font-medium border border-amber-200">${activeBadgeText}</span>` : ''}
+                                <span class="bg-slate-100 text-slate-600 font-mono text-[10px] px-2 py-0.5 rounded-md border border-slate-200">${taskMuni}</span>
                             </div>
-                            <div class="font-body text-xs text-on-surface-variant mt-0.5 max-w-2xl line-clamp-2">
+                            <div class="font-sans text-xs text-slate-600 mt-1 max-w-2xl line-clamp-2">
                                 ${taskDesc}
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center gap-6 shrink-0 text-xs font-headline">
+                    <div class="flex items-center gap-6 shrink-0 text-xs">
                         <div class="text-right hidden sm:block">
-                            <div class="text-secondary text-[11px] uppercase">${colJurisdiction}</div>
-                            <div class="font-code text-primary font-semibold truncate max-w-[180px]">${authorityTags}</div>
+                            <div class="text-slate-400 text-[10px] uppercase font-medium tracking-wider">${colJurisdiction}</div>
+                            <div class="font-mono text-slate-700 font-medium truncate max-w-[180px]">${authorityTags}</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-secondary text-[11px] uppercase">${colSchedule}</div>
-                            <div class="font-code text-primary font-semibold">${daysEst}</div>
+                            <div class="text-slate-400 text-[10px] uppercase font-medium tracking-wider">${colSchedule}</div>
+                            <div class="font-mono text-slate-800 font-semibold">${daysEst}</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-secondary text-[11px] uppercase">${colFees}</div>
-                            <div class="font-code text-primary font-bold">${feesEst}</div>
+                            <div class="text-slate-400 text-[10px] uppercase font-medium tracking-wider">${colFees}</div>
+                            <div class="font-mono text-slate-900 font-bold">${feesEst}</div>
                         </div>
-                        <button class="${isActive ? 'bg-amber-700 text-white' : 'bg-surface-container text-primary hover:bg-primary hover:text-on-primary'} px-3 py-1.5 text-xs font-semibold transition-colors border border-outline-variant shrink-0" onclick="event.stopPropagation(); window.app.loadTaskAndRoute('${t.id}')">
+                        <button class="${isActive ? 'bg-amber-700 text-white' : 'bg-slate-900 hover:bg-slate-800 text-white'} px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors shrink-0 shadow-2xs" onclick="event.stopPropagation(); window.app.loadTaskAndRoute('${t.id}')">
                             ${btnLoad}
                         </button>
                     </div>
@@ -1240,24 +1240,24 @@ class CivicApp {
             let dotBg = '';
             if (isCompleted) {
                 statusBadge = isMr
-                    ? '<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">✓ पूर्ण</span>'
-                    : '<span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-semibold flex items-center gap-1">✓ Completed</span>';
-                dotBg = 'bg-emerald-700 text-white';
+                    ? '<span class="bg-emerald-50 text-emerald-800 border border-emerald-200/60 text-xs px-2.5 py-1 rounded-md font-mono font-medium flex items-center gap-1">✓ पूर्ण</span>'
+                    : '<span class="bg-emerald-50 text-emerald-800 border border-emerald-200/60 text-xs px-2.5 py-1 rounded-md font-mono font-medium flex items-center gap-1">✓ Completed</span>';
+                dotBg = 'bg-emerald-600 text-white';
             } else if (!prereqsMet) {
                 statusBadge = isMr
-                    ? '<span class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full font-medium">मागील टप्प्यांची प्रतीक्षा</span>'
-                    : '<span class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full font-medium">Waiting on Prerequisite</span>';
-                dotBg = 'bg-slate-300 text-slate-700';
+                    ? '<span class="bg-slate-100 text-slate-600 border border-slate-200 text-xs px-2.5 py-1 rounded-md font-mono font-medium">मागील टप्प्यांची प्रतीक्षा</span>'
+                    : '<span class="bg-slate-100 text-slate-600 border border-slate-200 text-xs px-2.5 py-1 rounded-md font-mono font-medium">Waiting on Prerequisite</span>';
+                dotBg = 'bg-slate-200 text-slate-600';
             } else if (isSelected) {
                 statusBadge = isMr
-                    ? '<span class="bg-amber-100 text-amber-900 text-xs px-2.5 py-1 rounded-full font-semibold">● अर्ज करण्यास सज्ज</span>'
-                    : '<span class="bg-amber-100 text-amber-900 text-xs px-2.5 py-1 rounded-full font-semibold">● Ready to Apply</span>';
-                dotBg = 'bg-amber-500 text-white';
+                    ? '<span class="bg-amber-50 text-amber-900 border border-amber-200/60 text-xs px-2.5 py-1 rounded-md font-mono font-medium">● अर्ज करण्यास सज्ज</span>'
+                    : '<span class="bg-amber-50 text-amber-900 border border-amber-200/60 text-xs px-2.5 py-1 rounded-md font-mono font-medium">● Ready to Apply</span>';
+                dotBg = 'bg-amber-600 text-white';
             } else {
                 statusBadge = isMr
-                    ? '<span class="bg-blue-50 text-blue-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-blue-200">सुरू करण्यास सज्ज</span>'
-                    : '<span class="bg-blue-50 text-blue-800 text-xs px-2.5 py-1 rounded-full font-semibold border border-blue-200">Ready to Start</span>';
-                dotBg = 'bg-primary text-white';
+                    ? '<span class="bg-slate-50 text-slate-800 border border-slate-200 text-xs px-2.5 py-1 rounded-md font-mono font-medium">सुरू करण्यास सज्ज</span>'
+                    : '<span class="bg-slate-50 text-slate-800 border border-slate-200 text-xs px-2.5 py-1 rounded-md font-mono font-medium">Ready to Start</span>';
+                dotBg = 'bg-slate-900 text-white';
             }
 
             const feeText = s.fee_amount > 0 ? this.formatINR(s.fee_amount) : (isMr ? 'विनामूल्य / शून्य शुल्क' : 'Free / Nil');
@@ -1268,36 +1268,36 @@ class CivicApp {
             const btnDoneText = isCompleted ? (isMr ? 'पूर्ण झाले' : 'Completed') : (isMr ? 'झाले म्हणून खूण करा' : 'Mark Done');
 
             return `
-                <div class="bg-surface-container-lowest border ${isSelected ? 'border-amber-500 ring-2 ring-amber-400/20' : 'border-outline-variant'} rounded-md p-5 shadow-sm hover:shadow transition-all" id="step-card-${s.id}">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+                <div class="bg-white border ${isSelected ? 'border-amber-500 ring-2 ring-amber-400/20 shadow-md' : 'border-slate-200/80'} rounded-xl p-5 shadow-sm hover:shadow-md transition-all" id="step-card-${s.id}">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
                         <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full ${dotBg} flex items-center justify-center font-code text-xs font-bold shrink-0">
+                            <span class="w-8 h-8 rounded-lg ${dotBg} flex items-center justify-center font-mono text-xs font-bold shrink-0">
                                 ${isCompleted ? '✓' : idx + 1}
                             </span>
                             <div>
-                                <h3 class="font-headline text-base font-semibold text-primary cursor-pointer hover:text-amber-800" onclick="window.app.selectStation('${s.id}')">${stepTitle}</h3>
-                                <p class="font-headline text-xs text-secondary">${deptName} • ${s.department.jurisdiction || this.currentTask.municipality}</p>
+                                <h3 class="font-heading text-base font-semibold text-slate-900 cursor-pointer hover:text-amber-800" onclick="window.app.selectStation('${s.id}')">${stepTitle}</h3>
+                                <p class="font-sans text-xs text-slate-500">${deptName} • ${s.department.jurisdiction || this.currentTask.municipality}</p>
                             </div>
                         </div>
                         <div class="self-start sm:self-auto">${statusBadge}</div>
                     </div>
 
-                    <p class="font-body text-xs text-on-surface-variant mt-3 leading-relaxed">${stepDesc}</p>
+                    <p class="font-sans text-xs text-slate-600 mt-3 leading-relaxed">${stepDesc}</p>
 
-                    <div class="mt-4 pt-3 border-t border-outline-variant/30 flex flex-wrap items-center justify-between gap-3 text-xs">
-                        <div class="flex items-center gap-4 text-secondary font-headline">
+                    <div class="mt-4 pt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+                        <div class="flex items-center gap-4 text-slate-500 font-sans">
                             <span>⏱️ <strong>${slaText}</strong></span>
                             <span>💰 <strong>${feeText}</strong></span>
                             <span>📄 <strong>${docText}</strong></span>
-                            ${s.is_critical_path ? `<span class="text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${criticalPathText}</span>` : ''}
+                            ${s.is_critical_path ? `<span class="text-amber-800 font-medium bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${criticalPathText}</span>` : ''}
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <button onclick="window.app.selectStation('${s.id}'); window.app.switchNavTab('step-dossier');" class="bg-surface-container hover:bg-surface-container-high text-primary font-headline text-xs font-semibold px-3 py-1.5 rounded transition-colors flex items-center gap-1 border border-outline-variant">
+                            <button onclick="window.app.selectStation('${s.id}'); window.app.switchNavTab('step-dossier');" class="bg-white hover:bg-slate-50 text-slate-700 font-sans text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 border border-slate-200 shadow-2xs">
                                 <span>${btnDetailsText}</span>
                                 <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
                             </button>
-                            <button onclick="window.app.toggleStepComplete('${s.id}')" class="${isCompleted ? 'bg-emerald-700 hover:bg-emerald-800 text-white' : 'bg-primary hover:bg-primary-container text-white'} font-headline text-xs font-semibold px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-xs">
+                            <button onclick="window.app.toggleStepComplete('${s.id}')" class="${isCompleted ? 'bg-emerald-700 hover:bg-emerald-800 text-white' : 'bg-slate-900 hover:bg-slate-800 text-white'} font-sans text-xs font-medium px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm">
                                 <span class="material-symbols-outlined text-[14px]">${isCompleted ? 'check' : 'check_circle'}</span>
                                 <span>${btnDoneText}</span>
                             </button>
@@ -1469,17 +1469,17 @@ class CivicApp {
                     const badgeLabel = isMr ? (isPrereqDone ? 'पूर्ण' : 'प्रलंबित') : (isPrereqDone ? 'Cleared' : 'Pending');
                     const subLabel = isMr ? 'मागील टप्पा पूर्तता' : 'Prerequisite Clearance';
                     return `
-                        <div class="bg-surface-container-lowest p-3 border border-outline-variant flex items-center justify-between">
+                        <div class="bg-white rounded-lg p-3 border border-slate-200/80 flex items-center justify-between">
                             <div class="flex items-center gap-2.5">
-                                <span class="w-5 h-5 rounded-full ${isPrereqDone ? 'bg-emerald-800 text-white' : 'bg-surface-container text-secondary'} flex items-center justify-center font-code text-[11px] font-bold">
+                                <span class="w-5 h-5 rounded-full ${isPrereqDone ? 'bg-emerald-700 text-white' : 'bg-slate-100 text-slate-500'} flex items-center justify-center font-mono text-[11px] font-bold">
                                     ${isPrereqDone ? '✓' : '•'}
                                 </span>
                                 <div>
-                                    <div class="font-headline text-xs font-semibold text-primary">${pTitle}</div>
-                                    <div class="font-code text-[10px] text-secondary">${subLabel}</div>
+                                    <div class="font-heading text-xs font-semibold text-slate-900">${pTitle}</div>
+                                    <div class="font-mono text-[10px] text-slate-500">${subLabel}</div>
                                 </div>
                             </div>
-                            <span class="font-headline text-[10px] ${isPrereqDone ? 'bg-emerald-100 text-emerald-900 border border-emerald-300' : 'bg-amber-50 text-amber-900 border border-amber-300'} px-2 py-0.5 font-semibold">
+                            <span class="font-mono text-[10px] ${isPrereqDone ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/60' : 'bg-amber-50 text-amber-900 border border-amber-200/60'} px-2 py-0.5 rounded-md font-medium">
                                 ${badgeLabel}
                             </span>
                         </div>
@@ -1496,23 +1496,23 @@ class CivicApp {
             if (formsCount) formsCount.innerText = isMr ? `${forms.length} विहित नमुने` : `${forms.length} Prescribed Instruments`;
             formsContainer.innerHTML = forms.map(f => {
                 const offlineBtn = f.offline_fallback_url ? `
-                    <a class="inline-flex items-center justify-center gap-1.5 bg-emerald-50 text-emerald-900 border border-emerald-300 hover:bg-emerald-100 px-3 py-2 font-headline text-xs font-semibold transition-colors shrink-0" href="${f.offline_fallback_url}" download>
+                    <a class="inline-flex items-center justify-center gap-1.5 bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 px-3.5 py-2 rounded-lg font-sans text-xs font-medium transition-colors shrink-0 shadow-2xs" href="${f.offline_fallback_url}" download>
                         <span class="material-symbols-outlined text-[15px]">file_download</span>
                         <span>${isMr ? 'ऑफलाईन फॉर्म PDF ⬇' : 'Download Offline Form PDF ⬇'}</span>
                     </a>
                 ` : '';
                 return `
-                    <div class="py-3 first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                        <div class="space-y-0.5 max-w-xl">
+                    <div class="py-3.5 first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div class="space-y-1 max-w-xl">
                             <div class="flex items-center gap-2">
-                                <span class="font-code text-xs font-semibold bg-surface-container px-2 py-0.5 border border-outline-variant text-primary">${f.form_code}</span>
-                                <h3 class="font-headline text-sm font-semibold text-primary">${f.title}</h3>
+                                <span class="font-mono text-xs font-medium bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">${f.form_code}</span>
+                                <h3 class="font-heading text-sm font-semibold text-slate-900">${f.title}</h3>
                             </div>
-                            <p class="font-body text-xs text-on-surface-variant leading-relaxed">${isMr ? 'शासकीय व महानगरपालिका नियमांनुसार अर्जासाठी आवश्यक अधिकृत विहित नमुना.' : 'Official administrative instrument required for filing under municipal procedure code.'}</p>
-                            <div class="font-code text-[11px] text-secondary">${isMr ? 'अधिकृत स्वरूप: डिजिटल ई-फाइलिंग किंवा पीडीएफ दस्तऐवज' : 'Authorized Format: Digital E-Filing or PDF Document'}</div>
+                            <p class="font-sans text-xs text-slate-600 leading-relaxed">${isMr ? 'शासकीय व महानगरपालिका नियमांनुसार अर्जासाठी आवश्यक अधिकृत विहित नमुना.' : 'Official administrative instrument required for filing under municipal procedure code.'}</p>
+                            <div class="font-mono text-[11px] text-slate-500">${isMr ? 'अधिकृत स्वरूप: डिजिटल ई-फाइलिंग किंवा पीडीएफ दस्तऐवज' : 'Authorized Format: Digital E-Filing or PDF Document'}</div>
                         </div>
                         <div class="flex items-center gap-2 shrink-0 flex-wrap">
-                            <a class="inline-flex items-center justify-center gap-1.5 bg-surface-container-lowest text-primary border border-outline hover:bg-surface-container-low px-4 py-2 font-headline text-xs font-semibold transition-colors shrink-0" href="${f.download_url || f.fill_online_url || '#'}" target="_blank">
+                            <a class="inline-flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg px-4 py-2 font-sans text-xs font-medium transition-colors shrink-0 shadow-2xs" href="${f.download_url || f.fill_online_url || '#'}" target="_blank">
                                 <span class="material-symbols-outlined text-[16px]">download</span>
                                 <span>${isMr ? `अधिकृत नमुना (${f.download_url ? 'PDF' : 'ई-पोर्टल'})` : `Official Instrument (${f.download_url ? 'PDF' : 'E-Portal'})`}</span>
                             </a>
@@ -1520,7 +1520,7 @@ class CivicApp {
                         </div>
                     </div>
                 `;
-            }).join('') || `<div class="text-xs text-secondary font-headline">${isMr ? 'स्वतंत्र नमुना आवश्यक नाही. थेट स्वयंघोषणापत्रासह अर्ज करा.' : 'No separate form instruments prescribed. Proceed with direct declaration.'}</div>`;
+            }).join('') || `<div class="text-xs text-slate-500 font-sans">${isMr ? 'स्वतंत्र नमुना आवश्यक नाही. थेट स्वयंघोषणापत्रासह अर्ज करा.' : 'No separate form instruments prescribed. Proceed with direct declaration.'}</div>`;
         }
 
         // Evidence & Required Filings
@@ -1534,48 +1534,48 @@ class CivicApp {
 
                 if (d.is_alternative_group && d.alternative_options && d.alternative_options.length > 0) {
                     return `
-                        <div class="p-3.5 bg-amber-50/50 border-2 border-amber-300 rounded flex flex-col gap-2">
+                        <div class="p-4 bg-amber-50/70 border border-amber-200 rounded-xl flex flex-col gap-2.5">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">
                                     <span class="material-symbols-outlined text-amber-700 text-[18px]">rule</span>
-                                    <span class="font-headline text-xs font-bold text-amber-950">${d.group_name || docName}</span>
+                                    <span class="font-heading text-xs font-semibold text-amber-950">${d.group_name || docName}</span>
                                 </div>
-                                <span class="font-code text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 border border-amber-300 font-bold uppercase">${isMr ? 'कोणताही १ पर्याय' : 'ANY 1 PROOF'}</span>
+                                <span class="font-mono text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded border border-amber-300 font-medium uppercase">${isMr ? 'कोणताही १ पर्याय' : 'ANY 1 PROOF'}</span>
                             </div>
-                            <p class="font-body text-xs text-on-surface-variant">${d.description || (isMr ? 'खालीलपैकी कोणताही १ वैध पुरावा सादर करा.' : 'Submit any one of the following valid documents:')}</p>
+                            <p class="font-sans text-xs text-amber-900/80">${d.description || (isMr ? 'खालीलपैकी कोणताही १ वैध पुरावा सादर करा.' : 'Submit any one of the following valid documents:')}</p>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                                 ${d.alternative_options.map((opt, oIdx) => `
-                                    <label class="flex items-center gap-2 p-2 bg-white border border-outline-variant/60 rounded text-xs cursor-pointer hover:border-primary transition-colors">
-                                        <input type="radio" name="alt-proof-${d.id}" ${oIdx === 0 ? 'checked' : ''} class="text-primary focus:ring-primary cursor-pointer"/>
-                                        <span class="text-primary font-medium">${opt}</span>
+                                    <label class="flex items-center gap-2 p-2.5 bg-white border border-slate-200 rounded-lg text-xs cursor-pointer hover:border-slate-400 transition-colors shadow-2xs">
+                                        <input type="radio" name="alt-proof-${d.id}" ${oIdx === 0 ? 'checked' : ''} class="text-slate-900 focus:ring-slate-900 cursor-pointer"/>
+                                        <span class="text-slate-800 font-medium">${opt}</span>
                                     </label>
                                 `).join('')}
                             </div>
-                            <div class="text-[11px] text-gray-500 font-code flex items-center justify-between">
+                            <div class="text-[11px] text-slate-500 font-mono flex items-center justify-between pt-1">
                                 <span>${d.file_spec || 'PDF / JPEG under 256 KB'}</span>
-                                <button class="text-xs text-primary underline font-semibold" onclick="alert('${isMr ? 'कागदपत्र निवडले: ' + d.name : 'Document verified: ' + d.name}')">${isMr ? 'तयार ठेवा' : 'Mark Ready'}</button>
+                                <button class="text-xs text-slate-900 underline font-semibold hover:text-amber-800" onclick="alert('${isMr ? 'कागदपत्र निवडले: ' + d.name : 'Document verified: ' + d.name}')">${isMr ? 'तयार ठेवा' : 'Mark Ready'}</button>
                             </div>
                         </div>
                     `;
                 }
 
                 return `
-                <div class="p-3 bg-surface-container-lowest border border-outline-variant flex flex-col md:flex-row items-start justify-between gap-3">
+                <div class="p-3.5 bg-white border border-slate-200/80 rounded-xl flex flex-col md:flex-row items-start justify-between gap-3 shadow-2xs">
                     <div class="space-y-0.5 max-w-xl">
                         <div class="flex items-center gap-2">
-                            <span class="material-symbols-outlined text-amber-700 text-[18px]">pending</span>
-                            <span class="font-headline text-sm font-semibold text-primary">${docName}</span>
+                            <span class="material-symbols-outlined text-slate-600 text-[18px]">pending</span>
+                            <span class="font-heading text-sm font-semibold text-slate-900">${docName}</span>
                         </div>
-                        <p class="font-body text-xs text-on-surface-variant leading-relaxed">${d.description || (isMr ? 'तपासणीसाठी आवश्यक वैधानिक पुरावा.' : 'Statutory proof required by inspection window.')}</p>
-                        <div class="font-code text-[11px] text-outline">${isMr ? 'निकष: स्वाक्षरी केलेले व डिजिटल स्वरूपात प्रमाणित असणे आवश्यक' : 'CRITERIA: Must be authenticated and digitally verified'}</div>
+                        <p class="font-sans text-xs text-slate-600 leading-relaxed">${d.description || (isMr ? 'तपासणीसाठी आवश्यक वैधानिक पुरावा.' : 'Statutory proof required by inspection window.')}</p>
+                        <div class="font-mono text-[11px] text-slate-400">${isMr ? 'निकष: स्वाक्षरी केलेले व डिजिटल स्वरूपात प्रमाणित असणे आवश्यक' : 'CRITERIA: Must be authenticated and digitally verified'}</div>
                     </div>
                     <div class="shrink-0 flex flex-col items-start md:items-end gap-1">
-                        <span class="font-headline text-[10px] bg-amber-50 text-amber-900 border border-amber-300 px-2 py-0.5 font-semibold">${isMr ? (d.is_mandatory ? 'अनिवार्य' : 'ऐच्छिक') : (d.is_mandatory ? 'Mandatory' : 'Optional')}</span>
-                        <button class="font-headline text-xs text-primary underline hover:text-secondary font-medium mt-1" onclick="alert('${isMr ? 'कागदपत्र यादी अद्ययावत केली: ' + docName : 'Document checklist updated for: ' + docName}')">${isMr ? 'तयार ठेवा' : 'Upload / Verify'}</button>
+                        <span class="font-mono text-[10px] ${d.is_mandatory ? 'bg-amber-50 text-amber-900 border border-amber-200/60' : 'bg-slate-100 text-slate-600 border border-slate-200'} px-2 py-0.5 rounded-md font-medium">${isMr ? (d.is_mandatory ? 'अनिवार्य' : 'ऐच्छिक') : (d.is_mandatory ? 'Mandatory' : 'Optional')}</span>
+                        <button class="font-sans text-xs text-slate-900 underline hover:text-amber-800 font-medium mt-1" onclick="alert('${isMr ? 'कागदपत्र यादी अद्ययावत केली: ' + docName : 'Document checklist updated for: ' + docName}')">${isMr ? 'तयार ठेवा' : 'Upload / Verify'}</button>
                     </div>
                 </div>
             `;
-            }).join('') || `<div class="text-xs text-secondary font-headline">${isMr ? 'या टप्प्यासाठी अतिरिक्त कागदपत्रांची आवश्यकता नाही.' : 'No additional document filings mandated for this step.'}</div>`;
+            }).join('') || `<div class="text-xs text-slate-500 font-sans">${isMr ? 'या टप्प्यासाठी अतिरिक्त कागदपत्रांची आवश्यकता नाही.' : 'No additional document filings mandated for this step.'}</div>`;
         }
 
         // Fee Breakdown Table (in INR ₹)
@@ -1914,19 +1914,19 @@ class CivicApp {
                 const btnDetails = isMr ? 'तपशील' : 'Details';
 
                 return `
-                    <div class="p-3.5 border border-outline-variant rounded-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${isDone ? 'bg-emerald-50/30' : 'bg-surface-container-lowest'}">
+                    <div class="p-3.5 border border-slate-200/80 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${isDone ? 'bg-emerald-50/20' : 'bg-white shadow-2xs'}">
                         <div class="flex items-start gap-3">
-                            <input type="checkbox" ${isDone ? 'checked' : ''} onchange="window.app.toggleStepComplete('${s.id}')" class="mt-1 w-4 h-4 text-emerald-700 rounded border-outline focus:ring-emerald-600 cursor-pointer">
+                            <input type="checkbox" ${isDone ? 'checked' : ''} onchange="window.app.toggleStepComplete('${s.id}')" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
                             <div>
-                                <div class="font-headline text-xs font-semibold text-primary flex items-center gap-2">
-                                    <span class="${isDone ? 'line-through text-gray-500' : ''}">${idx + 1}. ${stepTitle}</span>
+                                <div class="font-heading text-xs font-semibold text-slate-900 flex items-center gap-2">
+                                    <span class="${isDone ? 'line-through text-slate-400' : ''}">${idx + 1}. ${stepTitle}</span>
                                 </div>
-                                <div class="font-body text-[11px] text-secondary mt-0.5">${deptName} • ⏱️ ${slaText} • 💰 ${feeText}</div>
+                                <div class="font-sans text-[11px] text-slate-500 mt-0.5">${deptName} • ⏱️ ${slaText} • 💰 ${feeText}</div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
                             ${statusBadge}
-                            <button onclick="window.app.selectStation('${s.id}'); window.app.switchNavTab('step-dossier');" class="bg-surface-container hover:bg-surface-container-high text-primary px-2.5 py-1 rounded text-[11px] font-semibold font-headline border border-outline-variant">
+                            <button onclick="window.app.selectStation('${s.id}'); window.app.switchNavTab('step-dossier');" class="bg-white hover:bg-slate-50 text-slate-700 px-2.5 py-1 rounded-lg text-xs font-medium font-sans border border-slate-200 shadow-2xs">
                                 ${btnDetails} ↗
                             </button>
                         </div>
@@ -1940,24 +1940,24 @@ class CivicApp {
         if (docsContainer) {
             const allDocs = (this.currentRoadmap && this.currentRoadmap.consolidated_documents) || [];
             if (allDocs.length === 0) {
-                docsContainer.innerHTML = `<div class="p-4 text-xs text-secondary font-headline">${isMr ? 'या प्रक्रियेसाठी अतिरिक्त कागदपत्रे आवश्यक नाहीत.' : 'No statutory documents required for this procedure.'}</div>`;
+                docsContainer.innerHTML = `<div class="p-4 text-xs text-slate-500 font-sans">${isMr ? 'या प्रक्रियेसाठी अतिरिक्त कागदपत्रे आवश्यक नाहीत.' : 'No statutory documents required for this procedure.'}</div>`;
             } else {
                 docsContainer.innerHTML = allDocs.map(d => {
                     const isReady = this.checkedDocIds.has(d.name);
                     const docName = this.getDocName(d.name);
                     const safeName = d.name.replace(/'/g, "\\'");
                     const badge = isReady
-                        ? `<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-semibold font-headline">${isMr ? '✓ तयार' : '✓ In File'}</span>`
-                        : `<span class="bg-amber-100 text-amber-900 text-[10px] px-2 py-0.5 rounded font-semibold font-headline">${isMr ? 'गहाळ' : 'Missing'}</span>`;
+                        ? `<span class="bg-emerald-50 text-emerald-800 border border-emerald-200/60 text-[10px] px-2 py-0.5 rounded-md font-mono font-medium">${isMr ? '✓ तयार' : '✓ In File'}</span>`
+                        : `<span class="bg-amber-50 text-amber-900 border border-amber-200/60 text-[10px] px-2 py-0.5 rounded-md font-mono font-medium">${isMr ? 'गहाळ' : 'Missing'}</span>`;
                     const mandatoryLabel = d.is_mandatory ? (isMr ? 'अनिवार्य' : 'Mandatory') : (isMr ? 'ऐच्छिक' : 'Optional');
 
                     return `
-                        <div class="p-3 border border-outline-variant rounded-md flex items-center justify-between gap-3 ${isReady ? 'bg-emerald-50/20' : 'bg-surface-container-lowest'}">
+                        <div class="p-3 border border-slate-200/80 rounded-xl flex items-center justify-between gap-3 ${isReady ? 'bg-emerald-50/20' : 'bg-white shadow-2xs'}">
                             <label class="flex items-start gap-2.5 cursor-pointer flex-1">
-                                <input type="checkbox" ${isReady ? 'checked' : ''} onchange="window.app.toggleDocumentReady('${safeName}')" class="mt-1 w-4 h-4 text-emerald-700 rounded border-outline focus:ring-emerald-600">
+                                <input type="checkbox" ${isReady ? 'checked' : ''} onchange="window.app.toggleDocumentReady('${safeName}')" class="mt-0.5 w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
                                 <div>
-                                    <div class="font-headline text-xs font-semibold text-primary ${isReady ? 'line-through text-gray-500' : ''}">${docName}</div>
-                                    <div class="font-code text-[10px] text-secondary mt-0.5">${mandatoryLabel} • ${d.category || 'General'}</div>
+                                    <div class="font-heading text-xs font-semibold text-slate-900 ${isReady ? 'line-through text-slate-400' : ''}">${docName}</div>
+                                    <div class="font-mono text-[10px] text-slate-500 mt-0.5">${mandatoryLabel} • ${d.category || 'General'}</div>
                                 </div>
                             </label>
                             <div class="shrink-0">${badge}</div>

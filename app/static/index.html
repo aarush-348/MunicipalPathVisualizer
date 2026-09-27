@@ -7,10 +7,10 @@
   <title>Civic Task Navigator | Government of Maharashtra Citizen Services Guide</title>
   <meta name="description" content="Grounded in Civic Functionalism & Municipal Ledger discipline. Deterministic administrative pathways under Maharashtra Right to Public Services Act (RTS 2015)."/>
   
-  <!-- Fonts: IBM Plex Sans, Source Serif 4, JetBrains Mono, Material Symbols Outlined -->
+  <!-- Fonts: Inter (Body & UI), IBM Plex Sans (Headings), JetBrains Mono (Code/Metrics), Material Symbols Outlined -->
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
 
   <!-- Tailwind CSS CDN -->
@@ -21,54 +21,68 @@
       theme: {
         extend: {
           colors: {
-            "primary": "#000b21",
-            "primary-container": "#152238",
+            brand: {
+              50: '#F8FAFC',
+              100: '#F1F5F9',
+              200: '#E2E8F0',
+              300: '#CBD5E1',
+              400: '#94A3B8',
+              500: '#64748B',
+              600: '#475569',
+              700: '#334155',
+              800: '#1E293B',
+              900: '#0F172A',
+              950: '#020617',
+            },
+            "primary": "#0F172A",
+            "primary-container": "#1E293B",
             "on-primary": "#ffffff",
-            "primary-fixed": "#d7e3ff",
-            "primary-fixed-dim": "#bac7e4",
-            "on-primary-fixed": "#0e1c31",
-            "on-primary-fixed-variant": "#3a475f",
-            "on-primary-container": "#7d89a4",
-            "secondary": "#51606f",
+            "primary-fixed": "#E2E8F0",
+            "primary-fixed-dim": "#94A3B8",
+            "on-primary-fixed": "#0F172A",
+            "on-primary-fixed-variant": "#334155",
+            "on-primary-container": "#CBD5E1",
+            "secondary": "#64748B",
             "on-secondary": "#ffffff",
-            "secondary-container": "#d2e1f3",
-            "on-secondary-container": "#556473",
-            "secondary-fixed": "#d5e4f6",
-            "secondary-fixed-dim": "#b9c8d9",
-            "tertiary": "#d9a441",
+            "secondary-container": "#F1F5F9",
+            "on-secondary-container": "#334155",
+            "secondary-fixed": "#F1F5F9",
+            "secondary-fixed-dim": "#CBD5E1",
+            "tertiary": "#B45309",
             "on-tertiary": "#ffffff",
-            "tertiary-container": "#301f00",
-            "on-tertiary-container": "#b1811f",
-            "tertiary-fixed": "#ffdeaa",
-            "tertiary-fixed-dim": "#f5bd58",
-            "background": "#f9faf8",
-            "on-background": "#191c1b",
-            "surface": "#f9faf8",
-            "on-surface": "#191c1b",
-            "surface-container-lowest": "#ffffff",
-            "surface-container-low": "#f3f4f2",
-            "surface-container": "#edeeec",
-            "surface-container-high": "#e7e8e6",
-            "surface-container-highest": "#e2e3e1",
-            "surface-dim": "#d9dad8",
-            "surface-bright": "#f9faf8",
-            "surface-variant": "#e2e3e1",
-            "on-surface-variant": "#44474d",
-            "outline": "#75777e",
-            "outline-variant": "#c5c6cd",
-            "error": "#ba1a1a",
+            "tertiary-container": "#FEF3C7",
+            "on-tertiary-container": "#92400E",
+            "tertiary-fixed": "#FEF3C7",
+            "tertiary-fixed-dim": "#FDE68A",
+            "background": "#FAFAFA",
+            "on-background": "#0F172A",
+            "surface": "#FFFFFF",
+            "on-surface": "#0F172A",
+            "surface-container-lowest": "#FFFFFF",
+            "surface-container-low": "#F8FAFC",
+            "surface-container": "#F1F5F9",
+            "surface-container-high": "#E2E8F0",
+            "surface-container-highest": "#CBD5E1",
+            "surface-dim": "#F1F5F9",
+            "surface-bright": "#FFFFFF",
+            "surface-variant": "#F1F5F9",
+            "on-surface-variant": "#475569",
+            "outline": "#94A3B8",
+            "outline-variant": "#E2E8F0",
+            "error": "#DC2626",
             "on-error": "#ffffff",
-            "error-container": "#ffdad6",
-            "on-error-container": "#93000a",
-            "verified-green": "#2f6848",
-            "blocker-crimson": "#ba1a1a"
+            "error-container": "#FEF2F2",
+            "on-error-container": "#991B1B",
+            "verified-green": "#059669",
+            "blocker-crimson": "#DC2626"
           },
           borderRadius: {
-            "DEFAULT": "0.125rem",
-            "sm": "0.125rem",
-            "md": "0.25rem",
-            "lg": "0.25rem",
-            "xl": "0.5rem",
+            "DEFAULT": "0.375rem",
+            "sm": "0.25rem",
+            "md": "0.375rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
             "full": "9999px"
           },
           spacing: {
@@ -83,31 +97,34 @@
             "gutter-mobile": "1rem"
           },
           fontFamily: {
+            sans: ["'Inter'", "sans-serif"],
+            heading: ["'IBM Plex Sans'", "sans-serif"],
+            headline: ["'IBM Plex Sans'", "sans-serif"],
             "headline-xl": ["'IBM Plex Sans'", "sans-serif"],
             "headline-lg": ["'IBM Plex Sans'", "sans-serif"],
             "headline-md": ["'IBM Plex Sans'", "sans-serif"],
             "headline-sm": ["'IBM Plex Sans'", "sans-serif"],
-            "headline": ["'IBM Plex Sans'", "sans-serif"],
-            "label-lg": ["'IBM Plex Sans'", "sans-serif"],
-            "label-md": ["'IBM Plex Sans'", "sans-serif"],
-            "label-sm": ["'IBM Plex Sans'", "sans-serif"],
-            "body-lg": ["'Source Serif 4'", "serif"],
-            "body-md": ["'Source Serif 4'", "serif"],
-            "body-sm": ["'Source Serif 4'", "serif"],
-            "body": ["'Source Serif 4'", "serif"],
-            "code": ["'JetBrains Mono'", "monospace"]
+            "label-lg": ["'Inter'", "sans-serif"],
+            "label-md": ["'Inter'", "sans-serif"],
+            "label-sm": ["'Inter'", "sans-serif"],
+            "body-lg": ["'Inter'", "sans-serif"],
+            "body-md": ["'Inter'", "sans-serif"],
+            "body-sm": ["'Inter'", "sans-serif"],
+            "body": ["'Inter'", "sans-serif"],
+            "code": ["'JetBrains Mono'", "monospace"],
+            mono: ["'JetBrains Mono'", "monospace"]
           },
           fontSize: {
-            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
-            "headline-lg": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
-            "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "headline-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "headline-md": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-sm": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
             "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
-            "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
-            "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "600" }],
-            "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
-            "body-md": ["15px", { "lineHeight": "24px", "fontWeight": "400" }],
-            "body-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "label-sm": ["11px", { "lineHeight": "16px", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
             "code": ["12px", { "lineHeight": "16px", "fontWeight": "400" }]
           }
         }
@@ -118,7 +135,14 @@
   <link rel="stylesheet" href="/static/style.css"/>
   <style>
     @layer base {
-      html, body { margin: 0; padding: 0; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        background-color: #FAFAFA;
+        color: #0F172A;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
       body { overscroll-behavior: none; }
     }
     .gov-tricolor { display: flex; height: 3px; width: 100%; }
@@ -129,10 +153,10 @@
     .nav-tab-btn {
       display: flex;
       align-items: center;
-      padding: 0 1.25rem;
-      border-bottom: 3px solid transparent;
-      color: #51606f;
-      font-family: 'IBM Plex Sans', sans-serif;
+      padding: 0 1rem;
+      border-bottom: 2px solid transparent;
+      color: #64748B;
+      font-family: 'Inter', sans-serif;
       font-size: 13px;
       font-weight: 500;
       transition: all 0.15s ease;
@@ -140,14 +164,14 @@
       text-decoration: none;
     }
     .nav-tab-btn:hover {
-      color: #000b21;
-      background-color: #f3f4f2;
+      color: #0F172A;
+      background-color: #F8FAFC;
     }
     .nav-tab-btn.active {
-      border-bottom-color: #000b21;
-      color: #000b21;
+      border-bottom-color: #0F172A;
+      color: #0F172A;
       font-weight: 600;
-      background-color: #f3f4f2;
+      background-color: #F8FAFC;
     }
 
     @media print {
@@ -304,73 +328,76 @@
   <!-- ======================================================================
        MAIN CONTENT CONTAINER
        ====================================================================== -->
-  <main class="flex-1 w-full pt-32 pb-16 bg-background" id="main-content">
+  <main class="flex-1 w-full pt-28 pb-16 bg-background" id="main-content">
     <div class="max-w-[1200px] mx-auto px-margin">
 
       <!-- ==================================================================
-           VIEW 1: TASK LOOKUP & INTAKE DECK (Metropolitan Docket Terminal)
+           VIEW 1: TASK LOOKUP & INTAKE DECK (Civic Precision Terminal)
            ================================================================== -->
       <section id="view-task-lookup" class="tab-pane flex flex-col w-full">
         
         <!-- Official Municipal Protocol Banner -->
-        <div class="bg-surface-container-high text-on-surface px-space-md py-space-sm mb-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-sm shadow-xs border border-outline-variant">
-          <div class="flex items-center gap-space-sm font-label-sm text-label-sm">
-            <span class="bg-primary text-on-primary px-2 py-0.5 font-code text-code tracking-wider uppercase font-semibold">Docket Intake</span>
-            <span class="font-headline-sm text-headline-sm uppercase tracking-tight text-primary">Maharashtra Civic Task Navigator — Public Access Terminal</span>
+        <div class="bg-slate-100/80 text-slate-800 rounded-xl px-4 py-2.5 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-2 border border-slate-200/80 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="bg-slate-900 text-white px-2 py-0.5 font-mono text-[11px] rounded font-semibold tracking-wider uppercase">Docket Intake</span>
+            <span class="font-heading font-semibold text-slate-900">Maharashtra Civic Task Navigator — Public Municipal Access Terminal</span>
           </div>
-          <div class="flex items-center gap-space-md font-code text-code text-on-surface-variant">
-            <span>NODE: <strong class="text-primary">MH-HQ-01</strong></span>
-            <span>DISPATCH: <strong class="text-primary">AUTO-ROUTING ACTIVE</strong></span>
-            <span class="bg-surface-container-lowest px-2 py-0.5 text-primary border border-outline-variant">RTS 2015 COMPLIANT</span>
+          <div class="flex items-center gap-3 font-mono text-[11px] text-slate-500">
+            <span>NODE: <strong class="text-slate-900 font-semibold">MH-HQ-01</strong></span>
+            <span>DISPATCH: <strong class="text-slate-900 font-semibold">AUTO-ROUTING ACTIVE</strong></span>
+            <span class="bg-white px-2 py-0.5 text-slate-800 border border-slate-200 rounded font-medium">RTS 2015 COMPLIANT</span>
           </div>
         </div>
 
         <!-- Main Administrative Inquiry Deck (12-Column Grid) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-space-xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-10">
           
-          <!-- Left 8 Columns: Search & Parameter Form -->
+          <!-- Left 8 Columns: Search & Parameter Form (Stripe/Linear style clean card) -->
           <div class="lg:col-span-8 flex flex-col">
-            <div class="bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant flex flex-col justify-between h-full">
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6 sm:p-8 flex flex-col justify-between h-full">
               <div>
                 <!-- Header and Statutory Instruction -->
-                <div class="mb-space-lg">
-                  <div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-space-xs" data-i18n="hero_tag">
-                    Statutory Compliance Discovery Portal
+                <div class="mb-6">
+                  <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600 mb-2 border border-slate-200/60 uppercase tracking-wider font-mono" data-i18n="hero_tag">
+                    MMC Act 1888 § 394 · Maharashtra Single Window
                   </div>
-                  <h1 class="font-headline-lg text-headline-lg text-primary tracking-tight mb-space-xs" data-i18n="hero_title">
-                    Initiate Cross-Agency Procedure Route
+                  <h1 class="font-heading text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mb-2" data-i18n="hero_title">
+                    Civic Compliance Roadmap
                   </h1>
-                  <p class="font-body-md text-body-md text-on-surface-variant" data-i18n="hero_desc">
-                    Enter any municipal procedure, permit requirement, or commercial filing to generate an ordered compliance route with statutory fees, agency jurisdictions, and verified sequencing prerequisites.
+                  <p class="font-sans text-sm text-slate-500 leading-relaxed" data-i18n="hero_desc">
+                    Search any municipal permit, trade license, or statutory procedure to synthesize a verified prerequisite graph across MCGM, MFB, FSSAI, and MPCB.
                   </p>
                 </div>
 
                 <!-- Structured Search Form -->
-                <form class="flex flex-col gap-space-md" id="taskIntakeForm" onsubmit="event.preventDefault(); window.app.performSearch();">
+                <form class="flex flex-col gap-4" id="taskIntakeForm" onsubmit="event.preventDefault(); window.app.performSearch();">
                   <div>
-                    <label class="block font-label-md text-label-md text-primary mb-1 font-semibold" for="taskQuery" data-i18n="search_label">
-                      What civic or municipal procedure do you need to complete?
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="taskQuery" data-i18n="search_label">
+                      Target Commercial or Civic Intent
                     </label>
-                    <div class="relative">
-                      <input class="w-full bg-surface-container-lowest text-primary font-body-md text-body-md px-4 py-3 border border-outline-variant shadow-inner focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder-secondary/60" id="taskQuery" name="query" placeholder="e.g. I want to register a small business, or Apply for 7/12 land extract" type="text" value="I want to register a small business"/>
-                      <button class="absolute right-3 top-3 text-secondary hover:text-primary" onclick="document.getElementById('taskQuery').value=''; document.getElementById('taskQuery').focus();" type="button" title="Clear query">
-                        <span class="material-symbols-outlined text-[18px]">backspace</span>
+                    <div class="relative group">
+                      <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-slate-400 text-[20px] pointer-events-none group-focus-within:text-slate-900 transition-colors">
+                        travel_explore
+                      </span>
+                      <input class="w-full pl-11 pr-10 py-3 bg-slate-50/60 hover:bg-slate-50 focus:bg-white text-slate-900 text-sm sm:text-base font-medium rounded-xl border border-slate-200 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all placeholder:text-slate-400" id="taskQuery" name="query" placeholder="e.g. I want to register a small business, or Apply for 7/12 land extract" type="text" value="I want to register a small business"/>
+                      <button class="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-700 transition-colors" onclick="document.getElementById('taskQuery').value=''; document.getElementById('taskQuery').focus();" type="button" title="Clear query">
+                        <span class="material-symbols-outlined text-[18px]">cancel</span>
                       </button>
                     </div>
-                    <div class="mt-1 flex items-center justify-between font-label-sm text-label-sm text-secondary">
-                      <span class="font-body-sm text-body-sm italic text-on-surface-variant">Natural language & Marathi (मराठी) accepted. Automatic administrative cross-referencing.</span>
-                      <span class="font-code text-code">SYNTAX: UTF-8 PLAIN</span>
+                    <div class="mt-1.5 flex items-center justify-between text-[11px] text-slate-400">
+                      <span>Natural language & Marathi (मराठी) accepted. Automatic administrative cross-referencing.</span>
+                      <span class="font-mono text-slate-400 hidden sm:inline">DOCKET: MH-RTS-2026</span>
                     </div>
                   </div>
 
                   <!-- Contextual Filters Grid -->
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
-                    <div class="bg-surface-container-low p-space-sm border border-outline-variant">
-                      <label class="block font-label-sm text-label-sm text-primary uppercase mb-1 font-semibold" for="jurisdictionSelect">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                    <div class="bg-slate-50 border border-slate-200/70 rounded-xl px-4 py-2.5">
+                      <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5" for="jurisdictionSelect">
                         Target Municipal Jurisdiction
                       </label>
                       <div class="relative">
-                        <select class="w-full bg-surface-container-lowest text-primary font-label-md text-label-md px-3 py-2 border border-outline-variant focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="jurisdictionSelect">
+                        <select class="w-full bg-transparent font-sans text-xs font-semibold text-slate-800 border-0 p-0 focus:ring-0 cursor-pointer pr-4 appearance-none" id="jurisdictionSelect">
                           <option value="all">All Maharashtra Municipalities & Districts</option>
                           <option value="Mumbai (MCGM / BMC)">Brihanmumbai (BMC / MCGM) — Mumbai</option>
                           <option value="Pune (PMC / PMRDA)">Pune Municipal Corporation (PMC)</option>
@@ -379,84 +406,84 @@
                           <option value="Nagpur (NMC)">Nagpur Municipal Corporation (NMC)</option>
                           <option value="Maharashtra Statewide (Aaple Sarkar RTS)" selected>Aaple Sarkar Statewide RTS</option>
                         </select>
-                        <span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-secondary text-[18px]">unfold_more</span>
+                        <span class="material-symbols-outlined absolute right-0 top-0.5 pointer-events-none text-slate-400 text-[18px]">unfold_more</span>
                       </div>
                     </div>
-                    <div class="bg-surface-container-low p-space-sm border border-outline-variant">
-                      <label class="block font-label-sm text-label-sm text-primary uppercase mb-1 font-semibold" for="entityClassification">
+                    <div class="bg-slate-50 border border-slate-200/70 rounded-xl px-4 py-2.5">
+                      <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5" for="entityClassification">
                         Applicant / Entity Type
                       </label>
                       <div class="relative">
-                        <select class="w-full bg-surface-container-lowest text-primary font-label-md text-label-md px-3 py-2 border border-outline-variant focus:outline-none focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="entityClassification">
+                        <select class="w-full bg-transparent font-sans text-xs font-semibold text-slate-800 border-0 p-0 focus:ring-0 cursor-pointer pr-4 appearance-none" id="entityClassification">
                           <option value="commercial-corp">Commercial Enterprise (LLC / Private Ltd)</option>
                           <option value="sole-prop" selected>Sole Proprietorship / Small Enterprise (MSME)</option>
                           <option value="individual-citizen">Individual Citizen / Resident</option>
                           <option value="licensed-pro">Licensed Architect / Legal Advocate</option>
                           <option value="rural-farmer">Agricultural Landholder / Farmer</option>
                         </select>
-                        <span class="material-symbols-outlined absolute right-2.5 top-2.5 pointer-events-none text-secondary text-[18px]">unfold_more</span>
+                        <span class="material-symbols-outlined absolute right-0 top-0.5 pointer-events-none text-slate-400 text-[18px]">unfold_more</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- Parameters Bar -->
-                  <div class="bg-surface-container p-space-sm flex flex-wrap items-center justify-between gap-space-sm text-secondary font-label-sm text-label-sm border border-outline-variant/60">
-                    <div class="flex items-center gap-space-sm">
-                      <span class="material-symbols-outlined text-[18px] text-primary">policy</span>
-                      <span>Enforcement Year: <strong class="text-primary font-code">2026 Statutory Calendar</strong></span>
+                  <div class="bg-slate-50 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-slate-600 text-xs border border-slate-200/60">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-[16px] text-slate-700">policy</span>
+                      <span>Enforcement Year: <strong class="text-slate-900 font-mono">2026 Statutory Calendar</strong></span>
                     </div>
-                    <div class="flex items-center gap-space-md">
-                      <label class="flex items-center gap-2 cursor-pointer text-primary">
-                        <input checked="" class="w-4 h-4 text-primary rounded-none focus:ring-0 cursor-pointer" type="checkbox"/>
-                        <span>Include Setu Kendra Hybrid Notices</span>
+                    <div class="flex items-center gap-4">
+                      <label class="flex items-center gap-1.5 cursor-pointer text-slate-700">
+                        <input checked="" class="w-3.5 h-3.5 rounded border-slate-300 text-slate-900 focus:ring-0 cursor-pointer" type="checkbox"/>
+                        <span>Setu Kendra Notices</span>
                       </label>
-                      <label class="flex items-center gap-2 cursor-pointer text-primary">
-                        <input checked="" class="w-4 h-4 text-primary rounded-none focus:ring-0 cursor-pointer" type="checkbox"/>
-                        <span>Fee Calculation Ledger</span>
+                      <label class="flex items-center gap-1.5 cursor-pointer text-slate-700">
+                        <input checked="" class="w-3.5 h-3.5 rounded border-slate-300 text-slate-900 focus:ring-0 cursor-pointer" type="checkbox"/>
+                        <span>Fee Ledger Calculation</span>
                       </label>
                     </div>
                   </div>
 
                   <!-- Popular Quick Suggestion Pills -->
-                  <div class="flex flex-wrap items-center gap-2 pt-1 font-label-sm text-label-sm">
-                    <span class="text-secondary font-semibold" data-i18n="popular_label">Popular:</span>
-                    <button type="button" onclick="window.app.fillQuery('I want to register a small business')" class="bg-surface-container hover:bg-surface-container-high text-primary border border-outline-variant px-3 py-1 font-semibold transition-colors">
+                  <div class="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
+                    <span class="text-slate-400 font-medium text-[11px] uppercase tracking-wider mr-1" data-i18n="popular_label">Popular:</span>
+                    <button type="button" onclick="window.app.fillQuery('I want to register a small business')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       🏪 Small Business Gumasta
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('Commercial Bakery Bandra Mumbai')" class="bg-surface-container hover:bg-surface-container-high text-primary border border-outline-variant px-3 py-1 font-semibold transition-colors">
+                    <button type="button" onclick="window.app.fillQuery('Commercial Bakery Bandra Mumbai')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       ☕ Bakery / F&B Bandra
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('Apply for Domicile in Haveli Taluka, Pune')" class="bg-surface-container hover:bg-surface-container-high text-primary border border-outline-variant px-3 py-1 font-semibold transition-colors">
+                    <button type="button" onclick="window.app.fillQuery('Apply for Domicile in Haveli Taluka, Pune')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       📜 Domicile / RTS Certificates
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('7/12 extract online digitally signed satbara')" class="bg-surface-container hover:bg-surface-container-high text-primary border border-outline-variant px-3 py-1 font-semibold transition-colors">
+                    <button type="button" onclick="window.app.fillQuery('7/12 extract online digitally signed satbara')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       🌾 7/12 Satbara Mutation
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('PMC Pune peth area property tax assessment and rebate claim')" class="bg-surface-container hover:bg-surface-container-high text-primary border border-outline-variant px-3 py-1 font-semibold transition-colors">
+                    <button type="button" onclick="window.app.fillQuery('PMC Pune peth area property tax assessment and rebate claim')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       🏢 Pune Property Tax
                     </button>
                   </div>
 
                   <!-- Primary Action Bar -->
-                  <div class="pt-space-sm flex flex-col sm:flex-row items-center justify-between gap-space-md border-t border-outline-variant/60">
-                    <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
-                      <span class="material-symbols-outlined text-[18px] text-tertiary">verified_user</span>
+                  <div class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100">
+                    <div class="flex items-center gap-1.5 text-slate-500 text-xs">
+                      <span class="material-symbols-outlined text-[16px] text-amber-600">verified_user</span>
                       <span>Statutory Guarantee: Maharashtra Right to Public Services Act (RTS 2015)</span>
                     </div>
-                    <button id="btn-generate-roadmap" class="w-full sm:w-auto bg-primary text-on-primary px-space-lg py-3 font-label-lg text-label-lg tracking-wide hover:bg-primary-container focus:outline-none focus:ring-2 focus:ring-tertiary transition-colors flex items-center justify-center gap-space-sm shadow-xs" onclick="window.app.performSearch()" type="button">
+                    <button id="btn-generate-roadmap" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-sm active:scale-[0.99]" onclick="window.app.performSearch()" type="button">
                       <span>Generate Compliance Roadmap</span>
-                      <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                      <span class="material-symbols-outlined text-[17px]">arrow_forward</span>
                     </button>
                   </div>
                 </form>
 
                 <!-- Live NLP Intent Feedback Banner -->
-                <div id="nlp-intent-banner" class="hidden mt-4 p-3 bg-surface-container-low border border-outline-variant text-primary font-label-sm flex items-center justify-between gap-3 shadow-xs">
+                <div id="nlp-intent-banner" class="hidden mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-900 text-xs flex items-center justify-between gap-3 shadow-xs">
                   <div id="nlp-search-feedback"></div>
                 </div>
 
                 <!-- Dynamic Catalog Search Results List -->
-                <div id="tasks-catalog-container" class="mt-space-lg space-y-space-sm">
+                <div id="tasks-catalog-container" class="mt-6 space-y-2">
                   <!-- Populated dynamically by app.js -->
                 </div>
 
@@ -465,189 +492,261 @@
           </div>
 
           <!-- Right 4 Columns: Municipal Dispatch Summary & Directives Deck -->
-          <div class="lg:col-span-4 flex flex-col gap-space-md">
+          <div class="lg:col-span-4 flex flex-col gap-4">
             
             <!-- Route Dispatch Preview Card -->
-            <div class="bg-surface-container-lowest p-space-md shadow-sm border border-outline-variant">
-              <div class="flex items-center justify-between pb-space-sm mb-space-sm bg-surface-container-low -mx-space-md -mt-space-md p-space-sm px-space-md border-b border-outline-variant">
-                <div class="font-label-sm text-label-sm font-semibold text-primary uppercase tracking-wider">Route Dispatch Preview</div>
-                <span class="bg-primary text-on-primary font-code text-code px-1.5 py-0.5">EST. TIME: 2-4 WKS</span>
+            <div class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-5">
+              <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+                <div class="text-xs font-semibold text-slate-900 uppercase tracking-wider font-heading">Route Dispatch Preview</div>
+                <span class="bg-slate-900 text-white font-mono text-[10px] px-2 py-0.5 rounded font-medium">EST. 2-4 WKS</span>
               </div>
-              <div class="space-y-space-sm font-label-sm text-label-sm">
-                <div class="flex justify-between items-baseline py-1 border-b border-surface-container">
-                  <span class="text-secondary">Statutory Guarantee:</span>
-                  <span class="font-code text-code text-primary font-semibold">Maharashtra RTS 2015</span>
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between items-baseline py-1 border-b border-slate-100">
+                  <span class="text-slate-500">Statutory Guarantee:</span>
+                  <span class="font-mono text-slate-900 font-semibold">Maharashtra RTS 2015</span>
                 </div>
-                <div class="flex justify-between items-baseline py-1 border-b border-surface-container">
-                  <span class="text-secondary">Deemed Approval Window:</span>
-                  <span class="font-code text-code text-primary font-semibold">Guaranteed by Law</span>
+                <div class="flex justify-between items-baseline py-1 border-b border-slate-100">
+                  <span class="text-slate-500">Deemed Approval Window:</span>
+                  <span class="font-mono text-slate-900 font-semibold">Guaranteed by Law</span>
                 </div>
-                <div class="flex justify-between items-baseline py-1 border-b border-surface-container">
-                  <span class="text-secondary">Aaple Sarkar Integration:</span>
-                  <span class="font-code text-code text-primary font-semibold">Single Window Portal</span>
+                <div class="flex justify-between items-baseline py-1 border-b border-slate-100">
+                  <span class="text-slate-500">Aaple Sarkar Integration:</span>
+                  <span class="font-mono text-slate-900 font-semibold">Single Window Portal</span>
                 </div>
                 <div class="flex justify-between items-baseline py-1">
-                  <span class="text-secondary">Anti-Tout / Direct Portal:</span>
-                  <span class="bg-emerald-100 text-emerald-900 px-1.5 py-0.5 font-semibold text-[11px]">100% Direct Official Filing</span>
+                  <span class="text-slate-500">Direct Official Filing:</span>
+                  <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2 py-0.5 rounded font-semibold text-[11px]">100% Zero Intermediary</span>
                 </div>
               </div>
-              <div class="mt-space-md pt-space-sm bg-surface-container p-space-sm border border-outline-variant/60">
-                <div class="font-label-sm text-label-sm text-primary font-semibold uppercase mb-1">Participating Clearances</div>
-                <div class="flex flex-wrap gap-1 font-code text-code">
-                  <span class="bg-surface-container-lowest text-primary px-1.5 py-0.5 border border-outline-variant">MCGM / BMC</span>
-                  <span class="bg-surface-container-lowest text-primary px-1.5 py-0.5 border border-outline-variant">PMC Pune</span>
-                  <span class="bg-surface-container-lowest text-primary px-1.5 py-0.5 border border-outline-variant">Aaple Sarkar</span>
-                  <span class="bg-surface-container-lowest text-primary px-1.5 py-0.5 border border-outline-variant">MahaBhumi</span>
-                  <span class="bg-surface-container-lowest text-primary px-1.5 py-0.5 border border-outline-variant">MPCB</span>
+              <div class="mt-4 pt-3 bg-slate-50 rounded-lg p-3 border border-slate-200/60">
+                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">Participating Agencies</div>
+                <div class="flex flex-wrap gap-1 text-[11px] font-mono">
+                  <span class="bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200">MCGM / BMC</span>
+                  <span class="bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200">PMC Pune</span>
+                  <span class="bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200">Aaple Sarkar</span>
+                  <span class="bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200">MahaBhumi</span>
+                  <span class="bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200">MPCB</span>
                 </div>
               </div>
             </div>
 
             <!-- Deterministic Legal Sequences Card -->
-            <div class="bg-primary text-on-primary p-space-md shadow-sm border border-primary-container">
-              <div class="flex items-center gap-space-xs font-label-sm text-label-sm text-primary-fixed mb-space-xs uppercase tracking-wider">
-                <span class="material-symbols-outlined text-[16px] text-tertiary">balance</span>
-                <span>Administrative Guarantee</span>
+            <div class="bg-slate-900 text-white rounded-xl p-5 shadow-sm border border-slate-800 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center gap-1.5 text-xs text-amber-400 mb-2 uppercase tracking-wider font-mono font-medium">
+                  <span class="material-symbols-outlined text-[16px]">balance</span>
+                  <span>Administrative Standing</span>
+                </div>
+                <h2 class="font-heading text-base font-semibold text-white mb-2">Deterministic Legal Sequences</h2>
+                <p class="font-sans text-xs text-slate-300 leading-relaxed mb-4">
+                  Routes generated by this terminal establish official administrative standing. Timelines and sequence requirements strictly conform to the Maharashtra Right to Public Services Act (RTS 2015).
+                </p>
               </div>
-              <h2 class="font-headline-sm text-headline-sm text-on-primary mb-space-xs">Deterministic Legal Sequences</h2>
-              <p class="font-body-sm text-body-sm text-primary-fixed-dim mb-space-md leading-relaxed">
-                Routes generated by this terminal establish official administrative standing. Timelines and sequence requirements strictly conform to the Maharashtra Right to Public Services Act (RTS 2015).
-              </p>
-              <div class="pt-space-sm bg-primary-container p-space-sm flex items-center justify-between text-primary-fixed font-code text-code border border-on-primary-fixed-variant">
+              <div class="pt-3 bg-slate-800/80 rounded-lg p-2.5 flex items-center justify-between text-slate-300 font-mono text-[11px] border border-slate-700">
                 <span>DOCKET DISPATCH:</span>
-                <span class="text-on-primary font-semibold">MH-RTS-SEC-04</span>
+                <span class="text-white font-semibold">MH-RTS-SEC-04</span>
               </div>
             </div>
 
           </div>
         </div>
 
-        <!-- Real Civic Task Suggestion Directives (Official Ledger Table) -->
-        <section class="mb-space-xl">
-          <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-space-sm pb-space-xs border-b border-outline-variant">
+        <!-- Procedural Architecture (Minimal 3-column card section from Stitch) -->
+        <section class="mb-10">
+          <div class="flex items-baseline justify-between mb-4">
             <div>
-              <div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Procedural Index Manifest</div>
-              <h2 class="font-headline-md text-headline-md text-primary">Pre-Compiled Municipal Master Directives</h2>
+              <h2 class="font-heading text-lg font-semibold text-slate-900 tracking-tight">Procedural Architecture</h2>
+              <p class="text-xs text-slate-500 mt-0.5">How the engine eliminates inter-agency sequencing deadlocks and ward-level circular dependencies.</p>
             </div>
-            <div class="font-body-sm text-body-sm text-secondary mt-1 sm:mt-0">
+            <span class="text-xs text-slate-400 font-mono hidden sm:inline">DAG v2.4 Spec</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Card 1 -->
+            <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-3">
+                  <span class="material-symbols-outlined text-[18px]">sync_alt</span>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-900 mb-1">Inter-Agency Federation</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                  Consolidates requirements across MCGM Ward Health Offices, MFB, MPCB, and Aaple Sarkar single-window feeds into one unified checklist.
+                </p>
+              </div>
+              <div class="mt-4 pt-2.5 border-t border-slate-100 text-[11px] font-mono text-slate-400">
+                Source: AutoDCR &amp; MMC Act §394
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-3">
+                  <span class="material-symbols-outlined text-[18px]">account_tree</span>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-900 mb-1">Topological Sorting</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                  Constructs a directed acyclic graph (DAG) so no citizen applies for permits out-of-order, preventing unrecoverable application rejections.
+                </p>
+              </div>
+              <div class="mt-4 pt-2.5 border-t border-slate-100 text-[11px] font-mono text-slate-400">
+                Engine: Dependency DAG Resolver
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm flex flex-col justify-between">
+              <div>
+                <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-3">
+                  <span class="material-symbols-outlined text-[18px]">verified</span>
+                </div>
+                <h3 class="text-sm font-semibold text-slate-900 mb-1">Cryptographic Provenance</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                  Every fee ledger item and timeline links to current Maharashtra Right to Public Services Act mandates with official Challan hashes.
+                </p>
+              </div>
+              <div class="mt-4 pt-2.5 border-t border-slate-100 text-[11px] font-mono text-slate-400">
+                Ledger: SHA-256 Index Verified
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Real Civic Task Suggestion Directives (Official Ledger Table) -->
+        <section class="mb-12">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-4">
+            <div>
+              <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block font-mono">Procedural Index Manifest</span>
+              <h2 class="font-heading text-lg font-semibold text-slate-900 tracking-tight">Verified Municipal Directives</h2>
+            </div>
+            <div class="text-xs text-slate-500 mt-1 sm:mt-0">
               Select a verified route to load certified statutory prerequisites and agency sequences.
             </div>
           </div>
 
           <!-- Official Ledger Grid List -->
-          <div class="bg-surface-container-lowest shadow-sm divide-y divide-outline-variant border border-outline-variant" id="directives-ledger-list">
+          <div class="bg-white rounded-xl border border-slate-200/80 divide-y divide-slate-100 overflow-hidden shadow-sm" id="directives-ledger-list">
             <!-- Populated dynamically or default items -->
-            <div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="window.app.loadTaskAndRoute('task-mah-small-biz')">
-              <div class="flex items-start gap-space-md">
-                <div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold border border-outline-variant shrink-0">
+            <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group" onclick="window.app.loadTaskAndRoute('task-mah-small-biz')">
+              <div class="flex items-start gap-4">
+                <span class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
                   01
-                </div>
+                </span>
                 <div>
-                  <div class="font-headline-sm text-headline-sm text-primary font-semibold">
-                    Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act)
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-semibold text-slate-900 group-hover:text-slate-950 font-heading">
+                      Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act)
+                    </h3>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Expedited</span>
                   </div>
-                  <div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  <div class="text-xs text-slate-500 mt-1 max-w-xl">
                     Unified intimation and registration for commercial establishments with under-10 employee fee exemption (Form A) under Maharashtra Shops Act 2017.
                   </div>
                 </div>
               </div>
-              <div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm shrink-0">
-                <div class="text-right">
-                  <div class="text-secondary uppercase">JURISDICTIONS</div>
-                  <div class="font-code text-code text-primary font-semibold">Labour Dept • Aaple Sarkar</div>
+              <div class="flex items-center justify-between md:justify-end gap-6 md:pl-4 pl-8 shrink-0">
+                <div class="text-left md:text-right">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Jurisdiction</span>
+                  <span class="text-xs font-medium text-slate-700">Labour Dept • Aaple Sarkar</span>
                 </div>
-                <div class="text-right">
-                  <div class="text-secondary uppercase">EST. SCHEDULE</div>
-                  <div class="font-code text-code text-primary font-semibold">1–3 Working Days</div>
+                <div class="text-left md:text-right">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Duration</span>
+                  <span class="text-xs font-mono font-medium text-slate-700">1–3 Days</span>
                 </div>
-                <button class="bg-primary text-on-primary px-3 py-1.5 font-label-sm font-semibold hover:bg-primary-container transition-colors">
+                <button class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
                   Load Route
                 </button>
               </div>
             </div>
 
-            <div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="window.app.loadTaskAndRoute('task-mum-bakery')">
-              <div class="flex items-start gap-space-md">
-                <div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold border border-outline-variant shrink-0">
+            <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group" onclick="window.app.loadTaskAndRoute('task-mum-bakery')">
+              <div class="flex items-start gap-4">
+                <span class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
                   02
-                </div>
+                </span>
                 <div>
-                  <div class="font-headline-sm text-headline-sm text-primary font-semibold">
-                    Register & Commission a Commercial Bakery in Bandra, Mumbai
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-semibold text-slate-900 group-hover:text-slate-950 font-heading">
+                      Register & Commission a Commercial Bakery in Bandra, Mumbai
+                    </h3>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200/60">Core Civic</span>
                   </div>
-                  <div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  <div class="text-xs text-slate-500 mt-1 max-w-xl">
                     Comprehensive multi-agency compliance sequence for commercial food production covering BMC Section 394 Health Trade License, MFB Fire Safety NOC, and FSSAI State License.
                   </div>
                 </div>
               </div>
-              <div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm shrink-0">
-                <div class="text-right">
-                  <div class="text-secondary uppercase">JURISDICTIONS</div>
-                  <div class="font-code text-code text-primary font-semibold">MCGM • MFB • FSSAI</div>
+              <div class="flex items-center justify-between md:justify-end gap-6 md:pl-4 pl-8 shrink-0">
+                <div class="text-left md:text-right">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Jurisdiction</span>
+                  <span class="text-xs font-medium text-slate-700">MCGM • MFB • FSSAI</span>
                 </div>
-                <div class="text-right">
-                  <div class="text-secondary uppercase">EST. SCHEDULE</div>
-                  <div class="font-code text-code text-primary font-semibold">45–65 Working Days</div>
+                <div class="text-left md:text-right">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Duration</span>
+                  <span class="text-xs font-mono font-medium text-slate-700">45–65 Days</span>
                 </div>
-                <button class="bg-primary text-on-primary px-3 py-1.5 font-label-sm font-semibold hover:bg-primary-container transition-colors">
+                <button class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
                   Load Route
                 </button>
               </div>
             </div>
 
-            <div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="window.app.loadTaskAndRoute('task-mah-rts-certificates')">
-              <div class="flex items-start gap-space-md">
-                <div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold border border-outline-variant shrink-0">
+            <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group" onclick="window.app.loadTaskAndRoute('task-mah-rts-certificates')">
+              <div class="flex items-start gap-4">
+                <span class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
                   03
-                </div>
+                </span>
                 <div>
-                  <div class="font-headline-sm text-headline-sm text-primary font-semibold">
-                    Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar)
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-semibold text-slate-900 group-hover:text-slate-950 font-heading">
+                      Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar)
+                    </h3>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Statewide RTS</span>
                   </div>
-                  <div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  <div class="text-xs text-slate-500 mt-1 max-w-xl">
                     Integrated service roadmap under Maharashtra RTS 2015 for obtaining Income Certificate, Age-Nationality-Domicile Certificate, and Caste Certificate with guaranteed SLAs.
                   </div>
                 </div>
               </div>
-              <div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm shrink-0">
-                <div class="text-right">
-                  <div class="text-secondary uppercase">JURISDICTIONS</div>
-                  <div class="font-code text-code text-primary font-semibold">Revenue & Forest • Tehsildar</div>
+              <div class="flex items-center justify-between md:justify-end gap-6 md:pl-4 pl-8 shrink-0">
+                <div class="text-left md:text-right">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Jurisdiction</span>
+                  <span class="text-xs font-medium text-slate-700">Revenue & Forest • Tehsildar</span>
                 </div>
-                <div class="text-right">
-                  <div class="text-secondary uppercase">EST. SCHEDULE</div>
-                  <div class="font-code text-code text-primary font-semibold">15–21 Working Days</div>
+                <div class="text-left md:text-right">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Duration</span>
+                  <span class="text-xs font-mono font-medium text-slate-700">15–21 Days</span>
                 </div>
-                <button class="bg-primary text-on-primary px-3 py-1.5 font-label-sm font-semibold hover:bg-primary-container transition-colors">
+                <button class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
                   Load Route
                 </button>
               </div>
             </div>
 
-            <div class="p-space-md hover:bg-surface-container-low transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-space-md" onclick="window.app.loadTaskAndRoute('task-mah-712-mutation')">
-              <div class="flex items-start gap-space-md">
-                <div class="w-8 h-8 bg-surface-container text-primary flex items-center justify-center font-code text-code font-bold border border-outline-variant shrink-0">
+            <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group" onclick="window.app.loadTaskAndRoute('task-mah-712-mutation')">
+              <div class="flex items-start gap-4">
+                <span class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
                   04
-                </div>
+                </span>
                 <div>
-                  <div class="font-headline-sm text-headline-sm text-primary font-semibold">
-                    Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-semibold text-slate-900 group-hover:text-slate-950 font-heading">
+                      Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer
+                    </h3>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Land Revenue</span>
                   </div>
-                  <div class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  <div class="text-xs text-slate-500 mt-1 max-w-xl">
                     E-Ferfar online mutation process for agricultural land title transfer upon sale, gift, or inheritance pursuant to Maharashtra Land Revenue Code 1966.
                   </div>
                 </div>
               </div>
-              <div class="flex items-center gap-space-lg self-end md:self-center font-label-sm text-label-sm shrink-0">
-                <div class="text-right">
-                  <div class="text-secondary uppercase">JURISDICTIONS</div>
-                  <div class="font-code text-code text-primary font-semibold">MahaBhumi • Talathi</div>
+              <div class="flex items-center justify-between md:justify-end gap-6 md:pl-4 pl-8 shrink-0">
+                <div class="text-left md:text-right">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Jurisdiction</span>
+                  <span class="text-xs font-medium text-slate-700">MahaBhumi • Talathi</span>
                 </div>
-                <div class="text-right">
-                  <div class="text-secondary uppercase">EST. SCHEDULE</div>
-                  <div class="font-code text-code text-primary font-semibold">15–30 Working Days</div>
+                <div class="text-left md:text-right">
+                  <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Duration</span>
+                  <span class="text-xs font-mono font-medium text-slate-700">15–30 Days</span>
                 </div>
-                <button class="bg-primary text-on-primary px-3 py-1.5 font-label-sm font-semibold hover:bg-primary-container transition-colors">
+                <button class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
                   Load Route
                 </button>
               </div>
@@ -658,53 +757,53 @@
       </section>
 
       <!-- ==================================================================
-           VIEW 2: PROCEDURE ROADMAP & TRANSIT SPINE (Wayfinding Route Deck)
+           VIEW 2: PROCEDURE ROADMAP & TRANSIT SPINE (Civic Precision Route Deck)
            ================================================================== -->
       <section id="view-roadmap-and-route" class="tab-pane flex flex-col w-full" style="display:none;">
         
         <!-- Route Header & Administrative Metadata Card -->
-        <div class="bg-surface-container-lowest p-space-lg shadow-sm border border-outline-variant mb-space-lg">
-          <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-space-md pb-space-md border-b border-outline-variant/50">
-            <div class="space-y-space-xs max-w-3xl">
-              <div class="flex items-center gap-space-sm flex-wrap text-xs">
-                <span id="route-id-badge" class="bg-primary text-on-primary font-code text-code px-2 py-0.5 font-semibold">ROUTE #MCGM-2026</span>
-                <span id="route-class-badge" class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-2 py-0.5 font-semibold uppercase">Standard Commercial Track</span>
-                <span class="font-code text-code text-secondary flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-600 inline-block"></span>
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 mb-6">
+          <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 pb-4 border-b border-slate-100">
+            <div class="space-y-1.5 max-w-3xl">
+              <div class="flex items-center gap-2 flex-wrap text-xs">
+                <span id="route-id-badge" class="bg-slate-900 text-white font-mono text-xs px-2.5 py-0.5 rounded-md font-medium">ROUTE #MCGM-2026</span>
+                <span id="route-class-badge" class="bg-slate-100 text-slate-700 font-sans text-xs px-2.5 py-0.5 rounded-md font-semibold uppercase border border-slate-200/60">Standard Commercial Track</span>
+                <span class="font-mono text-xs text-slate-500 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                   <span data-i18n="route_active_badge">ACTIVE COMPLIANCE MANIFEST</span>
                 </span>
               </div>
-              <h1 id="roadmap-heading-title" class="font-headline-xl text-headline-xl text-primary tracking-tight font-bold">
+              <h1 id="roadmap-heading-title" class="font-heading text-2xl sm:text-3xl text-slate-950 tracking-tight font-bold">
                 Procedure Roadmap
               </h1>
-              <p id="roadmap-heading-desc" class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              <p id="roadmap-heading-desc" class="font-sans text-sm text-slate-500 leading-relaxed">
                 Step-by-step regulatory roadmap with statutory SLAs and official application links.
               </p>
             </div>
 
             <!-- View Options & Actions Toolbar -->
-            <div class="flex items-center gap-space-sm flex-wrap">
-              <button id="btn-share-whatsapp-direct" onclick="window.app.shareViaWhatsApp()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-label-md text-label-md px-3.5 py-2 flex items-center gap-1.5 transition-colors shadow-2xs font-semibold" title="Share via WhatsApp">
+            <div class="flex items-center gap-2 flex-wrap">
+              <button id="btn-share-whatsapp-direct" onclick="window.app.shareViaWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-sans text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm" title="Share via WhatsApp">
                 <span class="material-symbols-outlined text-[16px]">chat</span>
                 <span data-i18n="btn_whatsapp">📲 WhatsApp</span>
               </button>
-              <button class="bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md px-3 py-2 flex items-center gap-1.5 transition-colors border border-outline-variant" onclick="window.print()">
+              <button class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80" onclick="window.print()">
                 <span class="material-symbols-outlined text-[16px]">print</span>
                 <span data-i18n="btn_print">Print Route Sheet</span>
               </button>
-              <button class="bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md px-3 py-2 flex items-center gap-1.5 transition-colors border border-outline-variant" id="btn-toggle-critical" onclick="window.app.toggleCriticalPathHighlight()">
+              <button class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80" id="btn-toggle-critical" onclick="window.app.toggleCriticalPathHighlight()">
                 <span class="material-symbols-outlined text-[16px]">alt_route</span>
                 <span id="txt-critical" data-i18n="critical_path">Critical Path</span>
               </button>
-              <button class="bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md px-3 py-2 flex items-center gap-1.5 transition-colors border border-outline-variant" id="btn-share-route" onclick="window.app.openShareModal()">
+              <button class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80" id="btn-share-route" onclick="window.app.openShareModal()">
                 <span class="material-symbols-outlined text-[16px]">share</span>
                 <span data-i18n="share_route">Share</span>
               </button>
-              <div class="flex bg-surface-container border border-outline-variant p-0.5 font-label-sm">
-                <button id="btn-mode-subway" class="px-2.5 py-1.5 font-semibold bg-primary text-white" onclick="window.app.toggleWayfindingView('subway')">
+              <div class="flex bg-slate-100 rounded-lg border border-slate-200/80 p-0.5 text-xs">
+                <button id="btn-mode-subway" class="px-2.5 py-1.5 rounded-md font-semibold bg-slate-900 text-white shadow-xs" onclick="window.app.toggleWayfindingView('subway')">
                   <span data-i18n="btn_subway">🚇 Subway Map</span>
                 </button>
-                <button id="btn-mode-dag" class="px-2.5 py-1.5 font-semibold text-secondary hover:text-primary" onclick="window.app.toggleWayfindingView('dag')">
+                <button id="btn-mode-dag" class="px-2.5 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900" onclick="window.app.toggleWayfindingView('dag')">
                   <span data-i18n="btn_dag">🕸️ DAG Topology</span>
                 </button>
               </div>
@@ -712,28 +811,28 @@
           </div>
 
           <!-- Administrative Summary Ribbon (4-Metric Grid) -->
-          <div class="bg-surface-container-low p-space-md grid grid-cols-2 sm:grid-cols-4 gap-space-md mt-space-md border border-outline-variant/60">
-            <div class="space-y-1">
-              <div class="font-label-sm text-label-sm text-secondary uppercase font-semibold" data-i18n="stat_sla_label">Total Estimated Timeline</div>
-              <div class="font-headline-sm text-headline-sm text-primary flex items-baseline gap-1" id="summary-stat-timeline">
-                <span class="font-bold">--</span> <span class="font-label-sm text-label-sm text-secondary">Working Days</span>
+          <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/70 grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5">
+            <div class="space-y-0.5">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono" data-i18n="stat_sla_label">Total Estimated Timeline</div>
+              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1" id="summary-stat-timeline">
+                <span>--</span> <span class="font-sans text-xs font-normal text-slate-500">Working Days</span>
               </div>
             </div>
-            <div class="space-y-1">
-              <div class="font-label-sm text-label-sm text-secondary uppercase font-semibold" data-i18n="stat_fee_label">Statutory Government Fees</div>
-              <div class="font-headline-sm text-headline-sm text-primary flex items-baseline gap-1" id="summary-stat-fees">
-                <span class="font-bold">₹0.00</span> <span class="font-label-sm text-label-sm text-secondary">INR</span>
+            <div class="space-y-0.5">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono" data-i18n="stat_fee_label">Statutory Government Fees</div>
+              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1" id="summary-stat-fees">
+                <span>₹0.00</span> <span class="font-sans text-xs font-normal text-slate-500">INR</span>
               </div>
             </div>
-            <div class="space-y-1">
-              <div class="font-label-sm text-label-sm text-secondary uppercase font-semibold" data-i18n="stat_steps_label">Station Progress</div>
-              <div class="font-headline-sm text-headline-sm text-primary flex items-baseline gap-1" id="summary-stat-progress">
-                <span class="font-bold">0 / 0</span> <span class="font-label-sm text-label-sm text-secondary">Milestones Cleared</span>
+            <div class="space-y-0.5">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono" data-i18n="stat_steps_label">Station Progress</div>
+              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1" id="summary-stat-progress">
+                <span>0 / 0</span> <span class="font-sans text-xs font-normal text-slate-500">Milestones Cleared</span>
               </div>
             </div>
-            <div class="space-y-1">
-              <div class="font-label-sm text-label-sm text-secondary uppercase font-semibold" data-i18n="stat_blocker_label">Current Stoppage / Blocker</div>
-              <div class="font-label-md text-label-md text-primary font-semibold truncate flex items-center gap-1" id="summary-stat-blocker">
+            <div class="space-y-0.5">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono" data-i18n="stat_blocker_label">Current Stoppage / Blocker</div>
+              <div class="text-xs font-semibold text-slate-900 truncate flex items-center gap-1.5 pt-1" id="summary-stat-blocker">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
                 <span>Ready to Begin</span>
               </div>
@@ -746,70 +845,70 @@
         </div>
 
         <!-- Optional Collapsible Subway SVG Diagram View -->
-        <div id="subway-diagram-wrapper" class="bg-surface-container-lowest p-space-lg border border-outline-variant shadow-xs overflow-x-auto mb-space-lg relative" style="display:none;">
-          <div class="flex items-center justify-between pb-space-sm mb-space-sm border-b border-outline-variant">
-            <div class="flex items-center gap-space-sm">
-              <span class="material-symbols-outlined text-[18px] text-primary">route</span>
-              <span class="font-label-md text-label-md font-bold text-primary uppercase" id="subway-network-label" data-i18n="subway_line_title">Inter-Agency Transit Spine</span>
+        <div id="subway-diagram-wrapper" class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-5 overflow-x-auto mb-6 relative" style="display:none;">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px] text-slate-700">route</span>
+              <span class="font-heading text-xs font-bold text-slate-900 uppercase" id="subway-network-label" data-i18n="subway_line_title">Inter-Agency Transit Spine</span>
             </div>
-            <div class="flex items-center gap-space-md font-code text-code text-secondary">
+            <div class="flex items-center gap-3 font-mono text-xs text-slate-400">
               <span id="subway-interagency-code" data-i18n="subway_line_sub">SCALE: 1 STOP = 1 PREREQUISITE STAGE</span>
             </div>
           </div>
           <div class="min-w-[860px] py-4 relative select-none">
-            <svg class="w-full h-auto text-primary" viewBox="0 0 940 380" xmlns="http://www.w3.org/2000/svg" id="subway-transit-svg"></svg>
+            <svg class="w-full h-auto text-slate-900" viewBox="0 0 940 380" xmlns="http://www.w3.org/2000/svg" id="subway-transit-svg"></svg>
           </div>
         </div>
 
         <!-- Optional Collapsible DAG Canvas View -->
-        <div id="dag-canvas-wrapper" class="bg-surface-container-lowest p-space-md border border-outline-variant shadow-xs relative mb-space-lg" style="display:none; height: 420px;">
-          <div class="absolute top-3 right-3 z-10 flex bg-surface-container border border-outline-variant p-0.5">
-            <button class="px-2 py-1 font-headline text-xs hover:bg-surface-container-high" id="btn-zoom-in" title="Zoom In">+</button>
-            <button class="px-2 py-1 font-headline text-xs hover:bg-surface-container-high border-l border-outline-variant" id="btn-zoom-out" title="Zoom Out">-</button>
-            <button class="px-2 py-1 font-headline text-xs hover:bg-surface-container-high border-l border-outline-variant" id="btn-fit-screen" title="Fit to Screen" data-i18n="btn_fit">Fit</button>
-            <button class="px-2 py-1 font-headline text-xs hover:bg-surface-container-high border-l border-outline-variant" id="btn-reset-view" title="Reset View" data-i18n="btn_reset">Reset</button>
+        <div id="dag-canvas-wrapper" class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-4 relative mb-6" style="display:none; height: 420px;">
+          <div class="absolute top-3 right-3 z-10 flex bg-slate-100 rounded-lg border border-slate-200/80 p-0.5 text-xs">
+            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-zoom-in" title="Zoom In">+</button>
+            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-zoom-out" title="Zoom Out">-</button>
+            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-fit-screen" title="Fit to Screen" data-i18n="btn_fit">Fit</button>
+            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-reset-view" title="Reset View" data-i18n="btn_reset">Reset</button>
           </div>
           <svg id="graph-canvas" class="w-full h-full cursor-grab"></svg>
         </div>
 
         <!-- PRIMARY VIEW: Dynamic, Clean Step-by-Step Cards -->
-        <div class="mb-space-lg">
-          <div class="flex items-center justify-between mb-space-md pb-space-xs border-b border-outline-variant">
+        <div class="mb-8">
+          <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-200/80">
             <div>
-              <h2 class="font-headline-lg text-headline-lg text-primary font-bold" data-i18n="checklist_heading">
+              <h2 class="font-heading text-lg font-bold text-slate-900 tracking-tight" data-i18n="checklist_heading">
                 Your Step-by-Step Compliance Checklist
               </h2>
-              <p class="font-body-sm text-body-sm text-on-surface-variant" data-i18n="checklist_desc">
+              <p class="font-sans text-xs text-slate-500 mt-0.5" data-i18n="checklist_desc">
                 Complete these stages in sequence. Click "View Details & Apply" to access the official portal links, offline PDF forms, and statutory proof requirements.
               </p>
             </div>
-            <button onclick="window.app.toggleWayfindingView(window.app.wayfindingMode === 'subway' ? 'cards' : 'subway')" class="text-xs font-label-md font-semibold text-primary hover:underline flex items-center gap-1">
+            <button onclick="window.app.toggleWayfindingView(window.app.wayfindingMode === 'subway' ? 'cards' : 'subway')" class="text-xs font-sans font-medium text-slate-700 hover:text-slate-900 flex items-center gap-1 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-lg border border-slate-200/80 transition-colors">
               <span class="material-symbols-outlined text-[16px]">map</span>
-              <span data-i18n="toggle_subway_btn">Toggle Visual Subway Map</span>
+              <span data-i18n="toggle_subway_btn">Toggle Transit Map</span>
             </button>
           </div>
 
           <!-- Maharashtra Shops & Establishments Act 2017 Intake Workers Toggle -->
-          <div id="shops-act-workers-toggle" class="bg-surface-container-low p-space-md border border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm mb-space-md" style="display:none;">
-            <div class="flex items-center gap-space-sm">
-              <span class="material-symbols-outlined text-amber-700 text-[20px]">storefront</span>
+          <div id="shops-act-workers-toggle" class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6" style="display:none;">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-amber-600 text-[20px]">storefront</span>
               <div>
-                <span class="font-label-md text-label-md font-bold text-primary block" data-i18n="shops_toggle_label">Workers Count (Maharashtra Shops Act 2017):</span>
-                <span class="font-body-sm text-body-sm text-secondary">Statutory Exemption: Under-10 establishments require ₹0 Form A Intimation only.</span>
+                <span class="font-heading text-xs font-bold text-slate-900 block" data-i18n="shops_toggle_label">Workers Count (Maharashtra Shops Act 2017):</span>
+                <span class="font-sans text-xs text-slate-500">Statutory Exemption: Under-10 establishments require ₹0 Form A Intimation only.</span>
               </div>
             </div>
-            <div class="flex items-center gap-space-xs shrink-0">
-              <button id="btn-workers-under-10" onclick="window.app.setWorkerCountTier('under10')" class="px-3 py-1.5 font-label-sm text-label-sm font-bold bg-emerald-700 text-white shadow-2xs">
+            <div class="flex items-center gap-2 shrink-0">
+              <button id="btn-workers-under-10" onclick="window.app.setWorkerCountTier('under10')" class="px-3 py-1.5 font-sans text-xs font-semibold rounded-lg bg-emerald-600 text-white shadow-sm">
                 <span data-i18n="shops_under_10">&lt; 10 Workers (Form A — ₹0 Free)</span>
               </button>
-              <button id="btn-workers-over-10" onclick="window.app.setWorkerCountTier('over10')" class="px-3 py-1.5 font-label-sm text-label-sm font-bold bg-surface-container text-primary border border-outline-variant">
+              <button id="btn-workers-over-10" onclick="window.app.setWorkerCountTier('over10')" class="px-3 py-1.5 font-sans text-xs font-semibold rounded-lg bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
                 <span data-i18n="shops_over_10">10+ Workers (Form B — Statutory Fee)</span>
               </button>
             </div>
           </div>
 
           <!-- Dynamic Steps Container (Generated by renderRoadmapStepCards in Stitch style) -->
-          <div id="roadmap-steps-container" class="space-y-space-md">
+          <div id="roadmap-steps-container" class="space-y-4">
             <!-- Dynamically populated by app.js -->
           </div>
         </div>
@@ -834,86 +933,88 @@
       <!-- ==================================================================
            VIEW 3: STEP DETAILS & HOW TO APPLY (Step Dossier)
            ================================================================== -->
+      <!-- ==================================================================
+           VIEW 3: STEP DETAILS & HOW TO APPLY (Step Dossier)
+           ================================================================== -->
       <section id="view-step-dossier" class="tab-pane flex flex-col w-full" style="display:none;">
         
         <!-- Navigational Docket Header & Path Sequence -->
-        <div class="mb-space-lg flex flex-col md:flex-row md:items-center md:justify-between gap-space-sm pb-space-sm border-b border-outline-variant">
-          <nav aria-label="Jurisdictional Path" class="flex items-center gap-space-xs font-label-md text-label-md text-secondary flex-wrap">
-            <a class="hover:text-primary transition-colors cursor-pointer" onclick="window.app.switchNavTab('roadmap-and-route')">Docket Route</a>
-            <span class="text-outline-variant">/</span>
-            <span id="dossier-route-crumb" class="hover:text-primary transition-colors cursor-pointer" onclick="window.app.switchNavTab('roadmap-and-route')">Active Task</span>
-            <span class="text-outline-variant">/</span>
-            <span id="dossier-step-crumb" class="font-semibold text-primary">Current Stage</span>
+        <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-4 border-b border-slate-200">
+          <nav aria-label="Jurisdictional Path" class="flex items-center gap-2 text-sm text-slate-500 flex-wrap">
+            <a class="hover:text-slate-900 transition-colors cursor-pointer font-medium" onclick="window.app.switchNavTab('roadmap-and-route')">Docket Route</a>
+            <span class="text-slate-300">/</span>
+            <span id="dossier-route-crumb" class="hover:text-slate-900 transition-colors cursor-pointer font-medium" onclick="window.app.switchNavTab('roadmap-and-route')">Active Task</span>
+            <span class="text-slate-300">/</span>
+            <span id="dossier-step-crumb" class="font-semibold text-slate-900">Current Stage</span>
           </nav>
-          <div class="flex items-center gap-space-sm">
-            <span id="dossier-ref-code" class="font-code text-code text-secondary font-semibold">REF: MH-CIVIC-STAGE</span>
-            <span class="inline-block w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
-            <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Priority Statutory Ledger</span>
+          <div class="flex items-center gap-2.5">
+            <span id="dossier-ref-code" class="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 font-medium">REF: MH-CIVIC-STAGE</span>
+            <span class="inline-block w-1 h-1 rounded-full bg-slate-300"></span>
+            <span class="text-xs text-slate-500 uppercase tracking-wider font-medium">Priority Statutory Ledger</span>
           </div>
         </div>
 
         <!-- Primary Administrative Dossier Title Header -->
-        <div class="bg-surface-container-lowest border border-outline-variant p-space-lg mb-space-lg relative overflow-hidden shadow-sm">
-          <div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
-          <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-space-lg">
-            <div class="space-y-space-xs max-w-3xl">
-              <div class="flex flex-wrap items-center gap-space-sm">
-                <span id="dossier-stage-idx" class="font-code text-code bg-primary text-on-primary px-2 py-0.5 font-medium rounded-none">STAGE 01 / 04</span>
-                <span id="dossier-agency-name" class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">MUNICIPAL DEPARTMENT</span>
+        <div class="bg-white rounded-xl border border-slate-200/80 p-6 md:p-8 mb-6 relative overflow-hidden shadow-sm">
+          <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+            <div class="space-y-3 max-w-3xl">
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="dossier-stage-idx" class="font-mono text-xs bg-slate-900 text-white px-2.5 py-0.5 rounded font-medium">STAGE 01 / 04</span>
+                <span id="dossier-agency-name" class="text-xs uppercase tracking-wider text-slate-500 font-semibold">MUNICIPAL DEPARTMENT</span>
               </div>
               <div class="flex items-center gap-3">
-                <h1 id="dossier-main-title" class="font-headline-xl text-headline-xl text-primary tracking-tight font-semibold">
+                <h1 id="dossier-main-title" class="font-heading text-2xl md:text-3xl text-slate-900 tracking-tight font-semibold">
                   Step Title
                 </h1>
                 <!-- Web Speech API Audio Speaker Button -->
-                <button id="btn-speak-instruction" onclick="window.app.speakStepInstruction()" class="p-1.5 bg-surface-container hover:bg-surface-container-high text-primary border border-outline-variant rounded transition-colors flex items-center justify-center shrink-0" title="Listen in Marathi/English (आवाज ऐका)">
+                <button id="btn-speak-instruction" onclick="window.app.speakStepInstruction()" class="p-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg transition-colors flex items-center justify-center shrink-0 shadow-2xs" title="Listen in Marathi/English (आवाज ऐका)">
                   <span class="material-symbols-outlined text-[20px]">volume_up</span>
                 </button>
               </div>
-              <p id="dossier-main-desc" class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              <p id="dossier-main-desc" class="font-sans text-sm md:text-base text-slate-600 leading-relaxed">
                 Step Description goes here.
               </p>
             </div>
 
             <!-- Active Docket Status Badge -->
-            <div class="flex flex-col items-start lg:items-end gap-space-xs bg-surface-container-low p-space-md border border-outline-variant min-w-[280px]">
-              <div class="flex items-center gap-space-xs">
+            <div class="flex flex-col items-start lg:items-end gap-1.5 bg-slate-50 rounded-xl p-4 border border-slate-200/80 min-w-[280px]">
+              <div class="flex items-center gap-2">
                 <span id="dossier-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
-                <span class="font-label-sm text-label-sm uppercase text-secondary font-semibold">Current Audit Status</span>
+                <span class="text-xs uppercase text-slate-500 font-semibold tracking-wide">Current Audit Status</span>
               </div>
-              <div id="dossier-status-text" class="font-headline-sm text-headline-sm text-primary font-semibold">
+              <div id="dossier-status-text" class="font-heading text-lg text-slate-900 font-semibold">
                 In Progress: Action Required
               </div>
-              <span id="dossier-status-sla" class="font-code text-code text-outline">Target Statutory Window: 15 Working Days</span>
+              <span id="dossier-status-sla" class="font-mono text-xs text-slate-500">Target Statutory Window: 15 Working Days</span>
             </div>
           </div>
 
           <!-- Hybrid Mode (Setu Kendra) Mandatory In-Person Visit Notice -->
-          <div id="dossier-hybrid-banner" class="hidden mt-space-md p-3.5 bg-amber-50 border-l-4 border-amber-600 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-[20px] text-amber-800">account_balance</span>
+          <div id="dossier-hybrid-banner" class="hidden mt-5 p-4 bg-amber-50/80 rounded-xl border border-amber-200 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-[24px] text-amber-700">account_balance</span>
               <div>
-                <strong class="font-label-md text-label-md block">🏛️ Mandatory In-Person Verification / Setu Kendra Visit Required</strong>
-                <span class="font-body-sm text-body-sm">While the application form is submitted online, statutory rules require an in-person physical panchnama or Setu Suvidha Kendra biometric verification.</span>
+                <strong class="font-heading text-sm font-semibold block text-amber-900">🏛️ Mandatory In-Person Verification / Setu Kendra Visit Required</strong>
+                <span class="text-xs text-amber-800 leading-normal">While the application form is submitted online, statutory rules require an in-person physical panchnama or Setu Suvidha Kendra biometric verification.</span>
               </div>
             </div>
-            <button onclick="window.app.openSetuLocatorModal()" class="shrink-0 px-3 py-1.5 bg-amber-800 text-white font-label-sm text-label-sm font-bold shadow-2xs hover:bg-amber-900 transition-colors flex items-center gap-1">
+            <button onclick="window.app.openSetuLocatorModal()" class="shrink-0 px-3.5 py-1.5 bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5">
               <span class="material-symbols-outlined text-[16px]">location_on</span>
               <span>Find Nearest Setu Kendra 📍</span>
             </button>
           </div>
 
           <!-- Official Provenance Authority Banner -->
-          <div class="mt-space-lg pt-space-md border-t border-outline-variant bg-surface-container-low -mx-space-lg -mb-space-lg px-space-lg py-space-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-space-xs">
-            <div class="flex items-center gap-space-sm text-secondary font-body-sm text-body-sm">
-              <span class="material-symbols-outlined text-[18px] text-primary">gavel</span>
+          <div class="mt-6 pt-4 border-t border-slate-200/80 bg-slate-50/50 -mx-6 md:-mx-8 -mb-6 md:-mb-8 px-6 md:px-8 py-3.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2 text-slate-600">
+              <span class="material-symbols-outlined text-[18px] text-slate-700">gavel</span>
               <span id="dossier-provenance-text">Verified against Government Regulations as of 2026.</span>
               <span id="dossier-gazette-tag" style="display:none;"></span>
-              <span id="dossier-verified-date" class="text-secondary text-[11px] block"></span>
-              <span id="dossier-crowd-count" class="text-secondary text-[11px] block"></span>
+              <span id="dossier-verified-date" class="text-slate-400 text-[11px] block"></span>
+              <span id="dossier-crowd-count" class="text-slate-400 text-[11px] block"></span>
               <p id="dossier-anti-tout-text" class="text-[11px] text-amber-800 italic mt-1"></p>
             </div>
-            <a id="dossier-provenance-link" class="font-code text-code text-primary underline hover:text-secondary inline-flex items-center gap-1 font-medium" href="#" rel="noopener noreferrer" target="_blank">
+            <a id="dossier-provenance-link" class="font-mono text-xs text-slate-900 hover:text-amber-800 underline inline-flex items-center gap-1 font-medium" href="#" rel="noopener noreferrer" target="_blank">
               <span id="dossier-provenance-link-text">portal.maharashtra.gov.in</span>
               <span class="material-symbols-outlined text-[13px]">open_in_new</span>
             </a>
@@ -921,95 +1022,95 @@
         </div>
 
         <!-- Primary 12-Column Split: 8 Col Evidence & Law / 4 Col Action & Municipal Counter -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           <!-- LEFT 8 COLUMNS: Statutory Mandates, Forms, Evidence Checklists & Fees -->
-          <div class="lg:col-span-8 space-y-space-lg">
+          <div class="lg:col-span-8 space-y-6">
             
             <!-- Section 0: Prerequisite Chain Clearance Bar -->
-            <div class="bg-surface-container-low border border-outline-variant p-space-md">
-              <div class="flex items-center justify-between flex-wrap gap-space-sm mb-space-xs">
-                <div class="flex items-center gap-space-xs font-label-sm text-label-sm text-primary font-semibold uppercase tracking-wider">
-                  <span class="material-symbols-outlined text-[16px] text-emerald-700">link</span>
+            <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
+              <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+                <div class="flex items-center gap-2 text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                  <span class="material-symbols-outlined text-[18px] text-emerald-600">link</span>
                   <span>Prerequisite Dependency Ledger</span>
                 </div>
-                <span id="dossier-prereq-chain-status" class="font-code text-code text-secondary">CHAIN STATUS: Cleared / Verified</span>
+                <span id="dossier-prereq-chain-status" class="font-mono text-xs text-slate-500">CHAIN STATUS: Cleared / Verified</span>
               </div>
-              <div id="dossier-prereqs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+              <div id="dossier-prereqs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                 <!-- Dynamically populated by app.js -->
               </div>
             </div>
 
             <!-- Section 1: Aaple Sarkar 3-Step Navigation Wayfinding Card -->
-            <div id="dossier-portal-guide-card" class="bg-surface-container-lowest border-2 border-primary/20 p-space-md shadow-xs">
-              <div class="flex items-center gap-space-sm pb-space-xs border-b border-outline-variant mb-space-sm">
-                <span class="material-symbols-outlined text-[20px] text-primary">assistant_navigation</span>
-                <span class="font-headline-sm text-headline-sm text-primary font-bold">ℹ️ Official Portal Navigation Guide (Aaple Sarkar / MCGM)</span>
+            <div id="dossier-portal-guide-card" class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
+              <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100 mb-3">
+                <span class="material-symbols-outlined text-[20px] text-slate-700">assistant_navigation</span>
+                <span class="font-heading text-sm text-slate-900 font-semibold">ℹ️ Official Portal Navigation Guide (Aaple Sarkar / MCGM)</span>
               </div>
-              <div id="dossier-portal-guide-steps" class="space-y-2 font-body-md text-body-md text-on-surface-variant">
+              <div id="dossier-portal-guide-steps" class="space-y-2 text-sm text-slate-600">
                 <!-- Populated dynamically -->
               </div>
             </div>
 
             <!-- Section 2: Required Statutory Forms -->
-            <section class="bg-surface-container-lowest border border-outline-variant">
-              <div class="bg-surface-container-low px-space-md py-space-sm border-b border-outline-variant flex items-center justify-between">
-                <div class="flex items-center gap-space-xs font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">
-                  <span class="material-symbols-outlined text-[18px]">description</span>
+            <section class="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-sm">
+              <div class="bg-slate-50/80 px-5 py-3 border-b border-slate-200/80 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                  <span class="material-symbols-outlined text-[18px] text-slate-700">description</span>
                   <span>1. Mandatory Statutory Forms</span>
                 </div>
-                <span id="dossier-forms-count" class="font-label-sm text-label-sm text-secondary">Forms Prescribed</span>
+                <span id="dossier-forms-count" class="font-mono text-xs text-slate-500">Forms Prescribed</span>
               </div>
-              <div id="dossier-forms-container" class="p-space-md divide-y divide-outline-variant">
+              <div id="dossier-forms-container" class="p-5 divide-y divide-slate-100">
                 <!-- Dynamically populated by app.js -->
               </div>
             </section>
 
             <!-- Section 3: Evidence Checklist & Document Locker (OR/AND Groupings) -->
-            <section class="bg-surface-container-lowest border border-outline-variant">
-              <div class="bg-surface-container-low px-space-md py-space-sm border-b border-outline-variant flex items-center justify-between">
-                <div class="flex items-center gap-space-xs font-label-lg text-label-lg text-primary font-semibold uppercase tracking-wider">
-                  <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+            <section class="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-sm">
+              <div class="bg-slate-50/80 px-5 py-3 border-b border-slate-200/80 flex items-center justify-between">
+                <div class="flex items-center gap-2 text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                  <span class="material-symbols-outlined text-[18px] text-slate-700">inventory_2</span>
                   <span>2. Mandatory Evidence & Document Proofs</span>
                 </div>
-                <span id="dossier-evidence-count" class="font-label-sm text-label-sm text-secondary">Document Locker</span>
+                <span id="dossier-evidence-count" class="font-mono text-xs text-slate-500">Document Locker</span>
               </div>
-              <div id="dossier-evidence-container" class="p-space-md space-y-space-md">
+              <div id="dossier-evidence-container" class="p-5 space-y-4">
                 <!-- Populated with Alternative Proof Radio Groups by app.js -->
               </div>
             </section>
 
             <!-- Section 4: RTS 2015 3-Tier Escalation Matrix Accordion -->
-            <div id="dossier-rts-escalation-card" class="bg-surface-container-lowest border border-outline-variant shadow-xs">
-              <button onclick="window.app.toggleRtsAccordion()" class="w-full bg-surface-container-low px-space-md py-space-sm flex items-center justify-between text-left hover:bg-surface-container transition-colors">
-                <div class="flex items-center gap-2">
-                  <span class="material-symbols-outlined text-[20px] text-primary">gavel</span>
-                  <span class="font-headline-sm text-headline-sm text-primary font-bold">⚖️ Statutory Rights Under Maharashtra RTS Act 2015 & Appeal Ladder</span>
+            <div id="dossier-rts-escalation-card" class="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-sm">
+              <button onclick="window.app.toggleRtsAccordion()" class="w-full bg-slate-50/80 px-5 py-3 flex items-center justify-between text-left hover:bg-slate-100 transition-colors">
+                <div class="flex items-center gap-2.5">
+                  <span class="material-symbols-outlined text-[20px] text-slate-700">gavel</span>
+                  <span class="font-heading text-sm text-slate-900 font-semibold">⚖️ Statutory Rights Under Maharashtra RTS Act 2015 & Appeal Ladder</span>
                 </div>
-                <span id="rts-accordion-icon" class="material-symbols-outlined text-[18px] text-secondary">expand_more</span>
+                <span id="rts-accordion-icon" class="material-symbols-outlined text-[18px] text-slate-500">expand_more</span>
               </button>
-              <div id="dossier-rts-escalation-content" class="p-space-md border-t border-outline-variant space-y-3 font-body-md text-body-md text-on-surface-variant" style="display:none;">
-                <p class="font-body-sm text-body-sm text-secondary">If the Designated Officer fails to deliver this service within statutory limits or rejects your application without valid legal cause, you have the right to file appeals under Section 8 of RTS Act 2015:</p>
+              <div id="dossier-rts-escalation-content" class="p-5 border-t border-slate-200/80 space-y-4 text-sm text-slate-600" style="display:none;">
+                <p class="text-xs text-slate-500 leading-normal">If the Designated Officer fails to deliver this service within statutory limits or rejects your application without valid legal cause, you have the right to file appeals under Section 8 of RTS Act 2015:</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div class="p-3 bg-surface-container-low border border-outline-variant">
-                    <span class="font-code text-code text-secondary block">TIER 1 (OFFICER)</span>
-                    <strong class="font-headline-sm text-headline-sm text-primary block" id="dossier-rts-designated">Tahsildar / Ward Officer</strong>
-                    <span class="font-body-sm text-body-sm text-secondary">Statutory SLA: 15 Days</span>
+                  <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
+                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 1 (OFFICER)</span>
+                    <strong class="font-heading text-sm text-slate-900 block mt-0.5" id="dossier-rts-designated">Tahsildar / Ward Officer</strong>
+                    <span class="text-xs text-slate-500 mt-1 block">Statutory SLA: 15 Days</span>
                   </div>
-                  <div class="p-3 bg-surface-container-low border border-outline-variant">
-                    <span class="font-code text-code text-secondary block">TIER 2 (1ST APPEAL)</span>
-                    <strong class="font-headline-sm text-headline-sm text-primary block" id="dossier-rts-first-appellate">Sub-Divisional Officer (SDO)</strong>
-                    <span class="font-body-sm text-body-sm text-secondary">Appeal Window: 30 Days</span>
+                  <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
+                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 2 (1ST APPEAL)</span>
+                    <strong class="font-heading text-sm text-slate-900 block mt-0.5" id="dossier-rts-first-appellate">Sub-Divisional Officer (SDO)</strong>
+                    <span class="text-xs text-slate-500 mt-1 block">Appeal Window: 30 Days</span>
                   </div>
-                  <div class="p-3 bg-surface-container-low border border-outline-variant">
-                    <span class="font-code text-code text-secondary block">TIER 3 (2ND APPEAL)</span>
-                    <strong class="font-headline-sm text-headline-sm text-primary block" id="dossier-rts-second-appellate">District Collector / RTS Comm.</strong>
-                    <span class="font-body-sm text-body-sm text-secondary">Appeal Window: 30 Days</span>
+                  <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
+                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 3 (2ND APPEAL)</span>
+                    <strong class="font-heading text-sm text-slate-900 block mt-0.5" id="dossier-rts-second-appellate">District Collector / RTS Comm.</strong>
+                    <span class="text-xs text-slate-500 mt-1 block">Appeal Window: 30 Days</span>
                   </div>
                 </div>
-                <div class="pt-2 flex items-center justify-between">
-                  <span class="font-code text-code text-secondary">Maharashtra Right to Public Services Act (RTS Act No. XXXI of 2015)</span>
-                  <a id="dossier-rts-appeal-btn" href="https://aaplesarkar.mahaonline.gov.in" target="_blank" class="px-3 py-1 bg-primary text-white font-label-sm font-semibold hover:bg-primary-container transition-colors inline-flex items-center gap-1">
+                <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <span class="font-mono text-slate-500">Maharashtra Right to Public Services Act (RTS Act No. XXXI of 2015)</span>
+                  <a id="dossier-rts-appeal-btn" href="https://aaplesarkar.mahaonline.gov.in" target="_blank" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors inline-flex items-center gap-1 self-start sm:self-auto shadow-2xs">
                     <span>File First Appeal ↗</span>
                   </a>
                 </div>
@@ -1017,12 +1118,12 @@
             </div>
 
             <!-- Section 5: Practical Guidelines & Pitfalls -->
-            <div class="bg-surface-container-low border border-outline-variant p-space-md">
-              <div class="flex items-center gap-space-xs font-label-md text-label-md text-primary font-bold uppercase mb-2">
-                <span class="material-symbols-outlined text-[18px] text-amber-700">lightbulb</span>
+            <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
+              <div class="flex items-center gap-2 text-xs font-semibold text-slate-900 uppercase tracking-wider mb-2">
+                <span class="material-symbols-outlined text-[18px] text-amber-600">lightbulb</span>
                 <span>Practical Navigation Tips & Common Pitfalls</span>
               </div>
-              <p id="dossier-guidelines-text" class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              <p id="dossier-guidelines-text" class="text-sm text-slate-600 leading-relaxed">
                 Ensure all documents match your Aadhaar name exactly to avoid rejection.
               </p>
             </div>
@@ -1030,59 +1131,59 @@
           </div>
 
           <!-- RIGHT 4 COLUMNS: Action Station & Municipal Counter -->
-          <div class="lg:col-span-4 space-y-space-md">
+          <div class="lg:col-span-4 space-y-6">
             
             <!-- Filing Action Card -->
-            <div class="bg-surface-container-lowest p-space-md border border-outline-variant shadow-sm space-y-space-md">
-              <div class="pb-space-sm border-b border-outline-variant">
-                <div class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Statutory Government Fee</div>
-                <div class="font-headline-xl text-headline-xl text-primary font-bold" id="dossier-fee-total">₹0.00</div>
-                <span class="font-body-sm text-body-sm text-secondary" id="dossier-payment-channel">Official Online Gateway (GRAS / Aaple Sarkar)</span>
+            <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+              <div class="pb-3 border-b border-slate-100">
+                <div class="text-xs uppercase text-slate-500 font-semibold tracking-wide">Statutory Government Fee</div>
+                <div class="font-heading text-3xl text-slate-900 font-bold mt-1" id="dossier-fee-total">₹0.00</div>
+                <span class="text-xs text-slate-500 mt-1 block" id="dossier-payment-channel">Official Online Gateway (GRAS / Aaple Sarkar)</span>
               </div>
 
               <!-- Official Action Button -->
-              <a id="dossier-apply-btn" href="#" target="_blank" class="w-full bg-primary text-on-primary py-3 px-space-md font-label-lg text-label-lg font-semibold hover:bg-primary-container transition-colors flex items-center justify-center gap-2 shadow-xs text-center">
+              <a id="dossier-apply-btn" href="#" target="_blank" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3.5 px-4 rounded-xl font-medium transition-all shadow-sm flex items-center justify-center gap-2 text-center text-sm">
                 <span>Apply on Official Portal</span>
                 <span class="material-symbols-outlined text-[18px]">open_in_new</span>
               </a>
 
               <!-- Offline Fallback Notice -->
-              <div class="p-space-sm bg-surface-container-low border border-outline-variant font-body-sm text-body-sm text-secondary">
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200/80 text-xs text-slate-600">
                 <span>Receipt Mandate: </span>
-                <span class="font-semibold text-primary" id="dossier-receipt-mandate">Instant Computerized E-Receipt & Application Token</span>
+                <span class="font-medium text-slate-900" id="dossier-receipt-mandate">Instant Computerized E-Receipt & Application Token</span>
               </div>
 
               <!-- Detailed Fee Table -->
-              <div class="pt-space-xs">
-                <div class="font-label-sm text-label-sm text-primary font-semibold uppercase mb-1">Fee Breakdown Table</div>
-                <div id="dossier-fee-table-body" class="font-code text-code text-secondary space-y-1 divide-y divide-outline-variant/40">
+              <div class="pt-1">
+                <div class="text-xs text-slate-700 font-semibold uppercase tracking-wider mb-2">Fee Breakdown Table</div>
+                <div id="dossier-fee-table-body" class="font-mono text-xs text-slate-600 space-y-1 divide-y divide-slate-100">
                   <!-- Populated by app.js -->
                 </div>
               </div>
             </div>
 
             <!-- Municipal Counter Desk & Working Hours -->
-            <div class="bg-surface-container-lowest p-space-md border border-outline-variant shadow-sm space-y-space-sm">
-              <div class="flex items-center gap-space-xs text-primary pb-space-xs border-b border-outline-variant">
-                <span class="material-symbols-outlined text-[18px]">business</span>
-                <span class="font-label-sm text-label-sm font-bold uppercase tracking-wider">Designated Municipal Counter</span>
+            <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm space-y-3">
+              <div class="flex items-center gap-2 text-slate-900 pb-2 border-b border-slate-100">
+                <span class="material-symbols-outlined text-[18px] text-slate-700">business</span>
+                <span class="text-xs font-semibold uppercase tracking-wider">Designated Municipal Counter</span>
               </div>
-              <div class="font-headline-sm text-headline-sm text-primary font-semibold" id="dossier-cell-title">
+              <div class="font-heading text-base text-slate-900 font-semibold" id="dossier-cell-title">
                 Competent Authority Desk
               </div>
-              <p class="font-body-sm text-body-sm text-on-surface-variant" id="dossier-cell-desc">
+              <p class="text-xs text-slate-600 leading-relaxed" id="dossier-cell-desc">
                 Public service counter for physical document submission or panchnama verification.
               </p>
-              <div class="font-body-sm text-body-sm text-secondary space-y-1 pt-1 border-t border-outline-variant/40">
-                <p id="dossier-office-address">Administrative Building, Municipal Corporation</p>
+              <div class="text-xs text-slate-500 space-y-1.5 pt-2 border-t border-slate-100">
+                <p id="dossier-office-address" class="text-slate-700">Administrative Building, Municipal Corporation</p>
                 <span id="dossier-office-city" style="display:none;"></span>
                 <span id="dossier-office-borough" style="display:none;"></span>
-                <p id="dossier-office-window" class="font-code text-code text-primary font-semibold">Counter Window 04</p>
-                <p id="dossier-office-hours" class="font-code text-code text-secondary">Mon – Fri: 10:30 AM – 4:30 PM IST</p>
+                <p id="dossier-office-window" class="font-mono text-xs text-slate-900 font-semibold">Counter Window 04</p>
+                <p id="dossier-office-hours" class="font-mono text-xs text-slate-500">Mon – Fri: 10:30 AM – 4:30 PM IST</p>
               </div>
-              <div class="pt-2 border-t border-outline-variant/40 text-xs font-headline flex flex-col gap-1">
-                <span class="text-secondary">Official Helpline: <strong class="text-primary font-code" id="dossier-ombuds-phone">1800-120-8040</strong></span>
-                <span class="text-secondary">Grievance Desk: <strong class="text-primary font-code" id="dossier-ombuds-email">grievance@maharashtra.gov.in</strong></span>
+              <div class="pt-2 border-t border-slate-100 text-xs flex flex-col gap-1 text-slate-500">
+                <span>Official Helpline: <strong class="text-slate-900 font-mono" id="dossier-ombuds-phone">1800-120-8040</strong></span>
+                <span>Grievance Desk: <strong class="text-slate-900 font-mono" id="dossier-ombuds-email">grievance@maharashtra.gov.in</strong></span>
               </div>
             </div>
 
@@ -1098,63 +1199,65 @@
       <section id="view-citizen-ledger" class="tab-pane flex flex-col w-full" style="display:none;">
         
         <!-- Ledger Header -->
-        <div class="bg-surface-container-lowest border border-outline-variant p-space-lg shadow-sm mb-space-lg">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-space-md border-b border-outline-variant">
+        <div class="bg-white rounded-xl border border-slate-200/80 p-6 md:p-8 shadow-sm mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
             <div>
-              <div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest" data-i18n="my_progress">Citizen Progress Ledger</div>
-              <h1 class="font-headline-lg text-headline-lg text-primary font-bold tracking-tight" id="ledger-task-title">
+              <div class="text-xs uppercase text-slate-500 font-semibold tracking-wider" data-i18n="my_progress">Citizen Progress Ledger</div>
+              <h1 class="font-heading text-2xl md:text-3xl text-slate-900 font-semibold tracking-tight mt-1" id="ledger-task-title">
                 My Procedural Manifest
               </h1>
             </div>
-            <button class="bg-primary hover:bg-primary-container text-white px-4 py-2 font-label-md font-semibold transition-colors flex items-center gap-1.5 shadow-xs" onclick="window.print()">
+            <button class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 shadow-sm" onclick="window.print()">
               <span class="material-symbols-outlined text-[16px]">print</span>
               <span>Print Ledger Sheet</span>
             </button>
           </div>
 
           <!-- Progress Ledger Summary Grid -->
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-space-md pt-space-md">
-            <div class="bg-surface-container-low p-space-sm border border-outline-variant">
-              <span class="font-label-sm text-label-sm text-secondary uppercase block">Stages Cleared</span>
-              <strong class="font-headline-md text-headline-md text-primary" id="ledger-steps-cleared">0</strong>
-              <span class="font-code text-code text-secondary block" id="ledger-steps-total">of 0 Steps</span>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5">
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
+              <span class="text-xs uppercase text-slate-500 font-medium block">Stages Cleared</span>
+              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5" id="ledger-steps-cleared">0</strong>
+              <span class="font-mono text-xs text-slate-500 block" id="ledger-steps-total">of 0 Steps</span>
             </div>
-            <div class="bg-surface-container-low p-space-sm border border-outline-variant">
-              <span class="font-label-sm text-label-sm text-secondary uppercase block">Timeline Remaining</span>
-              <strong class="font-headline-md text-headline-md text-primary" id="ledger-days-remaining">--</strong>
-              <span class="font-code text-code text-secondary block">Working Days</span>
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
+              <span class="text-xs uppercase text-slate-500 font-medium block">Timeline Remaining</span>
+              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5" id="ledger-days-remaining">--</strong>
+              <span class="font-mono text-xs text-slate-500 block">Working Days</span>
             </div>
-            <div class="bg-surface-container-low p-space-sm border border-outline-variant">
-              <span class="font-label-sm text-label-sm text-secondary uppercase block">Fees Paid / Logged</span>
-              <strong class="font-headline-md text-headline-md text-emerald-800" id="ledger-fees-paid">₹0.00</strong>
-              <span class="font-code text-code text-secondary block" id="ledger-fees-pending">Pending: ₹0.00</span>
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
+              <span class="text-xs uppercase text-slate-500 font-medium block">Fees Paid / Logged</span>
+              <strong class="font-heading text-2xl text-emerald-700 font-semibold block mt-0.5" id="ledger-fees-paid">₹0.00</strong>
+              <span class="font-mono text-xs text-slate-500 block" id="ledger-fees-pending">Pending: ₹0.00</span>
             </div>
-            <div class="bg-surface-container-low p-space-sm border border-outline-variant">
-              <span class="font-label-sm text-label-sm text-secondary uppercase block">Total Statutory Cost</span>
-              <strong class="font-headline-md text-headline-md text-primary" id="ledger-total-fees">₹0.00</strong>
-              <span class="font-code text-code text-secondary block">Official Rate</span>
+            <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
+              <span class="text-xs uppercase text-slate-500 font-medium block">Total Statutory Cost</span>
+              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5" id="ledger-total-fees">₹0.00</strong>
+              <span class="font-mono text-xs text-slate-500 block">Official Rate</span>
             </div>
           </div>
         </div>
 
         <!-- 12-Column Split: Steps Checklist & Document Locker -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-          <div class="lg:col-span-6 space-y-space-md">
-            <div class="bg-surface-container-lowest border border-outline-variant p-space-md shadow-xs">
-              <div class="font-label-lg text-label-lg font-bold text-primary uppercase pb-space-xs border-b border-outline-variant mb-space-sm">
-                Milestone Execution Log
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-6 space-y-4">
+            <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
+              <div class="text-xs uppercase font-semibold text-slate-900 tracking-wider pb-3 border-b border-slate-100 mb-4 flex items-center justify-between">
+                <span>Milestone Execution Log</span>
+                <span class="material-symbols-outlined text-[18px] text-slate-400">checklist</span>
               </div>
-              <div id="ledger-steps-list" class="space-y-space-sm">
+              <div id="ledger-steps-list" class="space-y-3">
                 <!-- Populated dynamically -->
               </div>
             </div>
           </div>
-          <div class="lg:col-span-6 space-y-space-md">
-            <div class="bg-surface-container-lowest border border-outline-variant p-space-md shadow-xs">
-              <div class="font-label-lg text-label-lg font-bold text-primary uppercase pb-space-xs border-b border-outline-variant mb-space-sm">
-                Consolidated Document Proof Locker (OR/AND Groupings)
+          <div class="lg:col-span-6 space-y-4">
+            <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
+              <div class="text-xs uppercase font-semibold text-slate-900 tracking-wider pb-3 border-b border-slate-100 mb-4 flex items-center justify-between">
+                <span>Consolidated Document Proof Locker</span>
+                <span class="material-symbols-outlined text-[18px] text-slate-400">folder_shared</span>
               </div>
-              <div id="ledger-docs-list" class="space-y-space-sm">
+              <div id="ledger-docs-list" class="space-y-3">
                 <!-- Populated dynamically -->
               </div>
             </div>
@@ -1168,48 +1271,48 @@
            ================================================================== -->
       <section id="view-registry-admin" class="tab-pane flex flex-col w-full" style="display:none;">
         
-        <div class="bg-surface-container-lowest border border-outline-variant p-space-lg shadow-sm mb-space-lg">
-          <div class="flex items-center justify-between pb-space-md border-b border-outline-variant">
+        <div class="bg-white rounded-xl border border-slate-200/80 p-6 md:p-8 shadow-sm mb-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-200/80 gap-3">
             <div>
-              <div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest" data-i18n="admin">Administrative Console</div>
-              <h1 class="font-headline-lg text-headline-lg text-primary font-bold">Government Portal Scraper & URL Health Monitor</h1>
+              <div class="text-xs uppercase text-slate-500 font-semibold tracking-wider" data-i18n="admin">Administrative Console</div>
+              <h1 class="font-heading text-2xl text-slate-900 font-semibold mt-1">Government Portal Scraper & URL Health Monitor</h1>
             </div>
-            <span class="font-code text-code bg-surface-container px-2.5 py-1 border border-outline-variant text-primary font-semibold">PORTAL AUDIT ENGINE</span>
+            <span class="font-mono text-xs bg-slate-100 px-3 py-1 rounded-md border border-slate-200 text-slate-700 font-semibold">PORTAL AUDIT ENGINE</span>
           </div>
 
           <!-- Admin Nav Panes -->
-          <div class="flex border-b border-outline-variant pt-space-md gap-4 text-xs font-headline font-semibold">
-            <button class="pb-2 border-b-2 border-primary text-primary" id="pane-scraper">Portal Scraper</button>
-            <button class="pb-2 border-b-2 border-transparent text-secondary hover:text-primary" id="pane-regulatory">Link Health & Cache</button>
-            <button class="pb-2 border-b-2 border-transparent text-secondary hover:text-primary" id="pane-audit">Audit Daemon</button>
-            <button class="pb-2 border-b-2 border-transparent text-secondary hover:text-primary" id="pane-feedback">Citizen Feedback</button>
-            <button class="pb-2 border-b-2 border-transparent text-secondary hover:text-primary" id="pane-moderation">Task Moderation</button>
+          <div class="flex border-b border-slate-200 pt-4 gap-4 text-xs font-semibold overflow-x-auto">
+            <button class="pb-2.5 border-b-2 border-slate-900 text-slate-900" id="pane-scraper">Portal Scraper</button>
+            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900" id="pane-regulatory">Link Health & Cache</button>
+            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900" id="pane-audit">Audit Daemon</button>
+            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900" id="pane-feedback">Citizen Feedback</button>
+            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900" id="pane-moderation">Task Moderation</button>
           </div>
 
           <!-- Scraper Panel -->
-          <div class="pt-space-md space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+          <div class="pt-5 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block font-label-sm font-semibold text-primary uppercase mb-1" for="scraper-url-input">Target Portal URL</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant px-3 py-2 font-code text-code" id="scraper-url-input" type="text" placeholder="https://aaplesarkar.mahaonline.gov.in/..."/>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5" for="scraper-url-input">Target Portal URL</label>
+                <input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 font-mono text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10" id="scraper-url-input" type="text" placeholder="https://aaplesarkar.mahaonline.gov.in/..."/>
               </div>
               <div>
-                <label class="block font-label-sm font-semibold text-primary uppercase mb-1" for="scraper-hint-input">Target Service Name / Hint</label>
-                <input class="w-full bg-surface-container-lowest border border-outline-variant px-3 py-2 font-label-md" id="scraper-hint-input" type="text" placeholder="e.g. Income Certificate Tahsildar"/>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5" for="scraper-hint-input">Target Service Name / Hint</label>
+                <input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10" id="scraper-hint-input" type="text" placeholder="e.g. Income Certificate Tahsildar"/>
               </div>
             </div>
-            <div class="flex items-center gap-3">
-              <button id="btn-run-scraper" class="px-4 py-2 bg-primary text-white font-label-sm font-semibold hover:bg-primary-container transition-colors">
+            <div class="flex items-center gap-3 pt-1">
+              <button id="btn-run-scraper" class="px-4 py-2 bg-slate-900 text-white text-xs font-medium rounded-lg hover:bg-slate-800 transition-colors shadow-sm">
                 Run Scrape Job
               </button>
-              <button id="btn-run-audit-daemon" class="px-4 py-2 bg-surface-container text-primary border border-outline-variant font-label-sm font-semibold hover:bg-surface-container-high transition-colors">
+              <button id="btn-run-audit-daemon" class="px-4 py-2 bg-white text-slate-700 border border-slate-200 text-xs font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-2xs">
                 Trigger Daily Link Daemon
               </button>
-              <span id="audit-daemon-status" class="font-code text-code text-secondary">Daemon: Idle</span>
+              <span id="audit-daemon-status" class="font-mono text-xs text-slate-500">Daemon: Idle</span>
             </div>
-            <div>
-              <label class="block font-label-sm font-semibold text-primary uppercase mb-1">Scraper Execution Output</label>
-              <pre id="scraper-output" class="bg-primary text-primary-fixed p-space-md font-code text-code overflow-x-auto max-h-64 border border-outline-variant">Awaiting audit run...</pre>
+            <div class="pt-2">
+              <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Scraper Execution Output</label>
+              <pre id="scraper-output" class="bg-slate-900 text-slate-200 p-4 rounded-xl font-mono text-xs overflow-x-auto max-h-64 border border-slate-800 leading-relaxed">Awaiting audit run...</pre>
             </div>
           </div>
 
@@ -1233,24 +1336,26 @@
   <!-- ======================================================================
        MODAL 1: AAPLE SARKAR SEVA KENDRA (SETU LOCATOR) DIRECTORY MODAL
        ====================================================================== -->
-  <div id="setu-locator-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4" style="display:none;">
-    <div class="bg-surface-container-lowest border-2 border-primary max-w-2xl w-full p-space-lg shadow-xl relative max-h-[85vh] flex flex-col">
-      <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant mb-space-md">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-amber-700 text-[24px]">account_balance</span>
+  <div id="setu-locator-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4" style="display:none;">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-2xl w-full p-6 md:p-8 shadow-2xl relative max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-800">
+            <span class="material-symbols-outlined text-[24px]">account_balance</span>
+          </div>
           <div>
-            <h3 class="font-headline-md text-headline-md text-primary font-bold">Aaple Sarkar Seva Kendra (Setu) Directory</h3>
-            <span class="font-body-sm text-body-sm text-secondary">Authorized Citizen Facilitation Centers for In-Person Verification & Panchnama</span>
+            <h3 class="font-heading text-lg font-semibold text-slate-900">Aaple Sarkar Seva Kendra (Setu) Directory</h3>
+            <span class="text-xs text-slate-500">Authorized Citizen Facilitation Centers for In-Person Verification & Panchnama</span>
           </div>
         </div>
-        <button onclick="window.app.closeSetuLocatorModal()" class="text-secondary hover:text-primary p-1">
+        <button onclick="window.app.closeSetuLocatorModal()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg transition-colors">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
 
-      <div class="mb-space-md">
-        <label class="block font-label-sm font-semibold text-primary uppercase mb-1">Select District / Division</label>
-        <select id="select-setu-district" onchange="window.app.renderSetuCenters(this.value)" class="w-full bg-surface-container-lowest border border-outline-variant px-3 py-2 font-label-md font-semibold text-primary focus:outline-none focus:ring-1 focus:ring-primary">
+      <div class="mb-4">
+        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Select District / Division</label>
+        <select id="select-setu-district" onchange="window.app.renderSetuCenters(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10">
           <option value="all">All Districts (Maharashtra)</option>
           <option value="mumbai">Mumbai City & Suburban</option>
           <option value="pune">Pune & Haveli / Baramati</option>
@@ -1261,13 +1366,13 @@
         </select>
       </div>
 
-      <div id="setu-centers-list" class="overflow-y-auto space-y-space-sm flex-1 pr-1">
+      <div id="setu-centers-list" class="overflow-y-auto space-y-3 flex-1 pr-1">
         <!-- Rendered by app.js -->
       </div>
 
-      <div class="mt-space-md pt-space-sm border-t border-outline-variant flex items-center justify-between font-label-sm text-secondary">
-        <span>Citizen Grievance Helpline: 1800-120-8040</span>
-        <button onclick="window.app.closeSetuLocatorModal()" class="px-4 py-1.5 bg-primary text-white font-semibold">Close</button>
+      <div class="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+        <span>Citizen Grievance Helpline: <strong class="text-slate-800 font-mono">1800-120-8040</strong></span>
+        <button onclick="window.app.closeSetuLocatorModal()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors">Close</button>
       </div>
     </div>
   </div>
@@ -1275,25 +1380,25 @@
   <!-- ======================================================================
        MODAL 2: SHARE ROUTE MODAL
        ====================================================================== -->
-  <div id="share-modal" class="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4" style="display:none;">
-    <div class="bg-surface-container-lowest border-2 border-primary max-w-md w-full p-space-lg shadow-xl relative">
-      <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant mb-space-md">
-        <h3 class="font-headline-sm text-headline-sm text-primary font-bold">Share Procedure Route</h3>
-        <button onclick="window.app.closeShareModal()" class="text-secondary hover:text-primary">
+  <div id="share-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4" style="display:none;">
+    <div class="bg-white rounded-2xl border border-slate-200 max-w-md w-full p-6 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
+        <h3 class="font-heading text-lg font-semibold text-slate-900">Share Procedure Route</h3>
+        <button onclick="window.app.closeShareModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
-      <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+      <p class="text-xs text-slate-600 mb-4 leading-normal">
         Share this verified statutory compliance route with direct links and required evidence checklists:
       </p>
-      <div class="flex items-center gap-2 mb-space-md">
-        <input id="share-link-input" readonly class="flex-1 bg-surface-container-low border border-outline-variant px-3 py-2 font-code text-code text-primary" type="text"/>
-        <button onclick="window.app.copyShareLink()" class="px-3 py-2 bg-primary text-white font-label-sm font-semibold hover:bg-primary-container">
+      <div class="flex items-center gap-2 mb-3">
+        <input id="share-link-input" readonly class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 font-mono text-xs text-slate-900" type="text"/>
+        <button onclick="window.app.copyShareLink()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-lg transition-colors">
           Copy
         </button>
       </div>
-      <div id="share-toast" class="hidden text-xs text-emerald-800 font-semibold mb-space-sm">Link copied to clipboard!</div>
-      <button onclick="window.app.shareViaWhatsApp()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-2.5 font-label-md font-semibold flex items-center justify-center gap-2 transition-colors">
+      <div id="share-toast" class="hidden text-xs text-emerald-800 font-semibold mb-3">Link copied to clipboard!</div>
+      <button onclick="window.app.shareViaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-sm">
         <span class="material-symbols-outlined text-[18px]">chat</span>
         <span>Share via WhatsApp</span>
       </button>
@@ -1303,36 +1408,36 @@
   <!-- ======================================================================
        STEP INSPECTION SLIDE-OUT DRAWER
        ====================================================================== -->
-  <div id="drawer-backdrop" class="fixed inset-0 bg-black/40 z-40" style="display:none;"></div>
-  <aside id="step-drawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] bg-surface-container-lowest border-l-2 border-primary z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
-    <div class="p-space-md border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+  <div id="drawer-backdrop" class="fixed inset-0 bg-slate-950/40 backdrop-blur-2xs z-40" style="display:none;"></div>
+  <aside id="step-drawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] bg-white border-l border-slate-200 z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
+    <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
       <div class="flex items-center gap-2">
-        <span class="font-code text-code bg-primary text-white px-2 py-0.5" id="drawer-step-badge">STAGE</span>
-        <span class="font-label-sm text-label-sm text-secondary uppercase font-semibold">Station Dossier</span>
+        <span class="font-mono text-xs bg-slate-900 text-white px-2.5 py-0.5 rounded font-medium" id="drawer-step-badge">STAGE</span>
+        <span class="text-xs uppercase text-slate-500 font-semibold tracking-wider">Station Dossier</span>
       </div>
-      <button id="btn-close-drawer" class="text-secondary hover:text-primary">
+      <button id="btn-close-drawer" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
         <span class="material-symbols-outlined text-[20px]">close</span>
       </button>
     </div>
-    <div class="flex-1 overflow-y-auto p-space-md space-y-space-md">
+    <div class="flex-1 overflow-y-auto p-5 space-y-4">
       <div>
-        <h3 id="drawer-title" class="font-headline-md text-headline-md text-primary font-bold mb-1">Step Title</h3>
-        <p id="drawer-desc" class="font-body-md text-body-md text-on-surface-variant">Step Description</p>
+        <h3 id="drawer-title" class="font-heading text-lg font-semibold text-slate-900 mb-1">Step Title</h3>
+        <p id="drawer-desc" class="text-xs text-slate-600 leading-relaxed">Step Description</p>
       </div>
-      <div class="bg-surface-container-low p-space-sm border border-outline-variant space-y-1 text-xs font-code">
-        <div>Agency: <strong class="text-primary font-headline" id="drawer-agency">Department</strong></div>
-        <div>SLA Window: <strong class="text-primary" id="drawer-sla">15 Days</strong></div>
-        <div>Statutory Fee: <strong class="text-primary" id="drawer-fee">₹0.00</strong></div>
+      <div class="bg-slate-50 rounded-lg p-3 border border-slate-200/80 space-y-1.5 text-xs">
+        <div>Agency: <strong class="text-slate-900 font-heading font-medium" id="drawer-agency">Department</strong></div>
+        <div>SLA Window: <strong class="text-slate-900 font-mono" id="drawer-sla">15 Days</strong></div>
+        <div>Statutory Fee: <strong class="text-slate-900 font-mono" id="drawer-fee">₹0.00</strong></div>
       </div>
-      <div class="pt-space-sm border-t border-outline-variant">
-        <button onclick="window.app.switchNavTab('step-dossier')" class="w-full bg-primary text-white py-2 font-label-md font-semibold hover:bg-primary-container transition-colors flex items-center justify-center gap-1">
+      <div class="pt-2">
+        <button onclick="window.app.switchNavTab('step-dossier')" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
           <span>Open Full Dossier</span>
           <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
         </button>
       </div>
     </div>
-    <div class="p-space-md border-t border-outline-variant bg-surface-container-low">
-      <button id="btn-toggle-complete" class="w-full py-2 bg-emerald-700 text-white font-label-md font-semibold hover:bg-emerald-800 transition-colors flex items-center justify-center gap-1.5 shadow-xs">
+    <div class="p-4 border-t border-slate-200 bg-slate-50/80">
+      <button id="btn-toggle-complete" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
         <span class="material-symbols-outlined text-[16px]">check_circle</span>
         <span>Mark Stage Cleared</span>
       </button>
@@ -1342,26 +1447,26 @@
   <!-- ======================================================================
        FOOTER
        ====================================================================== -->
-  <footer class="bg-primary text-on-primary border-t-2 border-primary-container py-space-xl mt-auto">
-    <div class="max-w-[1200px] mx-auto px-margin flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md text-xs font-label-sm">
-      <div class="space-y-1">
-        <div class="font-headline-sm text-headline-sm uppercase font-bold text-white tracking-wider">
+  <footer class="bg-slate-950 text-slate-400 border-t border-slate-800 py-12 mt-auto">
+    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs">
+      <div class="space-y-1.5">
+        <div class="font-heading text-sm uppercase font-semibold text-white tracking-wider">
           Maharashtra Civic Task Navigator
         </div>
-        <p class="font-body-sm text-body-sm text-primary-fixed-dim max-w-xl">
+        <p class="text-slate-400 max-w-xl leading-relaxed">
           An open civic utility platform mapping administrative procedures under the Maharashtra Right to Public Services Act (RTS 2015). Not an official intermediary; links connect citizens directly to verified state government portals.
         </p>
       </div>
-      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-space-md text-primary-fixed">
-        <a href="https://aaplesarkar.mahaonline.gov.in" target="_blank" class="hover:underline flex items-center gap-1">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-slate-300 font-medium">
+        <a href="https://aaplesarkar.mahaonline.gov.in" target="_blank" class="hover:text-white transition-colors flex items-center gap-1">
           <span>Aaple Sarkar Portal</span>
           <span class="material-symbols-outlined text-[14px]">open_in_new</span>
         </a>
-        <a href="https://portal.mcgm.gov.in" target="_blank" class="hover:underline flex items-center gap-1">
+        <a href="https://portal.mcgm.gov.in" target="_blank" class="hover:text-white transition-colors flex items-center gap-1">
           <span>MCGM BMC Portal</span>
           <span class="material-symbols-outlined text-[14px]">open_in_new</span>
         </a>
-        <a href="https://pmc.gov.in" target="_blank" class="hover:underline flex items-center gap-1">
+        <a href="https://pmc.gov.in" target="_blank" class="hover:text-white transition-colors flex items-center gap-1">
           <span>PMC Pune Portal</span>
           <span class="material-symbols-outlined text-[14px]">open_in_new</span>
         </a>

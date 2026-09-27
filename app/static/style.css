@@ -1,65 +1,66 @@
 /* ==========================================================================
-   CIVIC TASK NAVIGATOR — CIVIC TRANSIT LEDGER DESIGN SYSTEM
-   Grounded in 20th-century municipal wayfinding (Vignelli NYC Subway / TfL)
-   and authoritative official government ledger discipline.
+   CIVIC TASK NAVIGATOR — CIVIC PRECISION DESIGN SYSTEM (OPTION B)
+   Modern Sans-Serif Minimalist Architecture, Precision Typography,
+   Hairline Borders, Generous Whitespace, and Institutional Governance Tokens.
    ========================================================================== */
 
 :root {
-  /* Institutional Palette */
-  --primary: #000b21;
-  --primary-container: #152238;
-  --primary-fixed: #d7e3ff;
-  --primary-fixed-dim: #bac7e4;
+  /* Institutional Civic Precision Palette */
+  --primary: #0f172a;
+  --primary-container: #1e293b;
+  --primary-fixed: #e2e8f0;
+  --primary-fixed-dim: #94a3b8;
   --on-primary: #ffffff;
-  --on-primary-container: #7d89a4;
+  --on-primary-container: #cbd5e1;
 
-  --secondary: #51606f;
-  --secondary-fixed: #d5e4f6;
-  --secondary-fixed-dim: #b9c8d9;
-  --on-secondary: #ffffff;
-  --secondary-container: #d2e1f3;
-  --on-secondary-container: #556473;
+  --secondary: #64748b;
+  --secondary-fixed: #f1f5f9;
+  --secondary-fixed-dim: #cbd5e1;
+  --on-secondary: #0f172a;
+  --secondary-container: #f1f5f9;
+  --on-secondary-container: #334155;
 
-  --tertiary: #130a00;
-  --tertiary-fixed: #ffdeaa;
-  --tertiary-fixed-dim: #f5bd58;
-  --signal-amber: #d9a441;
-  --signal-amber-bg: #fdf3e7;
-  --signal-amber-text: #8a5800;
+  --tertiary: #b45309;
+  --tertiary-fixed: #fef3c7;
+  --tertiary-fixed-dim: #fde68a;
+  --signal-amber: #b45309;
+  --signal-amber-bg: #fffbeb;
+  --signal-amber-text: #92400e;
 
-  --canvas: #f9faf8;
+  --canvas: #fafafa;
   --paper: #ffffff;
-  --surface-dim: #d9dad8;
+  --surface-dim: #f1f5f9;
   --surface-container-lowest: #ffffff;
-  --surface-container-low: #f3f4f2;
-  --surface-container: #edeeec;
-  --surface-container-high: #e7e8e6;
-  --surface-container-highest: #e2e3e1;
+  --surface-container-low: #f8fafc;
+  --surface-container: #f1f5f9;
+  --surface-container-high: #e2e8f0;
+  --surface-container-highest: #cbd5e1;
 
-  --on-surface: #191c1b;
-  --on-surface-variant: #44474d;
-  --outline: #75777e;
-  --outline-variant: #c5c6cd;
+  --on-surface: #0f172a;
+  --on-surface-variant: #475569;
+  --outline: #94a3b8;
+  --outline-variant: #e2e8f0;
   --border-strong: #cbd5e1;
-  --border-light: #d8dfe6;
+  --border-light: #e2e8f0;
 
   /* Semantics */
-  --forest-green: #2f6848;
-  --forest-green-bg: #edf6f0;
-  --forest-green-text: #1d4a32;
+  --forest-green: #059669;
+  --forest-green-bg: #ecfdf5;
+  --forest-green-text: #065f46;
 
-  --blocker-crimson: #c23b22;
-  --blocker-crimson-bg: #fdf0ed;
-  --blocker-crimson-text: #8a1f0d;
+  --blocker-crimson: #dc2626;
+  --blocker-crimson-bg: #fef2f2;
+  --blocker-crimson-text: #991b1b;
 
-  /* Typography */
-  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Source Serif 4', Georgia, serif;
+  /* Typography: Civic Precision (Inter Body + IBM Plex Sans Headings) */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Elevation */
-  --shadow-architectural: 4px 4px 0px 0px rgba(21, 34, 56, 0.15);
-  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-architectural: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-subtle: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
 }
 
 /* Base Normalization */
