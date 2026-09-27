@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="web_standard" name="shell-type"/>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="web_standard" name="shell-type" />
   <title>Civic Task Navigator | Government of Maharashtra Citizen Services Guide</title>
-  <meta name="description" content="Grounded in Civic Functionalism & Municipal Ledger discipline. Deterministic administrative pathways under Maharashtra Right to Public Services Act (RTS 2015)."/>
-  
+  <meta name="description"
+    content="Grounded in Civic Functionalism & Municipal Ledger discipline. Deterministic administrative pathways under Maharashtra Right to Public Services Act (RTS 2015)." />
+
   <!-- Fonts: Inter (Body & UI), IBM Plex Sans (Headings), JetBrains Mono (Code/Metrics), Material Symbols Outlined -->
-  <link href="https://fonts.googleapis.com" rel="preconnect"/>
-  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -132,10 +138,12 @@
     };
   </script>
 
-  <link rel="stylesheet" href="/static/style.css"/>
+  <link rel="stylesheet" href="/static/style.css" />
   <style>
     @layer base {
-      html, body {
+
+      html,
+      body {
         margin: 0;
         padding: 0;
         background-color: #FAFAFA;
@@ -143,12 +151,32 @@
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
-      body { overscroll-behavior: none; }
+
+      body {
+        overscroll-behavior: none;
+      }
     }
-    .gov-tricolor { display: flex; height: 3px; width: 100%; }
-    .gov-tricolor .saffron { flex: 1; background-color: #FF9933; }
-    .gov-tricolor .white { flex: 1; background-color: #FFFFFF; }
-    .gov-tricolor .green { flex: 1; background-color: #138808; }
+
+    .gov-tricolor {
+      display: flex;
+      height: 3px;
+      width: 100%;
+    }
+
+    .gov-tricolor .saffron {
+      flex: 1;
+      background-color: #FF9933;
+    }
+
+    .gov-tricolor .white {
+      flex: 1;
+      background-color: #FFFFFF;
+    }
+
+    .gov-tricolor .green {
+      flex: 1;
+      background-color: #138808;
+    }
 
     .nav-tab-btn {
       display: inline-flex;
@@ -165,10 +193,12 @@
       cursor: pointer;
       text-decoration: none;
     }
+
     .nav-tab-btn:hover {
       color: #0F172A;
       background-color: #F1F5F9;
     }
+
     .nav-tab-btn.active {
       color: #0F172A;
       font-weight: 600;
@@ -177,23 +207,45 @@
     }
 
     @media print {
-      header, #top-nav-tabs, #btn-toggle-lang, #select-jurisdiction,
-      #btn-share-whatsapp-direct, #btn-share-route, #btn-mode-subway, #btn-mode-dag,
-      #btn-toggle-critical, .canvas-toolbar, #subway-diagram-wrapper, #dag-canvas-wrapper,
-      #step-drawer, #drawer-backdrop, #share-modal, #setu-locator-modal,
-      footer, button, .no-print {
+
+      header,
+      #top-nav-tabs,
+      #btn-toggle-lang,
+      #select-jurisdiction,
+      #btn-share-whatsapp-direct,
+      #btn-share-route,
+      #btn-mode-subway,
+      #btn-mode-dag,
+      #btn-toggle-critical,
+      .canvas-toolbar,
+      #subway-diagram-wrapper,
+      #dag-canvas-wrapper,
+      #step-drawer,
+      #drawer-backdrop,
+      #share-modal,
+      #setu-locator-modal,
+      footer,
+      button,
+      .no-print {
         display: none !important;
       }
-      body, #page-body, main {
+
+      body,
+      #page-body,
+      main {
         background: white !important;
         color: black !important;
         padding: 0 !important;
         margin: 0 !important;
       }
-      #view-roadmap-and-route, #view-step-dossier, #view-citizen-ledger {
+
+      #view-roadmap-and-route,
+      #view-step-dossier,
+      #view-citizen-ledger {
         display: block !important;
         page-break-inside: avoid;
       }
+
       .tab-pane {
         box-shadow: none !important;
         border: 1px solid #ccc !important;
@@ -211,7 +263,7 @@
        HEADER: Civic Precision Clean Navigation Bar
        ====================================================================== -->
   <header class="fixed top-0 left-0 right-0 w-full z-50 bg-white border-b border-slate-200/80 shadow-xs">
-    
+
     <!-- Indian National Tricolor Accent Strip -->
     <div class="gov-tricolor">
       <div class="saffron"></div>
@@ -221,7 +273,7 @@
 
     <!-- Main Navigation Bar -->
     <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-      
+
       <!-- Brand Logo & Jurisdiction Picker -->
       <div class="flex items-center gap-4 shrink-0">
         <div class="flex items-center gap-2.5 cursor-pointer" onclick="window.app.switchNavTab('task-lookup')">
@@ -229,21 +281,26 @@
             <span class="material-symbols-outlined text-[20px]">verified</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="font-heading font-bold text-slate-900 tracking-tight text-base sm:text-lg whitespace-nowrap" data-i18n="brand_title">Civic Task Navigator</span>
-            <span data-i18n="brand_state" class="bg-amber-50 text-amber-900 border border-amber-200 text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold">MAHARASHTRA</span>
+            <span class="font-heading font-bold text-slate-900 tracking-tight text-base sm:text-lg whitespace-nowrap"
+              data-i18n="brand_title">Civic Task Navigator</span>
+            <span data-i18n="brand_state"
+              class="bg-amber-50 text-amber-900 border border-amber-200 text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold">MAHARASHTRA</span>
           </div>
         </div>
 
         <!-- Active Municipal Jurisdiction Selector -->
         <div class="hidden 2xl:flex items-center pl-3 border-l border-slate-200">
           <div class="relative">
-            <select id="select-jurisdiction" class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 py-1 pl-2.5 pr-6 cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-slate-900 max-w-[220px] truncate">
+            <select id="select-jurisdiction"
+              class="bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 py-1 pl-2.5 pr-6 cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-slate-900 max-w-[220px] truncate">
               <option value="Mumbai (BMC / MCGM)">Mumbai (BMC / MCGM)</option>
               <option value="Pune (PMC)">Pune (PMC)</option>
               <option value="Nashik (NMC)">Nashik (NMC)</option>
-              <option value="Maharashtra Statewide (Aaple Sarkar)" selected>Maharashtra Statewide (Aaple Sarkar)</option>
+              <option value="Maharashtra Statewide (Aaple Sarkar)" selected>Maharashtra Statewide (Aaple Sarkar)
+              </option>
             </select>
-            <span class="material-symbols-outlined absolute right-1.5 top-1.5 text-[14px] text-slate-400 pointer-events-none">unfold_more</span>
+            <span
+              class="material-symbols-outlined absolute right-1.5 top-1.5 text-[14px] text-slate-400 pointer-events-none">unfold_more</span>
           </div>
         </div>
       </div>
@@ -269,7 +326,9 @@
 
       <!-- Right Controls: Language Switcher -->
       <div class="flex items-center gap-2 shrink-0">
-        <button id="btn-toggle-lang" onclick="window.app.toggleLanguage()" class="bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-200 flex items-center gap-1.5 transition-colors shadow-2xs" title="Switch Language (भाषा बदला)">
+        <button id="btn-toggle-lang" onclick="window.app.toggleLanguage()"
+          class="bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-200 flex items-center gap-1.5 transition-colors shadow-2xs"
+          title="Switch Language (भाषा बदला)">
           <span class="material-symbols-outlined text-[15px]">translate</span>
           <span id="label-lang-toggle" class="font-semibold">मराठी</span>
         </button>
@@ -288,57 +347,76 @@
            VIEW 1: TASK LOOKUP & INTAKE DECK (Civic Precision Terminal)
            ================================================================== -->
       <section id="view-task-lookup" class="tab-pane flex flex-col w-full">
-        
+
         <!-- Official Municipal Protocol Banner -->
-        <div class="bg-slate-100/80 text-slate-800 rounded-xl px-4 py-2.5 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-2 border border-slate-200/80 text-xs">
+        <div
+          class="bg-slate-100/80 text-slate-800 rounded-xl px-4 py-2.5 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-2 border border-slate-200/80 text-xs">
           <div class="flex items-center gap-2">
-            <span class="bg-slate-900 text-white px-2 py-0.5 font-mono text-[11px] rounded font-semibold tracking-wider uppercase">Docket Intake</span>
-            <span class="font-heading font-semibold text-slate-900">Maharashtra Civic Task Navigator — Public Municipal Access Terminal</span>
+            <span
+              class="bg-slate-900 text-white px-2 py-0.5 font-mono text-[11px] rounded font-semibold tracking-wider uppercase">Docket
+              Intake</span>
+            <span class="font-heading font-semibold text-slate-900">Maharashtra Civic Task Navigator — Public Municipal
+              Access Terminal</span>
           </div>
           <div class="flex items-center gap-3 font-mono text-[11px] text-slate-500">
             <span>NODE: <strong class="text-slate-900 font-semibold">MH-HQ-01</strong></span>
             <span>DISPATCH: <strong class="text-slate-900 font-semibold">AUTO-ROUTING ACTIVE</strong></span>
-            <span class="bg-white px-2 py-0.5 text-slate-800 border border-slate-200 rounded font-medium">RTS 2015 COMPLIANT</span>
+            <span class="bg-white px-2 py-0.5 text-slate-800 border border-slate-200 rounded font-medium">RTS 2015
+              COMPLIANT</span>
           </div>
         </div>
 
         <!-- Main Administrative Inquiry Deck (12-Column Grid) -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-10">
-          
+
           <!-- Left 8 Columns: Search & Parameter Form (Stripe/Linear style clean card) -->
           <div class="lg:col-span-8 flex flex-col">
-            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6 sm:p-8 flex flex-col justify-between h-full">
+            <div
+              class="bg-white rounded-2xl border border-slate-200/80 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-6 sm:p-8 flex flex-col justify-between h-full">
               <div>
                 <!-- Header and Statutory Instruction -->
                 <div class="mb-6">
-                  <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600 mb-2 border border-slate-200/60 uppercase tracking-wider font-mono" data-i18n="hero_tag">
+                  <div
+                    class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 text-slate-600 mb-2 border border-slate-200/60 uppercase tracking-wider font-mono"
+                    data-i18n="hero_tag">
                     MMC Act 1888 § 394 · Maharashtra Single Window
                   </div>
-                  <h1 class="font-heading text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mb-2" data-i18n="hero_title">
+                  <h1 class="font-heading text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight mb-2"
+                    data-i18n="hero_title">
                     Civic Compliance Roadmap
                   </h1>
                   <p class="font-sans text-sm text-slate-500 leading-relaxed" data-i18n="hero_desc">
-                    Search any municipal permit, trade license, or statutory procedure to synthesize a verified prerequisite graph across MCGM, MFB, FSSAI, and MPCB.
+                    Search any municipal permit, trade license, or statutory procedure to synthesize a verified
+                    prerequisite graph across MCGM, MFB, FSSAI, and MPCB.
                   </p>
                 </div>
 
                 <!-- Structured Search Form -->
-                <form class="flex flex-col gap-4" id="taskIntakeForm" onsubmit="event.preventDefault(); window.app.performSearch();">
+                <form class="flex flex-col gap-4" id="taskIntakeForm"
+                  onsubmit="event.preventDefault(); window.app.performSearch();">
                   <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5" for="taskQuery" data-i18n="search_label">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5"
+                      for="taskQuery" data-i18n="search_label">
                       Target Commercial or Civic Intent
                     </label>
                     <div class="relative group">
-                      <span class="material-symbols-outlined absolute left-3.5 top-3.5 text-slate-400 text-[20px] pointer-events-none group-focus-within:text-slate-900 transition-colors">
+                      <span
+                        class="material-symbols-outlined absolute left-3.5 top-3.5 text-slate-400 text-[20px] pointer-events-none group-focus-within:text-slate-900 transition-colors">
                         travel_explore
                       </span>
-                      <input class="w-full pl-11 pr-10 py-3 bg-slate-50/60 hover:bg-slate-50 focus:bg-white text-slate-900 text-sm sm:text-base font-medium rounded-xl border border-slate-200 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all placeholder:text-slate-400" id="taskQuery" name="query" placeholder="e.g. How to get water connection?, or How to register a business?" type="text" value=""/>
-                      <button class="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-700 transition-colors" onclick="document.getElementById('taskQuery').value=''; document.getElementById('taskQuery').focus();" type="button" title="Clear query">
+                      <input
+                        class="w-full pl-11 pr-10 py-3 bg-slate-50/60 hover:bg-slate-50 focus:bg-white text-slate-900 text-sm sm:text-base font-medium rounded-xl border border-slate-200 focus:border-slate-400 focus:ring-4 focus:ring-slate-100 outline-none transition-all placeholder:text-slate-400"
+                        id="taskQuery" name="query"
+                        placeholder="e.g. How to get water connection?, or How to register a business?" type="text"
+                        value="" />
+                      <button class="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-700 transition-colors"
+                        onclick="document.getElementById('taskQuery').value=''; document.getElementById('taskQuery').focus();"
+                        type="button" title="Clear query">
                         <span class="material-symbols-outlined text-[18px]">cancel</span>
                       </button>
                     </div>
                     <div class="mt-1.5 flex items-center justify-between text-[11px] text-slate-400">
-                      <span>Natural language & Marathi (मराठी) accepted. Automatic administrative cross-referencing.</span>
+                      <span>Natural language accepted. Automatic administrative cross-referencing.</span>
                       <span class="font-mono text-slate-400 hidden sm:inline">DOCKET: MH-RTS-2026</span>
                     </div>
                   </div>
@@ -346,50 +424,65 @@
                   <!-- Contextual Filters Grid -->
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                     <div class="bg-slate-50 border border-slate-200/70 rounded-xl px-4 py-2.5">
-                      <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5" for="jurisdictionSelect">
+                      <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5"
+                        for="jurisdictionSelect">
                         Target Municipal Jurisdiction
                       </label>
                       <div class="relative">
-                        <select class="w-full bg-transparent font-sans text-xs font-semibold text-slate-800 border-0 p-0 focus:ring-0 cursor-pointer pr-4 appearance-none" id="jurisdictionSelect">
+                        <select
+                          class="w-full bg-transparent font-sans text-xs font-semibold text-slate-800 border-0 p-0 focus:ring-0 cursor-pointer pr-4 appearance-none"
+                          id="jurisdictionSelect">
                           <option value="all" selected>All Jurisdictions / Auto-detect</option>
                           <option value="Mumbai (BMC / MCGM)">Mumbai (BMC / MCGM)</option>
                           <option value="Pune (PMC)">Pune (PMC)</option>
                           <option value="Nashik (NMC)">Nashik (NMC)</option>
-                          <option value="Maharashtra Statewide (Aaple Sarkar)">Maharashtra Statewide (Aaple Sarkar)</option>
+                          <option value="Maharashtra Statewide (Aaple Sarkar)">Maharashtra Statewide (Aaple Sarkar)
+                          </option>
                         </select>
-                        <span class="material-symbols-outlined absolute right-0 top-0.5 pointer-events-none text-slate-400 text-[18px]">unfold_more</span>
+                        <span
+                          class="material-symbols-outlined absolute right-0 top-0.5 pointer-events-none text-slate-400 text-[18px]">unfold_more</span>
                       </div>
                     </div>
                     <div class="bg-slate-50 border border-slate-200/70 rounded-xl px-4 py-2.5">
-                      <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5" for="entityClassification">
+                      <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5"
+                        for="entityClassification">
                         Applicant / Entity Type
                       </label>
                       <div class="relative">
-                        <select class="w-full bg-transparent font-sans text-xs font-semibold text-slate-800 border-0 p-0 focus:ring-0 cursor-pointer pr-4 appearance-none" id="entityClassification">
+                        <select
+                          class="w-full bg-transparent font-sans text-xs font-semibold text-slate-800 border-0 p-0 focus:ring-0 cursor-pointer pr-4 appearance-none"
+                          id="entityClassification">
                           <option value="commercial-corp">Commercial Enterprise (LLC / Private Ltd)</option>
                           <option value="sole-prop" selected>Sole Proprietorship / Small Enterprise (MSME)</option>
                           <option value="individual-citizen">Individual Citizen / Resident</option>
                           <option value="licensed-pro">Licensed Architect / Legal Advocate</option>
                           <option value="rural-farmer">Agricultural Landholder / Farmer</option>
                         </select>
-                        <span class="material-symbols-outlined absolute right-0 top-0.5 pointer-events-none text-slate-400 text-[18px]">unfold_more</span>
+                        <span
+                          class="material-symbols-outlined absolute right-0 top-0.5 pointer-events-none text-slate-400 text-[18px]">unfold_more</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- Parameters Bar -->
-                  <div class="bg-slate-50 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-slate-600 text-xs border border-slate-200/60">
+                  <div
+                    class="bg-slate-50 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-slate-600 text-xs border border-slate-200/60">
                     <div class="flex items-center gap-2">
                       <span class="material-symbols-outlined text-[16px] text-slate-700">policy</span>
-                      <span>Enforcement Year: <strong class="text-slate-900 font-mono">2026 Statutory Calendar</strong></span>
+                      <span>Enforcement Year: <strong class="text-slate-900 font-mono">2026 Statutory
+                          Calendar</strong></span>
                     </div>
                     <div class="flex items-center gap-4">
                       <label class="flex items-center gap-1.5 cursor-pointer text-slate-700">
-                        <input checked="" class="w-3.5 h-3.5 rounded border-slate-300 text-slate-900 focus:ring-0 cursor-pointer" type="checkbox"/>
+                        <input checked=""
+                          class="w-3.5 h-3.5 rounded border-slate-300 text-slate-900 focus:ring-0 cursor-pointer"
+                          type="checkbox" />
                         <span>Setu Kendra Notices</span>
                       </label>
                       <label class="flex items-center gap-1.5 cursor-pointer text-slate-700">
-                        <input checked="" class="w-3.5 h-3.5 rounded border-slate-300 text-slate-900 focus:ring-0 cursor-pointer" type="checkbox"/>
+                        <input checked=""
+                          class="w-3.5 h-3.5 rounded border-slate-300 text-slate-900 focus:ring-0 cursor-pointer"
+                          type="checkbox" />
                         <span>Fee Ledger Calculation</span>
                       </label>
                     </div>
@@ -397,31 +490,41 @@
 
                   <!-- Popular Quick Suggestion Pills -->
                   <div class="flex flex-wrap items-center gap-1.5 pt-1 text-xs">
-                    <span class="text-slate-400 font-medium text-[11px] uppercase tracking-wider mr-1" data-i18n="popular_label">Popular:</span>
-                    <button type="button" onclick="window.app.fillQuery('How to register a small business or retail enterprise?')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                    <span class="text-slate-400 font-medium text-[11px] uppercase tracking-wider mr-1"
+                      data-i18n="popular_label">Popular:</span>
+                    <button type="button"
+                      onclick="window.app.fillQuery('How to register a small business or retail enterprise?')"
+                      class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       Small Business (Shops Act)
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('How to get water connection?')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                    <button type="button" onclick="window.app.fillQuery('How to get water connection?')"
+                      class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       Water Connection
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('How to get caste certificate?')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                    <button type="button" onclick="window.app.fillQuery('How to get caste certificate?')"
+                      class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       Caste Certificate
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('Commercial Bakery Bandra Mumbai')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                    <button type="button" onclick="window.app.fillQuery('Commercial Bakery Bandra Mumbai')"
+                      class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       Bakery / F&B Bandra
                     </button>
-                    <button type="button" onclick="window.app.fillQuery('How to pay property tax?')" class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
+                    <button type="button" onclick="window.app.fillQuery('How to pay property tax?')"
+                      class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60 px-2.5 py-1 rounded-full font-medium transition-colors">
                       Property Tax
                     </button>
                   </div>
 
                   <!-- Primary Action Bar -->
-                  <div class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100">
+                  <div
+                    class="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100">
                     <div class="flex items-center gap-1.5 text-slate-500 text-xs">
                       <span class="material-symbols-outlined text-[16px] text-amber-600">verified_user</span>
                       <span>Statutory Guarantee: Maharashtra Right to Public Services Act (RTS 2015)</span>
                     </div>
-                    <button id="btn-generate-roadmap" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-sm active:scale-[0.99]" onclick="window.app.performSearch()" type="button">
+                    <button id="btn-generate-roadmap"
+                      class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-sm active:scale-[0.99]"
+                      onclick="window.app.performSearch()" type="button">
                       <span>Generate Compliance Graph</span>
                       <span class="material-symbols-outlined text-[17px]">arrow_forward</span>
                     </button>
@@ -429,7 +532,8 @@
                 </form>
 
                 <!-- Live NLP Intent Feedback Banner -->
-                <div id="nlp-intent-banner" class="hidden mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-900 text-xs flex items-center justify-between gap-3 shadow-xs">
+                <div id="nlp-intent-banner"
+                  class="hidden mt-4 p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-900 text-xs flex items-center justify-between gap-3 shadow-xs">
                   <div id="nlp-search-feedback"></div>
                 </div>
 
@@ -444,12 +548,14 @@
 
           <!-- Right 4 Columns: Municipal Dispatch Summary & Directives Deck -->
           <div class="lg:col-span-4 flex flex-col gap-4">
-            
+
             <!-- Route Dispatch Preview Card -->
             <div class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-5">
               <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-                <div class="text-xs font-semibold text-slate-900 uppercase tracking-wider font-heading">Route Dispatch Preview</div>
-                <span class="bg-slate-900 text-white font-mono text-[10px] px-2 py-0.5 rounded font-medium">EST. 2-4 WKS</span>
+                <div class="text-xs font-semibold text-slate-900 uppercase tracking-wider font-heading">Route Dispatch
+                  Preview</div>
+                <span class="bg-slate-900 text-white font-mono text-[10px] px-2 py-0.5 rounded font-medium">EST. 2-4
+                  WKS</span>
               </div>
               <div class="space-y-2 text-xs">
                 <div class="flex justify-between items-baseline py-1 border-b border-slate-100">
@@ -466,11 +572,14 @@
                 </div>
                 <div class="flex justify-between items-baseline py-1">
                   <span class="text-slate-500">Direct Official Filing:</span>
-                  <span class="bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2 py-0.5 rounded font-semibold text-[11px]">100% Zero Intermediary</span>
+                  <span
+                    class="bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2 py-0.5 rounded font-semibold text-[11px]">100%
+                    Zero Intermediary</span>
                 </div>
               </div>
               <div class="mt-4 pt-3 bg-slate-50 rounded-lg p-3 border border-slate-200/60">
-                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">Participating Agencies</div>
+                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1.5">Participating Agencies
+                </div>
                 <div class="flex flex-wrap gap-1 text-[11px] font-mono">
                   <span class="bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200">MCGM / BMC</span>
                   <span class="bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200">PMC Pune</span>
@@ -482,18 +591,22 @@
             </div>
 
             <!-- Deterministic Legal Sequences Card -->
-            <div class="bg-slate-900 text-white rounded-xl p-5 shadow-sm border border-slate-800 flex flex-col justify-between">
+            <div
+              class="bg-slate-900 text-white rounded-xl p-5 shadow-sm border border-slate-800 flex flex-col justify-between">
               <div>
-                <div class="flex items-center gap-1.5 text-xs text-amber-400 mb-2 uppercase tracking-wider font-mono font-medium">
+                <div
+                  class="flex items-center gap-1.5 text-xs text-amber-400 mb-2 uppercase tracking-wider font-mono font-medium">
                   <span class="material-symbols-outlined text-[16px]">balance</span>
                   <span>Administrative Standing</span>
                 </div>
                 <h2 class="font-heading text-base font-semibold text-white mb-2">Deterministic Legal Sequences</h2>
                 <p class="font-sans text-xs text-slate-300 leading-relaxed mb-4">
-                  Routes generated by this terminal establish official administrative standing. Timelines and sequence requirements strictly conform to the Maharashtra Right to Public Services Act (RTS 2015).
+                  Routes generated by this terminal establish official administrative standing. Timelines and sequence
+                  requirements strictly conform to the Maharashtra Right to Public Services Act (RTS 2015).
                 </p>
               </div>
-              <div class="pt-3 bg-slate-800/80 rounded-lg p-2.5 flex items-center justify-between text-slate-300 font-mono text-[11px] border border-slate-700">
+              <div
+                class="pt-3 bg-slate-800/80 rounded-lg p-2.5 flex items-center justify-between text-slate-300 font-mono text-[11px] border border-slate-700">
                 <span>DOCKET DISPATCH:</span>
                 <span class="text-white font-semibold">MH-RTS-SEC-04</span>
               </div>
@@ -507,7 +620,8 @@
           <div class="flex items-baseline justify-between mb-4">
             <div>
               <h2 class="font-heading text-lg font-semibold text-slate-900 tracking-tight">Procedural Architecture</h2>
-              <p class="text-xs text-slate-500 mt-0.5">How the engine eliminates inter-agency sequencing deadlocks and ward-level circular dependencies.</p>
+              <p class="text-xs text-slate-500 mt-0.5">How the engine eliminates inter-agency sequencing deadlocks and
+                ward-level circular dependencies.</p>
             </div>
             <span class="text-xs text-slate-400 font-mono hidden sm:inline">DAG v2.4 Spec</span>
           </div>
@@ -520,7 +634,8 @@
                 </div>
                 <h3 class="text-sm font-semibold text-slate-900 mb-1">Inter-Agency Federation</h3>
                 <p class="text-xs text-slate-500 leading-relaxed">
-                  Consolidates requirements across MCGM Ward Health Offices, MFB, MPCB, and Aaple Sarkar single-window feeds into one unified checklist.
+                  Consolidates requirements across MCGM Ward Health Offices, MFB, MPCB, and Aaple Sarkar single-window
+                  feeds into one unified checklist.
                 </p>
               </div>
               <div class="mt-4 pt-2.5 border-t border-slate-100 text-[11px] font-mono text-slate-400">
@@ -535,7 +650,8 @@
                 </div>
                 <h3 class="text-sm font-semibold text-slate-900 mb-1">Topological Sorting</h3>
                 <p class="text-xs text-slate-500 leading-relaxed">
-                  Constructs a directed acyclic graph (DAG) so no citizen applies for permits out-of-order, preventing unrecoverable application rejections.
+                  Constructs a directed acyclic graph (DAG) so no citizen applies for permits out-of-order, preventing
+                  unrecoverable application rejections.
                 </p>
               </div>
               <div class="mt-4 pt-2.5 border-t border-slate-100 text-[11px] font-mono text-slate-400">
@@ -550,7 +666,8 @@
                 </div>
                 <h3 class="text-sm font-semibold text-slate-900 mb-1">Cryptographic Provenance</h3>
                 <p class="text-xs text-slate-500 leading-relaxed">
-                  Every fee ledger item and timeline links to current Maharashtra Right to Public Services Act mandates with official Challan hashes.
+                  Every fee ledger item and timeline links to current Maharashtra Right to Public Services Act mandates
+                  with official Challan hashes.
                 </p>
               </div>
               <div class="mt-4 pt-2.5 border-t border-slate-100 text-[11px] font-mono text-slate-400">
@@ -564,8 +681,10 @@
         <section class="mb-12">
           <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-4">
             <div>
-              <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block font-mono">Procedural Index Manifest</span>
-              <h2 class="font-heading text-lg font-semibold text-slate-900 tracking-tight">Verified Municipal Directives</h2>
+              <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block font-mono">Procedural
+                Index Manifest</span>
+              <h2 class="font-heading text-lg font-semibold text-slate-900 tracking-tight">Verified Municipal Directives
+              </h2>
             </div>
             <div class="text-xs text-slate-500 mt-1 sm:mt-0">
               Select a verified route to load certified statutory prerequisites and agency sequences.
@@ -573,11 +692,16 @@
           </div>
 
           <!-- Official Ledger Grid List -->
-          <div class="bg-white rounded-xl border border-slate-200/80 divide-y divide-slate-100 overflow-hidden shadow-sm" id="directives-ledger-list">
+          <div
+            class="bg-white rounded-xl border border-slate-200/80 divide-y divide-slate-100 overflow-hidden shadow-sm"
+            id="directives-ledger-list">
             <!-- Populated dynamically or default items -->
-            <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group" onclick="window.app.loadTaskAndRoute('task-mah-small-biz')">
+            <div
+              class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group"
+              onclick="window.app.loadTaskAndRoute('task-mah-small-biz')">
               <div class="flex items-start gap-4">
-                <span class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
+                <span
+                  class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
                   01
                 </span>
                 <div>
@@ -585,10 +709,12 @@
                     <h3 class="text-sm font-semibold text-slate-900 group-hover:text-slate-950 font-heading">
                       Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act)
                     </h3>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Expedited</span>
+                    <span
+                      class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Expedited</span>
                   </div>
                   <div class="text-xs text-slate-500 mt-1 max-w-xl">
-                    Unified intimation and registration for commercial establishments with under-10 employee fee exemption (Form A) under Maharashtra Shops Act 2017.
+                    Unified intimation and registration for commercial establishments with under-10 employee fee
+                    exemption (Form A) under Maharashtra Shops Act 2017.
                   </div>
                 </div>
               </div>
@@ -601,15 +727,19 @@
                   <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Duration</span>
                   <span class="text-xs font-mono font-medium text-slate-700">1–3 Days</span>
                 </div>
-                <button class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
+                <button
+                  class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
                   Load Route
                 </button>
               </div>
             </div>
 
-            <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group" onclick="window.app.loadTaskAndRoute('task-mum-bakery')">
+            <div
+              class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group"
+              onclick="window.app.loadTaskAndRoute('task-mum-bakery')">
               <div class="flex items-start gap-4">
-                <span class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
+                <span
+                  class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
                   02
                 </span>
                 <div>
@@ -617,10 +747,13 @@
                     <h3 class="text-sm font-semibold text-slate-900 group-hover:text-slate-950 font-heading">
                       Register & Commission a Commercial Bakery in Bandra, Mumbai
                     </h3>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200/60">Core Civic</span>
+                    <span
+                      class="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200/60">Core
+                      Civic</span>
                   </div>
                   <div class="text-xs text-slate-500 mt-1 max-w-xl">
-                    Comprehensive multi-agency compliance sequence for commercial food production covering BMC Section 394 Health Trade License, MFB Fire Safety NOC, and FSSAI State License.
+                    Comprehensive multi-agency compliance sequence for commercial food production covering BMC Section
+                    394 Health Trade License, MFB Fire Safety NOC, and FSSAI State License.
                   </div>
                 </div>
               </div>
@@ -633,15 +766,19 @@
                   <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Duration</span>
                   <span class="text-xs font-mono font-medium text-slate-700">45–65 Days</span>
                 </div>
-                <button class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
+                <button
+                  class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
                   Load Route
                 </button>
               </div>
             </div>
 
-            <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group" onclick="window.app.loadTaskAndRoute('task-mah-rts-certificates')">
+            <div
+              class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group"
+              onclick="window.app.loadTaskAndRoute('task-mah-rts-certificates')">
               <div class="flex items-start gap-4">
-                <span class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
+                <span
+                  class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
                   03
                 </span>
                 <div>
@@ -649,10 +786,12 @@
                     <h3 class="text-sm font-semibold text-slate-900 group-hover:text-slate-950 font-heading">
                       Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar)
                     </h3>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Statewide RTS</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Statewide
+                      RTS</span>
                   </div>
                   <div class="text-xs text-slate-500 mt-1 max-w-xl">
-                    Integrated service roadmap under Maharashtra RTS 2015 for obtaining Income Certificate, Age-Nationality-Domicile Certificate, and Caste Certificate with guaranteed SLAs.
+                    Integrated service roadmap under Maharashtra RTS 2015 for obtaining Income Certificate,
+                    Age-Nationality-Domicile Certificate, and Caste Certificate with guaranteed SLAs.
                   </div>
                 </div>
               </div>
@@ -665,15 +804,19 @@
                   <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Duration</span>
                   <span class="text-xs font-mono font-medium text-slate-700">15–21 Days</span>
                 </div>
-                <button class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
+                <button
+                  class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
                   Load Route
                 </button>
               </div>
             </div>
 
-            <div class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group" onclick="window.app.loadTaskAndRoute('task-mah-712-mutation')">
+            <div
+              class="p-4 sm:p-5 hover:bg-slate-50/70 transition-colors cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-3 group"
+              onclick="window.app.loadTaskAndRoute('task-mah-712-mutation')">
               <div class="flex items-start gap-4">
-                <span class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
+                <span
+                  class="text-xs font-mono font-semibold text-slate-400 group-hover:text-slate-900 transition-colors pt-0.5">
                   04
                 </span>
                 <div>
@@ -681,10 +824,12 @@
                     <h3 class="text-sm font-semibold text-slate-900 group-hover:text-slate-950 font-heading">
                       Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer
                     </h3>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Land Revenue</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600">Land
+                      Revenue</span>
                   </div>
                   <div class="text-xs text-slate-500 mt-1 max-w-xl">
-                    E-Ferfar online mutation process for agricultural land title transfer upon sale, gift, or inheritance pursuant to Maharashtra Land Revenue Code 1966.
+                    E-Ferfar online mutation process for agricultural land title transfer upon sale, gift, or
+                    inheritance pursuant to Maharashtra Land Revenue Code 1966.
                   </div>
                 </div>
               </div>
@@ -697,7 +842,8 @@
                   <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wide block">Duration</span>
                   <span class="text-xs font-mono font-medium text-slate-700">15–30 Days</span>
                 </div>
-                <button class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
+                <button
+                  class="bg-slate-900 text-white px-3.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors shadow-sm">
                   Load Route
                 </button>
               </div>
@@ -711,20 +857,25 @@
            VIEW 2: PROCEDURE ROADMAP & TRANSIT SPINE (Civic Precision Route Deck)
            ================================================================== -->
       <section id="view-roadmap-and-route" class="tab-pane flex flex-col w-full" style="display:none;">
-        
+
         <!-- Route Header & Administrative Metadata Card -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 mb-6">
           <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4 pb-4 border-b border-slate-100">
             <div class="space-y-1.5 max-w-3xl">
               <div class="flex items-center gap-2 flex-wrap text-xs">
-                <span id="route-id-badge" class="bg-slate-900 text-white font-mono text-xs px-2.5 py-0.5 rounded-md font-medium">ROUTE #MCGM-2026</span>
-                <span id="route-class-badge" class="bg-slate-100 text-slate-700 font-sans text-xs px-2.5 py-0.5 rounded-md font-semibold uppercase border border-slate-200/60">Standard Commercial Track</span>
+                <span id="route-id-badge"
+                  class="bg-slate-900 text-white font-mono text-xs px-2.5 py-0.5 rounded-md font-medium">ROUTE
+                  #MCGM-2026</span>
+                <span id="route-class-badge"
+                  class="bg-slate-100 text-slate-700 font-sans text-xs px-2.5 py-0.5 rounded-md font-semibold uppercase border border-slate-200/60">Standard
+                  Commercial Track</span>
                 <span class="font-mono text-xs text-slate-500 flex items-center gap-1.5">
                   <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
                   <span data-i18n="route_active_badge">ACTIVE COMPLIANCE MANIFEST</span>
                 </span>
               </div>
-              <h1 id="roadmap-heading-title" class="font-heading text-2xl sm:text-3xl text-slate-950 tracking-tight font-bold">
+              <h1 id="roadmap-heading-title"
+                class="font-heading text-2xl sm:text-3xl text-slate-950 tracking-tight font-bold">
                 Procedure Roadmap
               </h1>
               <p id="roadmap-heading-desc" class="font-sans text-sm text-slate-500 leading-relaxed">
@@ -734,24 +885,34 @@
 
             <!-- View Options & Actions Toolbar -->
             <div class="flex items-center gap-2 flex-wrap">
-              <button id="btn-share-whatsapp-direct" onclick="window.app.shareViaWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-sans text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm" title="Share via WhatsApp">
+              <button id="btn-share-whatsapp-direct" onclick="window.app.shareViaWhatsApp()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white font-sans text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition-colors shadow-sm"
+                title="Share via WhatsApp">
                 <span class="material-symbols-outlined text-[16px]">chat</span>
                 <span data-i18n="btn_whatsapp">📲 WhatsApp</span>
               </button>
-              <button class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80" onclick="window.print()">
+              <button
+                class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80"
+                onclick="window.print()">
                 <span class="material-symbols-outlined text-[16px]">print</span>
                 <span data-i18n="btn_print">Print Route Sheet</span>
               </button>
-              <button class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80" id="btn-toggle-critical" onclick="window.app.toggleCriticalPathHighlight()">
+              <button
+                class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80"
+                id="btn-toggle-critical" onclick="window.app.toggleCriticalPathHighlight()">
                 <span class="material-symbols-outlined text-[16px]">alt_route</span>
                 <span id="txt-critical" data-i18n="critical_path">Critical Path</span>
               </button>
-              <button class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80" id="btn-share-route" onclick="window.app.openShareModal()">
+              <button
+                class="bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-sans text-xs font-medium px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors border border-slate-200/80"
+                id="btn-share-route" onclick="window.app.openShareModal()">
                 <span class="material-symbols-outlined text-[16px]">share</span>
                 <span data-i18n="share_route">Share</span>
               </button>
               <div class="flex bg-slate-100 rounded-lg border border-slate-200/80 p-0.5 text-xs">
-                <button id="btn-mode-dag" class="px-2.5 py-1.5 rounded-md font-semibold bg-slate-900 text-white shadow-xs" onclick="window.app.toggleWayfindingView('dag')">
+                <button id="btn-mode-dag"
+                  class="px-2.5 py-1.5 rounded-md font-semibold bg-slate-900 text-white shadow-xs"
+                  onclick="window.app.toggleWayfindingView('dag')">
                   <span data-i18n="btn_dag">🕸️ DAG Topology</span>
                 </button>
               </div>
@@ -761,26 +922,34 @@
           <!-- Administrative Summary Ribbon (4-Metric Grid) -->
           <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/70 grid grid-cols-2 sm:grid-cols-4 gap-4 mt-5">
             <div class="space-y-0.5">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono" data-i18n="stat_sla_label">Total Estimated Timeline</div>
-              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1" id="summary-stat-timeline">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono"
+                data-i18n="stat_sla_label">Total Estimated Timeline</div>
+              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1"
+                id="summary-stat-timeline">
                 <span>--</span> <span class="font-sans text-xs font-normal text-slate-500">Working Days</span>
               </div>
             </div>
             <div class="space-y-0.5">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono" data-i18n="stat_fee_label">Statutory Government Fees</div>
-              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1" id="summary-stat-fees">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono"
+                data-i18n="stat_fee_label">Statutory Government Fees</div>
+              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1"
+                id="summary-stat-fees">
                 <span>₹0.00</span> <span class="font-sans text-xs font-normal text-slate-500">INR</span>
               </div>
             </div>
             <div class="space-y-0.5">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono" data-i18n="stat_steps_label">Station Progress</div>
-              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1" id="summary-stat-progress">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono"
+                data-i18n="stat_steps_label">Station Progress</div>
+              <div class="font-heading text-lg font-bold text-slate-900 flex items-baseline gap-1"
+                id="summary-stat-progress">
                 <span>0 / 0</span> <span class="font-sans text-xs font-normal text-slate-500">Milestones Cleared</span>
               </div>
             </div>
             <div class="space-y-0.5">
-              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono" data-i18n="stat_blocker_label">Current Stoppage / Blocker</div>
-              <div class="text-xs font-semibold text-slate-900 truncate flex items-center gap-1.5 pt-1" id="summary-stat-blocker">
+              <div class="text-[10px] uppercase font-bold text-slate-400 tracking-wider font-mono"
+                data-i18n="stat_blocker_label">Current Stoppage / Blocker</div>
+              <div class="text-xs font-semibold text-slate-900 truncate flex items-center gap-1.5 pt-1"
+                id="summary-stat-blocker">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
                 <span>Ready to Begin</span>
               </div>
@@ -793,12 +962,18 @@
         </div>
 
         <!-- Single Graph View: Verified DAG Topology Canvas -->
-        <div id="dag-canvas-wrapper" class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-4 relative mb-6" style="display:block; height: 420px;">
-          <div class="absolute top-3 right-3 z-10 flex bg-slate-100 rounded-lg border border-slate-200/80 p-0.5 text-xs">
-            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-zoom-in" title="Zoom In">+</button>
-            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-zoom-out" title="Zoom Out">-</button>
-            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-fit-screen" title="Fit to Screen" data-i18n="btn_fit">Fit</button>
-            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-reset-view" title="Reset View" data-i18n="btn_reset">Reset</button>
+        <div id="dag-canvas-wrapper" class="bg-white rounded-xl border border-slate-200/80 shadow-sm p-4 relative mb-6"
+          style="display:block; height: 420px;">
+          <div
+            class="absolute top-3 right-3 z-10 flex bg-slate-100 rounded-lg border border-slate-200/80 p-0.5 text-xs">
+            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-zoom-in"
+              title="Zoom In">+</button>
+            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-zoom-out"
+              title="Zoom Out">-</button>
+            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-fit-screen"
+              title="Fit to Screen" data-i18n="btn_fit">Fit</button>
+            <button class="px-2 py-1 font-sans text-xs font-medium hover:bg-slate-200 rounded" id="btn-reset-view"
+              title="Reset View" data-i18n="btn_reset">Reset</button>
           </div>
           <svg id="graph-canvas" class="w-full h-full cursor-grab"></svg>
         </div>
@@ -811,29 +986,37 @@
                 Your Step-by-Step Compliance Checklist
               </h2>
               <p class="font-sans text-xs text-slate-500 mt-0.5" data-i18n="checklist_desc">
-                Complete these stages in sequence. Click "View Details & Apply" to access the official portal links, offline PDF forms, and statutory proof requirements.
+                Complete these stages in sequence. Click "View Details & Apply" to access the official portal links,
+                offline PDF forms, and statutory proof requirements.
               </p>
             </div>
-            <button onclick="window.app.toggleWayfindingView(window.app.wayfindingMode === 'dag' ? 'cards' : 'dag')" class="text-xs font-sans font-medium text-slate-700 hover:text-slate-900 flex items-center gap-1 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-lg border border-slate-200/80 transition-colors">
+            <button onclick="window.app.toggleWayfindingView(window.app.wayfindingMode === 'dag' ? 'cards' : 'dag')"
+              class="text-xs font-sans font-medium text-slate-700 hover:text-slate-900 flex items-center gap-1 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1.5 rounded-lg border border-slate-200/80 transition-colors">
               <span class="material-symbols-outlined text-[16px]">account_tree</span>
               <span>Toggle DAG Graph</span>
             </button>
           </div>
 
           <!-- Maharashtra Shops & Establishments Act 2017 Intake Workers Toggle -->
-          <div id="shops-act-workers-toggle" class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6" style="display:none;">
+          <div id="shops-act-workers-toggle"
+            class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6"
+            style="display:none;">
             <div class="flex items-center gap-3">
               <span class="material-symbols-outlined text-amber-600 text-[20px]">storefront</span>
               <div>
-                <span class="font-heading text-xs font-bold text-slate-900 block" data-i18n="shops_toggle_label">Workers Count (Maharashtra Shops Act 2017):</span>
-                <span class="font-sans text-xs text-slate-500">Statutory Exemption: Under-10 establishments require ₹0 Form A Intimation only.</span>
+                <span class="font-heading text-xs font-bold text-slate-900 block" data-i18n="shops_toggle_label">Workers
+                  Count (Maharashtra Shops Act 2017):</span>
+                <span class="font-sans text-xs text-slate-500">Statutory Exemption: Under-10 establishments require ₹0
+                  Form A Intimation only.</span>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button id="btn-workers-under-10" onclick="window.app.setWorkerCountTier('under10')" class="px-3 py-1.5 font-sans text-xs font-semibold rounded-lg bg-emerald-600 text-white shadow-sm">
+              <button id="btn-workers-under-10" onclick="window.app.setWorkerCountTier('under10')"
+                class="px-3 py-1.5 font-sans text-xs font-semibold rounded-lg bg-emerald-600 text-white shadow-sm">
                 <span data-i18n="shops_under_10">&lt; 10 Workers (Form A — ₹0 Free)</span>
               </button>
-              <button id="btn-workers-over-10" onclick="window.app.setWorkerCountTier('over10')" class="px-3 py-1.5 font-sans text-xs font-semibold rounded-lg bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
+              <button id="btn-workers-over-10" onclick="window.app.setWorkerCountTier('over10')"
+                class="px-3 py-1.5 font-sans text-xs font-semibold rounded-lg bg-white text-slate-700 border border-slate-200 hover:bg-slate-50">
                 <span data-i18n="shops_over_10">10+ Workers (Form B — Statutory Fee)</span>
               </button>
             </div>
@@ -869,18 +1052,23 @@
            VIEW 3: STEP DETAILS & HOW TO APPLY (Step Dossier)
            ================================================================== -->
       <section id="view-step-dossier" class="tab-pane flex flex-col w-full" style="display:none;">
-        
+
         <!-- Navigational Docket Header & Path Sequence -->
-        <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-4 border-b border-slate-200">
+        <div
+          class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 pb-4 border-b border-slate-200">
           <nav aria-label="Jurisdictional Path" class="flex items-center gap-2 text-sm text-slate-500 flex-wrap">
-            <a class="hover:text-slate-900 transition-colors cursor-pointer font-medium" onclick="window.app.switchNavTab('roadmap-and-route')">Docket Route</a>
+            <a class="hover:text-slate-900 transition-colors cursor-pointer font-medium"
+              onclick="window.app.switchNavTab('roadmap-and-route')">Docket Route</a>
             <span class="text-slate-300">/</span>
-            <span id="dossier-route-crumb" class="hover:text-slate-900 transition-colors cursor-pointer font-medium" onclick="window.app.switchNavTab('roadmap-and-route')">Active Task</span>
+            <span id="dossier-route-crumb" class="hover:text-slate-900 transition-colors cursor-pointer font-medium"
+              onclick="window.app.switchNavTab('roadmap-and-route')">Active Task</span>
             <span class="text-slate-300">/</span>
             <span id="dossier-step-crumb" class="font-semibold text-slate-900">Current Stage</span>
           </nav>
           <div class="flex items-center gap-2.5">
-            <span id="dossier-ref-code" class="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 font-medium">REF: MH-CIVIC-STAGE</span>
+            <span id="dossier-ref-code"
+              class="font-mono text-xs text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 font-medium">REF:
+              MH-CIVIC-STAGE</span>
             <span class="inline-block w-1 h-1 rounded-full bg-slate-300"></span>
             <span class="text-xs text-slate-500 uppercase tracking-wider font-medium">Priority Statutory Ledger</span>
           </div>
@@ -891,17 +1079,17 @@
           <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div class="space-y-3 max-w-3xl">
               <div class="flex flex-wrap items-center gap-2">
-                <span id="dossier-stage-idx" class="font-mono text-xs bg-slate-900 text-white px-2.5 py-0.5 rounded font-medium">STAGE 01 / 04</span>
-                <span id="dossier-agency-name" class="text-xs uppercase tracking-wider text-slate-500 font-semibold">MUNICIPAL DEPARTMENT</span>
+                <span id="dossier-stage-idx"
+                  class="font-mono text-xs bg-slate-900 text-white px-2.5 py-0.5 rounded font-medium">STAGE 01 /
+                  04</span>
+                <span id="dossier-agency-name"
+                  class="text-xs uppercase tracking-wider text-slate-500 font-semibold">MUNICIPAL DEPARTMENT</span>
               </div>
               <div class="flex items-center gap-3">
-                <h1 id="dossier-main-title" class="font-heading text-2xl md:text-3xl text-slate-900 tracking-tight font-semibold">
+                <h1 id="dossier-main-title"
+                  class="font-heading text-2xl md:text-3xl text-slate-900 tracking-tight font-semibold">
                   Step Title
                 </h1>
-                <!-- Web Speech API Audio Speaker Button -->
-                <button id="btn-speak-instruction" onclick="window.app.speakStepInstruction()" class="p-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg transition-colors flex items-center justify-center shrink-0 shadow-2xs" title="Listen in Marathi/English (आवाज ऐका)">
-                  <span class="material-symbols-outlined text-[20px]">volume_up</span>
-                </button>
               </div>
               <p id="dossier-main-desc" class="font-sans text-sm md:text-base text-slate-600 leading-relaxed">
                 Step Description goes here.
@@ -909,7 +1097,8 @@
             </div>
 
             <!-- Active Docket Status Badge -->
-            <div class="flex flex-col items-start lg:items-end gap-1.5 bg-slate-50 rounded-xl p-4 border border-slate-200/80 min-w-[280px]">
+            <div
+              class="flex flex-col items-start lg:items-end gap-1.5 bg-slate-50 rounded-xl p-4 border border-slate-200/80 min-w-[280px]">
               <div class="flex items-center gap-2">
                 <span id="dossier-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
                 <span class="text-xs uppercase text-slate-500 font-semibold tracking-wide">Current Audit Status</span>
@@ -917,27 +1106,34 @@
               <div id="dossier-status-text" class="font-heading text-lg text-slate-900 font-semibold">
                 In Progress: Action Required
               </div>
-              <span id="dossier-status-sla" class="font-mono text-xs text-slate-500">Target Statutory Window: 15 Working Days</span>
+              <span id="dossier-status-sla" class="font-mono text-xs text-slate-500">Target Statutory Window: 15 Working
+                Days</span>
             </div>
           </div>
 
           <!-- Hybrid Mode (Setu Kendra) Mandatory In-Person Visit Notice -->
-          <div id="dossier-hybrid-banner" class="hidden mt-5 p-4 bg-amber-50/80 rounded-xl border border-amber-200 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div id="dossier-hybrid-banner"
+            class="hidden mt-5 p-4 bg-amber-50/80 rounded-xl border border-amber-200 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div class="flex items-center gap-3">
               <span class="material-symbols-outlined text-[24px] text-amber-700">account_balance</span>
               <div>
-                <strong class="font-heading text-sm font-semibold block text-amber-900">🏛️ Mandatory In-Person Verification / Setu Kendra Visit Required</strong>
-                <span class="text-xs text-amber-800 leading-normal">While the application form is submitted online, statutory rules require an in-person physical panchnama or Setu Suvidha Kendra biometric verification.</span>
+                <strong class="font-heading text-sm font-semibold block text-amber-900">🏛️ Mandatory In-Person
+                  Verification / Setu Kendra Visit Required</strong>
+                <span class="text-xs text-amber-800 leading-normal">While the application form is submitted online,
+                  statutory rules require an in-person physical panchnama or Setu Suvidha Kendra biometric
+                  verification.</span>
               </div>
             </div>
-            <button onclick="window.app.openSetuLocatorModal()" class="shrink-0 px-3.5 py-1.5 bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5">
+            <button onclick="window.app.openSetuLocatorModal()"
+              class="shrink-0 px-3.5 py-1.5 bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5">
               <span class="material-symbols-outlined text-[16px]">location_on</span>
               <span>Find Nearest Setu Kendra 📍</span>
             </button>
           </div>
 
           <!-- Official Provenance Authority Banner -->
-          <div class="mt-6 pt-4 border-t border-slate-200/80 bg-slate-50/50 -mx-6 md:-mx-8 -mb-6 md:-mb-8 px-6 md:px-8 py-3.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs">
+          <div
+            class="mt-6 pt-4 border-t border-slate-200/80 bg-slate-50/50 -mx-6 md:-mx-8 -mb-6 md:-mb-8 px-6 md:px-8 py-3.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs">
             <div class="flex items-center gap-2 text-slate-600">
               <span class="material-symbols-outlined text-[18px] text-slate-700">gavel</span>
               <span id="dossier-provenance-text">Verified against Government Regulations as of 2026.</span>
@@ -946,7 +1142,9 @@
               <span id="dossier-crowd-count" class="text-slate-400 text-[11px] block"></span>
               <p id="dossier-anti-tout-text" class="text-[11px] text-amber-800 italic mt-1"></p>
             </div>
-            <a id="dossier-provenance-link" class="font-mono text-xs text-slate-900 hover:text-amber-800 underline inline-flex items-center gap-1 font-medium" href="#" rel="noopener noreferrer" target="_blank">
+            <a id="dossier-provenance-link"
+              class="font-mono text-xs text-slate-900 hover:text-amber-800 underline inline-flex items-center gap-1 font-medium"
+              href="#" rel="noopener noreferrer" target="_blank">
               <span id="dossier-provenance-link-text">portal.maharashtra.gov.in</span>
               <span class="material-symbols-outlined text-[13px]">open_in_new</span>
             </a>
@@ -955,10 +1153,10 @@
 
         <!-- Primary 12-Column Split: 8 Col Evidence & Law / 4 Col Action & Municipal Counter -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
+
           <!-- LEFT 8 COLUMNS: Statutory Mandates, Forms, Evidence Checklists & Fees -->
           <div class="lg:col-span-8 space-y-6">
-            
+
             <!-- Section 0: Prerequisite Chain Clearance Bar -->
             <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
               <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
@@ -966,7 +1164,8 @@
                   <span class="material-symbols-outlined text-[18px] text-emerald-600">link</span>
                   <span>Prerequisite Dependency Ledger</span>
                 </div>
-                <span id="dossier-prereq-chain-status" class="font-mono text-xs text-slate-500">CHAIN STATUS: Cleared / Verified</span>
+                <span id="dossier-prereq-chain-status" class="font-mono text-xs text-slate-500">CHAIN STATUS: Cleared /
+                  Verified</span>
               </div>
               <div id="dossier-prereqs-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                 <!-- Dynamically populated by app.js -->
@@ -977,7 +1176,8 @@
             <div id="dossier-portal-guide-card" class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
               <div class="flex items-center gap-2.5 pb-3 border-b border-slate-100 mb-3">
                 <span class="material-symbols-outlined text-[20px] text-slate-700">assistant_navigation</span>
-                <span class="font-heading text-sm text-slate-900 font-semibold">ℹ️ Official Portal Navigation Guide (Aaple Sarkar / MCGM)</span>
+                <span class="font-heading text-sm text-slate-900 font-semibold">ℹ️ Official Portal Navigation Guide
+                  (Aaple Sarkar / MCGM)</span>
               </div>
               <div id="dossier-portal-guide-steps" class="space-y-2 text-sm text-slate-600">
                 <!-- Populated dynamically -->
@@ -1013,36 +1213,51 @@
             </section>
 
             <!-- Section 4: RTS 2015 3-Tier Escalation Matrix Accordion -->
-            <div id="dossier-rts-escalation-card" class="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-sm">
-              <button onclick="window.app.toggleRtsAccordion()" class="w-full bg-slate-50/80 px-5 py-3 flex items-center justify-between text-left hover:bg-slate-100 transition-colors">
+            <div id="dossier-rts-escalation-card"
+              class="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-sm">
+              <button onclick="window.app.toggleRtsAccordion()"
+                class="w-full bg-slate-50/80 px-5 py-3 flex items-center justify-between text-left hover:bg-slate-100 transition-colors">
                 <div class="flex items-center gap-2.5">
                   <span class="material-symbols-outlined text-[20px] text-slate-700">gavel</span>
-                  <span class="font-heading text-sm text-slate-900 font-semibold">⚖️ Statutory Rights Under Maharashtra RTS Act 2015 & Appeal Ladder</span>
+                  <span class="font-heading text-sm text-slate-900 font-semibold">⚖️ Statutory Rights Under Maharashtra
+                    RTS Act 2015 & Appeal Ladder</span>
                 </div>
-                <span id="rts-accordion-icon" class="material-symbols-outlined text-[18px] text-slate-500">expand_more</span>
+                <span id="rts-accordion-icon"
+                  class="material-symbols-outlined text-[18px] text-slate-500">expand_more</span>
               </button>
-              <div id="dossier-rts-escalation-content" class="p-5 border-t border-slate-200/80 space-y-4 text-sm text-slate-600" style="display:none;">
-                <p class="text-xs text-slate-500 leading-normal">If the Designated Officer fails to deliver this service within statutory limits or rejects your application without valid legal cause, you have the right to file appeals under Section 8 of RTS Act 2015:</p>
+              <div id="dossier-rts-escalation-content"
+                class="p-5 border-t border-slate-200/80 space-y-4 text-sm text-slate-600" style="display:none;">
+                <p class="text-xs text-slate-500 leading-normal">If the Designated Officer fails to deliver this service
+                  within statutory limits or rejects your application without valid legal cause, you have the right to
+                  file appeals under Section 8 of RTS Act 2015:</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 1 (OFFICER)</span>
-                    <strong class="font-heading text-sm text-slate-900 block mt-0.5" id="dossier-rts-designated">Tahsildar / Ward Officer</strong>
+                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 1
+                      (OFFICER)</span>
+                    <strong class="font-heading text-sm text-slate-900 block mt-0.5"
+                      id="dossier-rts-designated">Tahsildar / Ward Officer</strong>
                     <span class="text-xs text-slate-500 mt-1 block">Statutory SLA: 15 Days</span>
                   </div>
                   <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 2 (1ST APPEAL)</span>
-                    <strong class="font-heading text-sm text-slate-900 block mt-0.5" id="dossier-rts-first-appellate">Sub-Divisional Officer (SDO)</strong>
+                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 2 (1ST
+                      APPEAL)</span>
+                    <strong class="font-heading text-sm text-slate-900 block mt-0.5"
+                      id="dossier-rts-first-appellate">Sub-Divisional Officer (SDO)</strong>
                     <span class="text-xs text-slate-500 mt-1 block">Appeal Window: 30 Days</span>
                   </div>
                   <div class="p-3.5 bg-slate-50 rounded-lg border border-slate-200/80">
-                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 3 (2ND APPEAL)</span>
-                    <strong class="font-heading text-sm text-slate-900 block mt-0.5" id="dossier-rts-second-appellate">District Collector / RTS Comm.</strong>
+                    <span class="font-mono text-[10px] text-slate-500 block uppercase font-medium">TIER 3 (2ND
+                      APPEAL)</span>
+                    <strong class="font-heading text-sm text-slate-900 block mt-0.5"
+                      id="dossier-rts-second-appellate">District Collector / RTS Comm.</strong>
                     <span class="text-xs text-slate-500 mt-1 block">Appeal Window: 30 Days</span>
                   </div>
                 </div>
                 <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-                  <span class="font-mono text-slate-500">Maharashtra Right to Public Services Act (RTS Act No. XXXI of 2015)</span>
-                  <a id="dossier-rts-appeal-btn" href="https://aaplesarkar.mahaonline.gov.in" target="_blank" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors inline-flex items-center gap-1 self-start sm:self-auto shadow-2xs">
+                  <span class="font-mono text-slate-500">Maharashtra Right to Public Services Act (RTS Act No. XXXI of
+                    2015)</span>
+                  <a id="dossier-rts-appeal-btn" href="https://aaplesarkar.mahaonline.gov.in" target="_blank"
+                    class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors inline-flex items-center gap-1 self-start sm:self-auto shadow-2xs">
                     <span>File First Appeal ↗</span>
                   </a>
                 </div>
@@ -1064,17 +1279,19 @@
 
           <!-- RIGHT 4 COLUMNS: Action Station & Municipal Counter -->
           <div class="lg:col-span-4 space-y-6">
-            
+
             <!-- Filing Action Card -->
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm space-y-4">
               <div class="pb-3 border-b border-slate-100">
                 <div class="text-xs uppercase text-slate-500 font-semibold tracking-wide">Statutory Government Fee</div>
                 <div class="font-heading text-3xl text-slate-900 font-bold mt-1" id="dossier-fee-total">₹0.00</div>
-                <span class="text-xs text-slate-500 mt-1 block" id="dossier-payment-channel">Official Online Gateway (GRAS / Aaple Sarkar)</span>
+                <span class="text-xs text-slate-500 mt-1 block" id="dossier-payment-channel">Official Online Gateway
+                  (GRAS / Aaple Sarkar)</span>
               </div>
 
               <!-- Official Action Button -->
-              <a id="dossier-apply-btn" href="#" target="_blank" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3.5 px-4 rounded-xl font-medium transition-all shadow-sm flex items-center justify-center gap-2 text-center text-sm">
+              <a id="dossier-apply-btn" href="#" target="_blank"
+                class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3.5 px-4 rounded-xl font-medium transition-all shadow-sm flex items-center justify-center gap-2 text-center text-sm">
                 <span>Apply on Official Portal</span>
                 <span class="material-symbols-outlined text-[18px]">open_in_new</span>
               </a>
@@ -1082,13 +1299,16 @@
               <!-- Offline Fallback Notice -->
               <div class="p-3 bg-slate-50 rounded-lg border border-slate-200/80 text-xs text-slate-600">
                 <span>Receipt Mandate: </span>
-                <span class="font-medium text-slate-900" id="dossier-receipt-mandate">Instant Computerized E-Receipt & Application Token</span>
+                <span class="font-medium text-slate-900" id="dossier-receipt-mandate">Instant Computerized E-Receipt &
+                  Application Token</span>
               </div>
 
               <!-- Detailed Fee Table -->
               <div class="pt-1">
-                <div class="text-xs text-slate-700 font-semibold uppercase tracking-wider mb-2">Fee Breakdown Table</div>
-                <div id="dossier-fee-table-body" class="font-mono text-xs text-slate-600 space-y-1 divide-y divide-slate-100">
+                <div class="text-xs text-slate-700 font-semibold uppercase tracking-wider mb-2">Fee Breakdown Table
+                </div>
+                <div id="dossier-fee-table-body"
+                  class="font-mono text-xs text-slate-600 space-y-1 divide-y divide-slate-100">
                   <!-- Populated by app.js -->
                 </div>
               </div>
@@ -1110,12 +1330,16 @@
                 <p id="dossier-office-address" class="text-slate-700">Administrative Building, Municipal Corporation</p>
                 <span id="dossier-office-city" style="display:none;"></span>
                 <span id="dossier-office-borough" style="display:none;"></span>
-                <p id="dossier-office-window" class="font-mono text-xs text-slate-900 font-semibold">Counter Window 04</p>
-                <p id="dossier-office-hours" class="font-mono text-xs text-slate-500">Mon – Fri: 10:30 AM – 4:30 PM IST</p>
+                <p id="dossier-office-window" class="font-mono text-xs text-slate-900 font-semibold">Counter Window 04
+                </p>
+                <p id="dossier-office-hours" class="font-mono text-xs text-slate-500">Mon – Fri: 10:30 AM – 4:30 PM IST
+                </p>
               </div>
               <div class="pt-2 border-t border-slate-100 text-xs flex flex-col gap-1 text-slate-500">
-                <span>Official Helpline: <strong class="text-slate-900 font-mono" id="dossier-ombuds-phone">1800-120-8040</strong></span>
-                <span>Grievance Desk: <strong class="text-slate-900 font-mono" id="dossier-ombuds-email">grievance@maharashtra.gov.in</strong></span>
+                <span>Official Helpline: <strong class="text-slate-900 font-mono"
+                    id="dossier-ombuds-phone">1800-120-8040</strong></span>
+                <span>Grievance Desk: <strong class="text-slate-900 font-mono"
+                    id="dossier-ombuds-email">grievance@maharashtra.gov.in</strong></span>
               </div>
             </div>
 
@@ -1129,17 +1353,22 @@
            VIEW 4: CITIZEN LEDGER & PROGRESS (My Progress Deck)
            ================================================================== -->
       <section id="view-citizen-ledger" class="tab-pane flex flex-col w-full" style="display:none;">
-        
+
         <!-- Ledger Header -->
         <div class="bg-white rounded-xl border border-slate-200/80 p-6 md:p-8 shadow-sm mb-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200/80">
             <div>
-              <div class="text-xs uppercase text-slate-500 font-semibold tracking-wider" data-i18n="my_progress">Citizen Progress Ledger</div>
-              <h1 class="font-heading text-2xl md:text-3xl text-slate-900 font-semibold tracking-tight mt-1" id="ledger-task-title">
+              <div class="text-xs uppercase text-slate-500 font-semibold tracking-wider" data-i18n="my_progress">Citizen
+                Progress Ledger</div>
+              <h1 class="font-heading text-2xl md:text-3xl text-slate-900 font-semibold tracking-tight mt-1"
+                id="ledger-task-title">
                 My Procedural Manifest
               </h1>
             </div>
-            <button class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 shadow-sm" onclick="window.print()">
+            <button
+              class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 shadow-sm"
+              onclick="window.print()">
               <span class="material-symbols-outlined text-[16px]">print</span>
               <span>Print Ledger Sheet</span>
             </button>
@@ -1149,22 +1378,26 @@
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-5">
             <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
               <span class="text-xs uppercase text-slate-500 font-medium block">Stages Cleared</span>
-              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5" id="ledger-steps-cleared">0</strong>
+              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5"
+                id="ledger-steps-cleared">0</strong>
               <span class="font-mono text-xs text-slate-500 block" id="ledger-steps-total">of 0 Steps</span>
             </div>
             <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
               <span class="text-xs uppercase text-slate-500 font-medium block">Timeline Remaining</span>
-              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5" id="ledger-days-remaining">--</strong>
+              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5"
+                id="ledger-days-remaining">--</strong>
               <span class="font-mono text-xs text-slate-500 block">Working Days</span>
             </div>
             <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
               <span class="text-xs uppercase text-slate-500 font-medium block">Fees Paid / Logged</span>
-              <strong class="font-heading text-2xl text-emerald-700 font-semibold block mt-0.5" id="ledger-fees-paid">₹0.00</strong>
+              <strong class="font-heading text-2xl text-emerald-700 font-semibold block mt-0.5"
+                id="ledger-fees-paid">₹0.00</strong>
               <span class="font-mono text-xs text-slate-500 block" id="ledger-fees-pending">Pending: ₹0.00</span>
             </div>
             <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
               <span class="text-xs uppercase text-slate-500 font-medium block">Total Statutory Cost</span>
-              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5" id="ledger-total-fees">₹0.00</strong>
+              <strong class="font-heading text-2xl text-slate-900 font-semibold block mt-0.5"
+                id="ledger-total-fees">₹0.00</strong>
               <span class="font-mono text-xs text-slate-500 block">Official Rate</span>
             </div>
           </div>
@@ -1174,7 +1407,8 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div class="lg:col-span-6 space-y-4">
             <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
-              <div class="text-xs uppercase font-semibold text-slate-900 tracking-wider pb-3 border-b border-slate-100 mb-4 flex items-center justify-between">
+              <div
+                class="text-xs uppercase font-semibold text-slate-900 tracking-wider pb-3 border-b border-slate-100 mb-4 flex items-center justify-between">
                 <span>Milestone Execution Log</span>
                 <span class="material-symbols-outlined text-[18px] text-slate-400">checklist</span>
               </div>
@@ -1185,7 +1419,8 @@
           </div>
           <div class="lg:col-span-6 space-y-4">
             <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
-              <div class="text-xs uppercase font-semibold text-slate-900 tracking-wider pb-3 border-b border-slate-100 mb-4 flex items-center justify-between">
+              <div
+                class="text-xs uppercase font-semibold text-slate-900 tracking-wider pb-3 border-b border-slate-100 mb-4 flex items-center justify-between">
                 <span>Consolidated Document Proof Locker</span>
                 <span class="material-symbols-outlined text-[18px] text-slate-400">folder_shared</span>
               </div>
@@ -1202,49 +1437,68 @@
            VIEW 5: REGISTRY ADMIN & SCAPING AUDITOR
            ================================================================== -->
       <section id="view-registry-admin" class="tab-pane flex flex-col w-full" style="display:none;">
-        
+
         <div class="bg-white rounded-xl border border-slate-200/80 p-6 md:p-8 shadow-sm mb-6">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-200/80 gap-3">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-200/80 gap-3">
             <div>
-              <div class="text-xs uppercase text-slate-500 font-semibold tracking-wider" data-i18n="admin">Administrative Console</div>
-              <h1 class="font-heading text-2xl text-slate-900 font-semibold mt-1">Government Portal Scraper & URL Health Monitor</h1>
+              <div class="text-xs uppercase text-slate-500 font-semibold tracking-wider" data-i18n="admin">
+                Administrative Console</div>
+              <h1 class="font-heading text-2xl text-slate-900 font-semibold mt-1">Government Portal Scraper & URL Health
+                Monitor</h1>
             </div>
-            <span class="font-mono text-xs bg-slate-100 px-3 py-1 rounded-md border border-slate-200 text-slate-700 font-semibold">PORTAL AUDIT ENGINE</span>
+            <span
+              class="font-mono text-xs bg-slate-100 px-3 py-1 rounded-md border border-slate-200 text-slate-700 font-semibold">PORTAL
+              AUDIT ENGINE</span>
           </div>
 
           <!-- Admin Nav Panes -->
           <div class="flex border-b border-slate-200 pt-4 gap-4 text-xs font-semibold overflow-x-auto">
             <button class="pb-2.5 border-b-2 border-slate-900 text-slate-900" id="pane-scraper">Portal Scraper</button>
-            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900" id="pane-regulatory">Link Health & Cache</button>
-            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900" id="pane-audit">Audit Daemon</button>
-            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900" id="pane-feedback">Citizen Feedback</button>
-            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900" id="pane-moderation">Task Moderation</button>
+            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900"
+              id="pane-regulatory">Link Health & Cache</button>
+            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900"
+              id="pane-audit">Audit Daemon</button>
+            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900"
+              id="pane-feedback">Citizen Feedback</button>
+            <button class="pb-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-900"
+              id="pane-moderation">Task Moderation</button>
           </div>
 
           <!-- Scraper Panel -->
           <div class="pt-5 space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5" for="scraper-url-input">Target Portal URL</label>
-                <input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 font-mono text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10" id="scraper-url-input" type="text" placeholder="https://aaplesarkar.mahaonline.gov.in/..."/>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5"
+                  for="scraper-url-input">Target Portal URL</label>
+                <input
+                  class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 font-mono text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+                  id="scraper-url-input" type="text" placeholder="https://aaplesarkar.mahaonline.gov.in/..." />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5" for="scraper-hint-input">Target Service Name / Hint</label>
-                <input class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10" id="scraper-hint-input" type="text" placeholder="e.g. Income Certificate Tahsildar"/>
+                <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5"
+                  for="scraper-hint-input">Target Service Name / Hint</label>
+                <input
+                  class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+                  id="scraper-hint-input" type="text" placeholder="e.g. Income Certificate Tahsildar" />
               </div>
             </div>
             <div class="flex items-center gap-3 pt-1">
-              <button id="btn-run-scraper" class="px-4 py-2 bg-slate-900 text-white text-xs font-medium rounded-lg hover:bg-slate-800 transition-colors shadow-sm">
+              <button id="btn-run-scraper"
+                class="px-4 py-2 bg-slate-900 text-white text-xs font-medium rounded-lg hover:bg-slate-800 transition-colors shadow-sm">
                 Run Scrape Job
               </button>
-              <button id="btn-run-audit-daemon" class="px-4 py-2 bg-white text-slate-700 border border-slate-200 text-xs font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-2xs">
+              <button id="btn-run-audit-daemon"
+                class="px-4 py-2 bg-white text-slate-700 border border-slate-200 text-xs font-medium rounded-lg hover:bg-slate-50 transition-colors shadow-2xs">
                 Trigger Daily Link Daemon
               </button>
               <span id="audit-daemon-status" class="font-mono text-xs text-slate-500">Daemon: Idle</span>
             </div>
             <div class="pt-2">
-              <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Scraper Execution Output</label>
-              <pre id="scraper-output" class="bg-slate-900 text-slate-200 p-4 rounded-xl font-mono text-xs overflow-x-auto max-h-64 border border-slate-800 leading-relaxed">Awaiting audit run...</pre>
+              <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Scraper
+                Execution Output</label>
+              <pre id="scraper-output"
+                class="bg-slate-900 text-slate-200 p-4 rounded-xl font-mono text-xs overflow-x-auto max-h-64 border border-slate-800 leading-relaxed">Awaiting audit run...</pre>
             </div>
           </div>
 
@@ -1254,8 +1508,10 @@
             <div id="feedback-list-body"></div>
             <div id="moderation-table-body"></div>
             <div id="regulatory-cache-body"></div>
-            <input id="input-track-token" type="hidden"/>
-            <select id="select-track-portal"><option value="aaple-sarkar">Aaple Sarkar</option></select>
+            <input id="input-track-token" type="hidden" />
+            <select id="select-track-portal">
+              <option value="aaple-sarkar">Aaple Sarkar</option>
+            </select>
           </div>
 
         </div>
@@ -1268,26 +1524,34 @@
   <!-- ======================================================================
        MODAL 1: AAPLE SARKAR SEVA KENDRA (SETU LOCATOR) DIRECTORY MODAL
        ====================================================================== -->
-  <div id="setu-locator-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4" style="display:none;">
-    <div class="bg-white rounded-2xl border border-slate-200 max-w-2xl w-full p-6 md:p-8 shadow-2xl relative max-h-[85vh] flex flex-col">
+  <div id="setu-locator-modal"
+    class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4"
+    style="display:none;">
+    <div
+      class="bg-white rounded-2xl border border-slate-200 max-w-2xl w-full p-6 md:p-8 shadow-2xl relative max-h-[85vh] flex flex-col">
       <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-5">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-800">
+          <div
+            class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-800">
             <span class="material-symbols-outlined text-[24px]">account_balance</span>
           </div>
           <div>
             <h3 class="font-heading text-lg font-semibold text-slate-900">Aaple Sarkar Seva Kendra (Setu) Directory</h3>
-            <span class="text-xs text-slate-500">Authorized Citizen Facilitation Centers for In-Person Verification & Panchnama</span>
+            <span class="text-xs text-slate-500">Authorized Citizen Facilitation Centers for In-Person Verification &
+              Panchnama</span>
           </div>
         </div>
-        <button onclick="window.app.closeSetuLocatorModal()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg transition-colors">
+        <button onclick="window.app.closeSetuLocatorModal()"
+          class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg transition-colors">
           <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
 
       <div class="mb-4">
-        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Select District / Division</label>
-        <select id="select-setu-district" onchange="window.app.renderSetuCenters(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Select District /
+          Division</label>
+        <select id="select-setu-district" onchange="window.app.renderSetuCenters(this.value)"
+          class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-sm font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10">
           <option value="all">All Districts (Maharashtra)</option>
           <option value="mumbai">Mumbai City & Suburban</option>
           <option value="pune">Pune & Haveli / Baramati</option>
@@ -1304,7 +1568,8 @@
 
       <div class="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
         <span>Citizen Grievance Helpline: <strong class="text-slate-800 font-mono">1800-120-8040</strong></span>
-        <button onclick="window.app.closeSetuLocatorModal()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors">Close</button>
+        <button onclick="window.app.closeSetuLocatorModal()"
+          class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium transition-colors">Close</button>
       </div>
     </div>
   </div>
@@ -1312,7 +1577,8 @@
   <!-- ======================================================================
        MODAL 2: SHARE ROUTE MODAL
        ====================================================================== -->
-  <div id="share-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4" style="display:none;">
+  <div id="share-modal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4"
+    style="display:none;">
     <div class="bg-white rounded-2xl border border-slate-200 max-w-md w-full p-6 shadow-2xl relative">
       <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
         <h3 class="font-heading text-lg font-semibold text-slate-900">Share Procedure Route</h3>
@@ -1324,13 +1590,17 @@
         Share this verified statutory compliance route with direct links and required evidence checklists:
       </p>
       <div class="flex items-center gap-2 mb-3">
-        <input id="share-link-input" readonly class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 font-mono text-xs text-slate-900" type="text"/>
-        <button onclick="window.app.copyShareLink()" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-lg transition-colors">
+        <input id="share-link-input" readonly
+          class="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 font-mono text-xs text-slate-900"
+          type="text" />
+        <button onclick="window.app.copyShareLink()"
+          class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-lg transition-colors">
           Copy
         </button>
       </div>
       <div id="share-toast" class="hidden text-xs text-emerald-800 font-semibold mb-3">Link copied to clipboard!</div>
-      <button onclick="window.app.shareViaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-sm">
+      <button onclick="window.app.shareViaWhatsApp()"
+        class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-sm">
         <span class="material-symbols-outlined text-[18px]">chat</span>
         <span>Share via WhatsApp</span>
       </button>
@@ -1341,10 +1611,12 @@
        STEP INSPECTION SLIDE-OUT DRAWER
        ====================================================================== -->
   <div id="drawer-backdrop" class="fixed inset-0 bg-slate-950/40 backdrop-blur-2xs z-40" style="display:none;"></div>
-  <aside id="step-drawer" class="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] bg-white border-l border-slate-200 z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
+  <aside id="step-drawer"
+    class="fixed top-0 right-0 bottom-0 w-full sm:w-[460px] bg-white border-l border-slate-200 z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
     <div class="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
       <div class="flex items-center gap-2">
-        <span class="font-mono text-xs bg-slate-900 text-white px-2.5 py-0.5 rounded font-medium" id="drawer-step-badge">STAGE</span>
+        <span class="font-mono text-xs bg-slate-900 text-white px-2.5 py-0.5 rounded font-medium"
+          id="drawer-step-badge">STAGE</span>
         <span class="text-xs uppercase text-slate-500 font-semibold tracking-wider">Station Dossier</span>
       </div>
       <button id="btn-close-drawer" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
@@ -1357,19 +1629,22 @@
         <p id="drawer-desc" class="text-xs text-slate-600 leading-relaxed">Step Description</p>
       </div>
       <div class="bg-slate-50 rounded-lg p-3 border border-slate-200/80 space-y-1.5 text-xs">
-        <div>Agency: <strong class="text-slate-900 font-heading font-medium" id="drawer-agency">Department</strong></div>
+        <div>Agency: <strong class="text-slate-900 font-heading font-medium" id="drawer-agency">Department</strong>
+        </div>
         <div>SLA Window: <strong class="text-slate-900 font-mono" id="drawer-sla">15 Days</strong></div>
         <div>Statutory Fee: <strong class="text-slate-900 font-mono" id="drawer-fee">₹0.00</strong></div>
       </div>
       <div class="pt-2">
-        <button onclick="window.app.switchNavTab('step-dossier')" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
+        <button onclick="window.app.switchNavTab('step-dossier')"
+          class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
           <span>Open Full Dossier</span>
           <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
         </button>
       </div>
     </div>
     <div class="p-4 border-t border-slate-200 bg-slate-50/80">
-      <button id="btn-toggle-complete" class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
+      <button id="btn-toggle-complete"
+        class="w-full py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold transition-colors flex items-center justify-center gap-1.5 shadow-2xs">
         <span class="material-symbols-outlined text-[16px]">check_circle</span>
         <span>Mark Stage Cleared</span>
       </button>
@@ -1380,21 +1655,26 @@
        FOOTER
        ====================================================================== -->
   <footer class="bg-slate-950 text-slate-400 border-t border-slate-800 py-12 mt-auto">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs">
+    <div
+      class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs">
       <div class="space-y-1.5">
         <div class="font-heading text-sm uppercase font-semibold text-white tracking-wider">
           Maharashtra Civic Task Navigator
         </div>
         <p class="text-slate-400 max-w-xl leading-relaxed">
-          An open civic utility platform mapping administrative procedures under the Maharashtra Right to Public Services Act (RTS 2015). Not an official intermediary; links connect citizens directly to verified state government portals.
+          An open civic utility platform mapping administrative procedures under the Maharashtra Right to Public
+          Services Act (RTS 2015). Not an official intermediary; links connect citizens directly to verified state
+          government portals.
         </p>
       </div>
       <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-slate-300 font-medium">
-        <a href="https://aaplesarkar.mahaonline.gov.in" target="_blank" class="hover:text-white transition-colors flex items-center gap-1">
+        <a href="https://aaplesarkar.mahaonline.gov.in" target="_blank"
+          class="hover:text-white transition-colors flex items-center gap-1">
           <span>Aaple Sarkar Portal</span>
           <span class="material-symbols-outlined text-[14px]">open_in_new</span>
         </a>
-        <a href="https://portal.mcgm.gov.in" target="_blank" class="hover:text-white transition-colors flex items-center gap-1">
+        <a href="https://portal.mcgm.gov.in" target="_blank"
+          class="hover:text-white transition-colors flex items-center gap-1">
           <span>MCGM BMC Portal</span>
           <span class="material-symbols-outlined text-[14px]">open_in_new</span>
         </a>
@@ -1412,4 +1692,5 @@
   <script src="/static/admin_view.js"></script>
   <script src="/static/app.js"></script>
 </body>
+
 </html>
