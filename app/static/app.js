@@ -1754,6 +1754,16 @@ class CivicApp {
             // Render interactive search feedback cards on Intake Screen
             this.renderNlpResolutionFeedback(data);
 
+            if (data.needs_disambiguation && data.matches && data.matches.length >= 2) {
+                // Multi-candidate disambiguation required: do NOT auto-redirect!
+                // Stay on Intake Screen and smoothly focus the disambiguation options
+                const feedbackEl = document.getElementById('nlp-search-feedback');
+                if (feedbackEl) {
+                    feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+                return;
+            }
+
             if (data.top_task_id) {
                 // Set provenance notice for the roadmap header banner
                 if (data.hinglish_detected) {
@@ -1824,6 +1834,45 @@ class CivicApp {
         container.classList.remove('hidden');
         const isMr = (this.currentLang === 'mr');
 
+        let disambiguationBannerHtml = '';
+        if (data.needs_disambiguation && data.matches.length >= 2) {
+            const optA = data.matches[0];
+            const optB = data.matches[1];
+            const optATitle = (isMr && window.TASK_TRANSLATIONS?.[optA.task_id]?.title) || optA.title;
+            const optBTitle = (isMr && window.TASK_TRANSLATIONS?.[optB.task_id]?.title) || optB.title;
+            disambiguationBannerHtml = `
+                <div class="p-4 bg-amber-50 border-2 border-amber-500 rounded shadow-xs mb-3 space-y-3">
+                    <div class="flex items-center gap-2 text-amber-900 font-bold text-sm">
+                        <span class="material-symbols-outlined text-amber-600">help_outline</span>
+                        <span>${isMr ? 'कृपया वैधानिक हेतू स्पष्ट करा (अस्पष्ट शोध पर्याय):' : 'Ambiguous Statutory Intent — Please Clarify Your Request:'}</span>
+                    </div>
+                    <p class="text-xs text-amber-800">
+                        ${isMr 
+                            ? `आपला शोध एकापेक्षा जास्त अधिकृत प्रक्रियेशी जवळपास समान पातळीवर जुळत आहे. कृपया आपला अचूक पर्याय निवडा:` 
+                            : `Your query closely matches multiple distinct civic workflows. Please select your intended procedure:`}
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                        <button onclick="window.app.loadTaskAndRoute('${optA.task_id}')" 
+                                class="flex items-center justify-between p-3 bg-white border border-amber-300 hover:border-primary hover:bg-amber-100/40 text-left transition-all rounded shadow-2xs group">
+                            <div>
+                                <span class="font-bold text-xs text-primary block group-hover:underline">Option A: ${optATitle}</span>
+                                <span class="text-[11px] text-gray-500">${optA.municipality} • ${optA.category}</span>
+                            </div>
+                            <span class="material-symbols-outlined text-[18px] text-primary shrink-0 ml-2 group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                        </button>
+                        <button onclick="window.app.loadTaskAndRoute('${optB.task_id}')" 
+                                class="flex items-center justify-between p-3 bg-white border border-amber-300 hover:border-primary hover:bg-amber-100/40 text-left transition-all rounded shadow-2xs group">
+                            <div>
+                                <span class="font-bold text-xs text-primary block group-hover:underline">Option B: ${optBTitle}</span>
+                                <span class="text-[11px] text-gray-500">${optB.municipality} • ${optB.category}</span>
+                            </div>
+                            <span class="material-symbols-outlined text-[18px] text-primary shrink-0 ml-2 group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
         let hinglishBadgeHtml = '';
         if (data.hinglish_detected) {
             hinglishBadgeHtml = `
@@ -1870,6 +1919,7 @@ class CivicApp {
 
         const headerLabel = isMr ? `वैधानिक प्रक्रिया शोधली (${data.matches.length} परिणाम):` : `Statutory Intent Resolved (${data.matches.length} matches):`;
         container.innerHTML = `
+            ${disambiguationBannerHtml}
             ${hinglishBadgeHtml}
             <div class="font-headline text-[11px] font-semibold text-secondary uppercase tracking-wider">
                 ${headerLabel}

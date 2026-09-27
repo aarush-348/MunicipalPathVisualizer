@@ -774,6 +774,9 @@
           <button class="admin-subtab px-4 py-2.5 border-b-2 border-transparent text-secondary hover:text-primary" data-subtab="feedback" onclick="window.app.admin.switchTab('feedback')" data-i18n="subtab_feedback">
             💬 Citizen Feedback
           </button>
+          <button class="admin-subtab px-4 py-2.5 border-b-2 border-transparent text-secondary hover:text-primary" data-subtab="regulatory" onclick="window.app.admin.switchTab('regulatory')" data-i18n="subtab_regulatory">
+            🏛️ Statutory Portal Audit Cache (Track B)
+          </button>
         </div>
 
         <!-- PANE 1: Portal Scraper Console -->
@@ -873,6 +876,49 @@
             </p>
             <div class="space-y-3" id="feedback-list-body">
               <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- PANE 5: Statutory Portal Audit Cache (Track B Decoupled Background Scraper) -->
+        <div class="admin-tab-pane" id="pane-regulatory" style="display:none;">
+          <div class="bg-white border border-outline-variant rounded-lg p-6 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 class="font-headline text-base font-bold text-primary flex items-center gap-2">
+                  <span>Universal Statutory Regulatory Audit Cache</span>
+                  <span class="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] px-2 py-0.5 rounded font-bold">Track B Offline Decoupled</span>
+                </h2>
+                <p class="font-body text-xs text-gray-500 mt-1">
+                  Decouples live user queries from slow external government servers (&lt;5ms local read latency). Periodically audits HTTP status, verified SLAs, statutory fees, and gazette citations for all 6 statutory filing gateways.
+                </p>
+              </div>
+              <div class="flex flex-col sm:items-end gap-1 shrink-0">
+                <button id="btn-run-audit-daemon" onclick="window.app.admin.runRegulatoryAuditDaemon()" class="bg-primary hover:bg-primary-container text-white px-4 py-2 rounded text-xs font-headline font-semibold flex items-center gap-1.5 transition-colors shadow-xs">
+                  <span class="material-symbols-outlined text-[16px]">verified</span>
+                  <span>Run Background Audit Daemon</span>
+                </button>
+                <div id="audit-daemon-status" class="text-[11px] font-headline text-secondary"></div>
+              </div>
+            </div>
+
+            <!-- Table of Audited Portals -->
+            <div class="overflow-x-auto border border-outline-variant rounded">
+              <table class="w-full text-left text-xs font-headline">
+                <thead class="bg-surface-container-low border-b border-outline-variant text-gray-600 uppercase text-[10px]">
+                  <tr>
+                    <th class="p-3">Portal Gateway &amp; Authority</th>
+                    <th class="p-3">HTTP Status</th>
+                    <th class="p-3">Statutory Act &amp; Gazette Citation</th>
+                    <th class="p-3">Verified SLA &amp; Fee Schedule</th>
+                    <th class="p-3">Confidence</th>
+                    <th class="p-3">Last Audited</th>
+                  </tr>
+                </thead>
+                <tbody id="regulatory-cache-body" class="divide-y divide-gray-100 font-body">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

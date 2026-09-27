@@ -66,7 +66,8 @@ async def resolve_task_intent(payload: IntentRequest):
             )
             for m in res.matches
         ],
-        synthesis=res.synthesis
+        synthesis=res.synthesis,
+        needs_disambiguation=res.needs_disambiguation
     )
 
 
@@ -194,6 +195,26 @@ async def admin_verify_step(update: AdminVerificationUpdate, task_id: str = Quer
 @app.get("/api/admin/audit-logs")
 async def get_audit_logs():
     return db.get_audit_logs()
+
+
+@app.get("/api/admin/regulatory-cache")
+async def get_regulatory_cache():
+    """
+    Returns the locally cached audit status, verified gazette citations,
+    and fee schedules for the 6 official statutory portals.
+    Guarantees < 5ms retrieval without live external blocking.
+    """
+    return db.get_regulatory_audits()
+
+
+@app.post("/api/admin/run-audit-daemon")
+async def trigger_regulatory_audit():
+    """
+    Asynchronously triggers the background regulatory audit daemon across
+    all official government portals, updating the local high-speed cache.
+    """
+    results = await scraper_service.run_regulatory_audit()
+    return {"status": "success", "message": f"Successfully audited {len(results)} statutory government portals.", "data": results}
 
 
 # ---------------------------------------------------------------------------

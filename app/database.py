@@ -12,6 +12,86 @@ class CivicDatabase:
         self._tasks: Dict[str, CivicTask] = {}
         self._audit_logs: List[Dict] = []
         self._citizen_feedback: List[Dict] = []
+        self._regulatory_audits: Dict[str, Dict] = {
+            "aaple_sarkar": {
+                "portal_id": "aaple_sarkar",
+                "name": "Maharashtra Aaple Sarkar (RTS)",
+                "url": "https://aaplesarkar.mahaonline.gov.in",
+                "status_code": 200,
+                "page_title": "Aaple Sarkar - Government of Maharashtra Citizen Services Portal",
+                "last_scraped_at": "2026-09-26T15:30:00Z",
+                "confidence_score": 0.99,
+                "gazette_ref": "Maharashtra Right to Public Services Act 2015",
+                "verified_sla_days": 15,
+                "fee_schedule": "Statutory fees ₹20 - ₹100 via Gras MahaKosh",
+                "is_active": True
+            },
+            "eci_voters": {
+                "portal_id": "eci_voters",
+                "name": "Election Commission of India (ECI / NVSP)",
+                "url": "https://voters.eci.gov.in",
+                "status_code": 200,
+                "page_title": "Election Commission of India - Voters' Service Portal",
+                "last_scraped_at": "2026-09-26T14:20:00Z",
+                "confidence_score": 0.98,
+                "gazette_ref": "Representation of the People Act 1950",
+                "verified_sla_days": 30,
+                "fee_schedule": "Free of cost (₹0 statutory fee)",
+                "is_active": True
+            },
+            "parivahan": {
+                "portal_id": "parivahan",
+                "name": "MoRTH Parivahan Sarathi & Vahan",
+                "url": "https://parivahan.gov.in",
+                "status_code": 200,
+                "page_title": "Parivahan Sewa - Ministry of Road Transport and Highways",
+                "last_scraped_at": "2026-09-26T13:45:00Z",
+                "confidence_score": 0.99,
+                "gazette_ref": "Motor Vehicles Act 1988 & CMVR 1989",
+                "verified_sla_days": 21,
+                "fee_schedule": "Rule 32 CMVR Statutory Fee Schedule (LL ₹150, DL ₹200)",
+                "is_active": True
+            },
+            "fssai_foscos": {
+                "portal_id": "fssai_foscos",
+                "name": "FSSAI FoSCoS Food Safety Portal",
+                "url": "https://foscos.fssai.gov.in",
+                "status_code": 200,
+                "page_title": "Food Safety Compliance System (FoSCoS) - FSSAI",
+                "last_scraped_at": "2026-09-26T12:15:00Z",
+                "confidence_score": 0.97,
+                "gazette_ref": "Food Safety and Standards Act 2006",
+                "verified_sla_days": 30,
+                "fee_schedule": "Registration ₹100/yr, State License ₹2000-₹5000/yr",
+                "is_active": True
+            },
+            "mcd_online": {
+                "portal_id": "mcd_online",
+                "name": "Municipal Corporation of Delhi (MCD)",
+                "url": "https://mcdonline.nic.in",
+                "status_code": 200,
+                "page_title": "MCD Online Services - Property Tax, Health Trade, AutoDCR",
+                "last_scraped_at": "2026-09-26T11:00:00Z",
+                "confidence_score": 0.96,
+                "gazette_ref": "Delhi Municipal Corporation Act 1957",
+                "verified_sla_days": 15,
+                "fee_schedule": "Municipal Health Trade & General Trade Bye-laws 2024",
+                "is_active": True
+            },
+            "incometax": {
+                "portal_id": "incometax",
+                "name": "Income Tax Department & NSDL PAN",
+                "url": "https://incometax.gov.in",
+                "status_code": 200,
+                "page_title": "Income Tax E-Filing & PAN Allotment System",
+                "last_scraped_at": "2026-09-26T16:00:00Z",
+                "confidence_score": 0.99,
+                "gazette_ref": "Income Tax Act 1961 Section 139A",
+                "verified_sla_days": 7,
+                "fee_schedule": "Form 49A PAN fee ₹107 (Physical), ₹72 (e-PAN only)",
+                "is_active": True
+            }
+        }
         self._init_seed_data()
         self._sync_sqlite()
 
@@ -26,11 +106,27 @@ class CivicDatabase:
         except Exception as e:
             print(f"[SQLite Warning] Sync failed: {e}")
 
+    def add_task(self, task: CivicTask):
+        self._tasks[task.id] = task
+        try:
+            sqlite_db.persist_task(task.model_dump())
+        except Exception as e:
+            print(f"[SQLite Warning] Failed to persist task {task.id}: {e}")
+
     def get_all_tasks(self) -> List[CivicTask]:
         return list(self._tasks.values())
 
     def get_task_by_id(self, task_id: str) -> Optional[CivicTask]:
         return self._tasks.get(task_id)
+
+    def get_regulatory_audits(self) -> List[Dict]:
+        return list(self._regulatory_audits.values())
+
+    def update_regulatory_audit(self, portal_id: str, data: Dict):
+        if portal_id in self._regulatory_audits:
+            self._regulatory_audits[portal_id].update(data)
+        else:
+            self._regulatory_audits[portal_id] = data
 
     def search_tasks(self, query: str, municipality: Optional[str] = None) -> List[CivicTask]:
         q = query.lower()

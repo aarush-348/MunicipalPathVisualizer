@@ -1,0 +1,650 @@
+[
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Aaple Sarkar Citizen Profile & Mobile Aadhaar e-KYC (Dept: Aaple Sarkar Citizen Services (Maharashtra Right to Public Services Commission))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Aaple Sarkar Citizen Profile & Mobile Aadhaar e-KYC (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Age, Nationality and Domicile Certificate (SLA: 15 Days) (Dept: Aaple Sarkar Citizen Services (Maharashtra Right to Public Services Commission))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Income Certificate Application & Talathi Verification (SLA: 15 Days) (Dept: Aaple Sarkar Citizen Services (Maharashtra Right to Public Services Commission))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Tahsildar Digital Signature & Barcoded Certificate Issuance (Dept: Aaple Sarkar Citizen Services (Maharashtra Right to Public Services Commission))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Income Certificate Application & Talathi Verification (SLA: 15 Days) (Form: Income Certificate Application Form)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Income Certificate Application & Talathi Verification (SLA: 15 Days) (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Age, Nationality and Domicile Certificate (SLA: 15 Days) (Form: Age Nationality and Domicile Certificate Form)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Age, Nationality and Domicile Certificate (SLA: 15 Days) (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in/en/Registration/Register",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Aaple Sarkar Citizen Profile & Mobile Aadhaar e-KYC (Form: Citizen Registration Portal Form)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in/en/TrackApplicationStatus",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Tahsildar Digital Signature & Barcoded Certificate Issuance (Form: Barcoded Maharashtra State Certificate PDF)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://aaplesarkar.mahaonline.gov.in/en/VerifyCertificate",
+    "context": "Task: Citizen Statutory Certificates Package (Income, Domicile & Caste via Aaple Sarkar) -> Step: Tahsildar Digital Signature & Barcoded Certificate Issuance (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://autodcr.mcgm.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Architectural AutoDCR Plan Submission & Intimation of Disapproval (IOD) (Dept: BMC Building Proposals Department (AutoDCR Cell))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://autodcr.mcgm.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Architectural AutoDCR Plan Submission & Intimation of Disapproval (IOD) (Form: Application for Development Permission & Building Sanction)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://autodcr.mcgm.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Final Building Completion & Occupancy Certificate (OC) (Dept: BMC Building Proposals Department (AutoDCR Cell))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://autodcr.mcgm.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Final Building Completion & Occupancy Certificate (OC) (Form: Completion Certificate & Notice of Completion)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://autodcr.mcgm.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Plinth Commencement Certificate (CC) (Dept: BMC Building Proposals Department (AutoDCR Cell))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://autodcr.mcgm.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Plinth Commencement Certificate (CC) (Form: Notice of Completion of Plinth)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://autodcr.mcgm.gov.in/eodb-dashboard",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Architectural AutoDCR Plan Submission & Intimation of Disapproval (IOD) (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://autodcr.mcgm.gov.in/guidelines/cc_procedure.pdf",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Plinth Commencement Certificate (CC) (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://bhulekh.mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Statutory Notice Issuance under Section 150 (15-Day Public Objection) (Form: Public Notice of Property Record Transfer)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://bhulekh.mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Statutory Notice Issuance under Section 150 (15-Day Public Objection) (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://digitalsatbara.mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Circle Officer / Tehsildar Approval & Digital 7/12 Satbara Issuance (Form: Digitally Signed 7/12 & 8A Extract)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://digitalsatbara.mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Circle Officer / Tehsildar Approval & Digital 7/12 Satbara Issuance (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://fda.maharashtra.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: FSSAI Maharashtra State Food License & MPCB Consent (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://foscos.fssai.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: FSSAI Maharashtra State Food License & MPCB Consent (Dept: Food Safety and Standards Authority of India (FSSAI Western Region) & FDA Maharashtra)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://foscos.fssai.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: FSSAI Maharashtra State Food License & MPCB Consent (Form: State Food License Application)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://foscos.fssai.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: FSSAI State Food License (FoSCoS Maharashtra) (Dept: Food Safety and Standards Authority of India (FSSAI Western Region) & FDA Maharashtra)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://foscos.fssai.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: FSSAI State Food License (FoSCoS Maharashtra) (Form: Application for State Food License under FSS Act)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://foscos.fssai.gov.in/userguide",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: FSSAI State Food License (FoSCoS Maharashtra) (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://igrmaharashtra.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Registered Title Deed & IGR Index-II Verification (Dept: Inspector General of Registration & Controller of Stamps (IGR Maharashtra))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://igrmaharashtra.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Registered Title Deed & IGR Index-II Verification (Form: Certified Copy of Book No. 1 Index II)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://igrmaharashtra.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Commercial Premises Verification & Registered Lease / Tax Index (Dept: Inspector General of Registration & Controller of Stamps (IGR Maharashtra))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://igrmaharashtra.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Commercial Premises Verification & Registered Lease / Tax Index (Form: E-Registration Certified Index-II Copy)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://igrmaharashtra.gov.in/e-Search",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Registered Title Deed & IGR Index-II Verification (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://igrmaharashtra.gov.in/e-Search",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Commercial Premises Verification & Registered Lease / Tax Index (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://lms.mahaonline.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: Business Incorporation & PMC Gumasta Intimation (Dept: Maharashtra Labour Department (LMS MahaOnline & Aaple Sarkar))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://lms.mahaonline.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: Business Incorporation & PMC Gumasta Intimation (Form: PMC Gumasta Registration Form)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://lms.mahaonline.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Commercial Lease Registration & Gumasta License (Ward H/West) (Form: Application for Registration of Shops & Establishments)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://lms.mahaonline.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Maharashtra Gumasta License / Form A Intimation (LMS MahaOnline) (Dept: Maharashtra Labour Department (LMS MahaOnline & Aaple Sarkar))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://lms.mahaonline.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Maharashtra Gumasta License / Form A Intimation (LMS MahaOnline) (Form: Application for Registration (10+ Employees))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://lms.mahaonline.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Maharashtra Gumasta License / Form A Intimation (LMS MahaOnline) (Form: Intimation of Establishment (0-9 Employees))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://lms.mahaonline.gov.in/Home/CitizenServices",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Commercial Lease Registration & Gumasta License (Ward H/West) (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://lms.mahaonline.gov.in/Home/DownloadForms",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Maharashtra Gumasta License / Form A Intimation (LMS MahaOnline) (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Circle Officer / Tehsildar Approval & Digital 7/12 Satbara Issuance (Dept: Revenue & Forest Department, Maharashtra (MahaBhumi E-Ferfar Cell))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: E-Ferfar (Online Mutation) Filing on MahaBhumi E-Hakk Portal (Dept: Revenue & Forest Department, Maharashtra (MahaBhumi E-Ferfar Cell))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Statutory Notice Issuance under Section 150 (15-Day Public Objection) (Dept: Revenue & Forest Department, Maharashtra (MahaBhumi E-Ferfar Cell))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Talathi Field Inquiry & Verification Report (Dept: Revenue & Forest Department, Maharashtra (MahaBhumi E-Ferfar Cell))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mahabhumi.gov.in",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: Talathi Field Inquiry & Verification Report (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mahabhumi.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Property Card, CTS Plan & IGR Title Clearance (Dept: Revenue & Forest Department, Maharashtra (MahaBhumi E-Ferfar Cell))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mahabhumi.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Property Card, CTS Plan & IGR Title Clearance (Form: Digital Property Card Download)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mahabhumi.gov.in/e-Ferfar/rules.pdf",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: E-Ferfar (Online Mutation) Filing on MahaBhumi E-Hakk Portal (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://mahabhumi.gov.in/e-Hakk",
+    "context": "Task: Agricultural & Land 7/12 (Satbara) Mutation & Title Transfer -> Step: E-Ferfar (Online Mutation) Filing on MahaBhumi E-Hakk Portal (Form: Application for E-Ferfar Mutation Entry)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://mahabhumi.gov.in/e-Records",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Property Card, CTS Plan & IGR Title Clearance (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://mahagst.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Maharashtra Professional Tax (PTEC & PTRC Enrollment via MahaGST) (Dept: Department of Goods and Services Tax, Maharashtra (MahaGST))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.mahagst.gov.in/"
+  },
+  {
+    "url": "https://mahagst.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Maharashtra Professional Tax (PTEC & PTRC Enrollment via MahaGST) (Form: Application for Certificate of Enrolment under PT Act)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.mahagst.gov.in/"
+  },
+  {
+    "url": "https://mahagst.gov.in/en/professional-tax",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Maharashtra Professional Tax (PTEC & PTRC Enrollment via MahaGST) (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://mpcb.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MPCB Green Category Consent to Establish & Operate (CTE/CTO) (Dept: Maharashtra Pollution Control Board (MPCB Regional Office))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mpcb.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MPCB Green Category Consent to Establish & Operate (CTE/CTO) (Form: Combined Application for CTE & CTO under Water & Air Acts)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://mpcb.gov.in/consent/categorization-industries",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MPCB Green Category Consent to Establish & Operate (CTE/CTO) (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://pmc.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: PMC Health Department Trade / Eating House License (Dept: Pune Municipal Corporation (PMC Health Department))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: PMC Health Department Trade / Eating House License (Form: Application for Eating House License)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: PMC Property Tax Khata & No Arrears Certificate (Dept: Pune Municipal Corporation (PMC Health Department))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: Pune Central Fire Brigade NOC (New Timber Market HQ) (Dept: Pune Fire Brigade (PMC Central Fire Command))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: Pune Central Fire Brigade NOC (New Timber Market HQ) (Form: Application for Commercial Kitchen Fire NOC)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in/en/fire-department",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: Pune Central Fire Brigade NOC (New Timber Market HQ) (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in/en/health-department",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: PMC Health Department Trade / Eating House License (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in/en/property-tax",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: PMC Property Tax Khata & No Arrears Certificate (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in/en/shops-and-establishments",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: Business Incorporation & PMC Gumasta Intimation (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://pmc.gov.in/ptis",
+    "context": "Task: Open a Restaurant, Cafe or Food Outlet in Pune (PMC) -> Step: PMC Property Tax Khata & No Arrears Certificate (Form: Property Tax Clearance Application)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://www.pmc.gov.in"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Integrated Statutory Clearances (CFO Fire NOC, Traffic & SWD) (Dept: Mumbai Fire Brigade (Chief Fire Officer Command))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Assistant Engineer (Water Works) Site Survey & Feasibility Inspection (Dept: MCGM Hydraulic Engineer Department (Water Works))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Assistant Engineer (Water Works) Site Survey & Feasibility Inspection (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Licensed Plumber Layout & Online Filing (Aaple Sarkar / BMC) (Dept: MCGM Hydraulic Engineer Department (Water Works))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Licensed Plumber Layout & Online Filing (Aaple Sarkar / BMC) (Form: Plumber Certificate of Internal Water Fitting)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: MCGM Property Tax SAC & Building Plan Verification (Dept: MCGM Hydraulic Engineer Department (Water Works))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: MCGM Property Tax SAC & Building Plan Verification (Form: Application for Fresh Municipal Water Supply)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Main Pipeline Tapping, Water Meter Calibration & Supply Activation (Dept: MCGM Hydraulic Engineer Department (Water Works))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Main Pipeline Tapping, Water Meter Calibration & Supply Activation (Form: Water Supply Release & Meter Connection Order)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Main Pipeline Tapping, Water Meter Calibration & Supply Activation (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Road Opening / Trenching Permission & Restoration Charges (Dept: MCGM Hydraulic Engineer Department (Water Works))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Road Opening / Trenching Permission & Restoration Charges (Form: Right of Way Road Opening Permission)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Commercial Lease Registration & Gumasta License (Ward H/West) (Dept: MCGM Labour & Shops Department (Ward H/West))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MCGM Section 394 Health Trade License (MOH Ward H/West) (Dept: MCGM Public Health Department (Medical Officer of Health - Ward H/West))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MCGM Section 394 Health Trade License (MOH Ward H/West) (Form: Application for Grant of Health License under Section 394 MMC Act)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Mumbai Fire Brigade (MFB) Fire Safety Inspection NOC (Dept: Mumbai Fire Brigade (Chief Fire Officer Command))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Mumbai Fire Brigade (MFB) Fire Safety Inspection NOC (Form: Application for Fire Safety Verification & Final NOC)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Outdoor Dining Permission & Devanagari Signage Clearance (Ward H/West) (Dept: MCGM License & Estate Department (Section 328/394))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Outdoor Dining Permission & Devanagari Signage Clearance (Ward H/West) (Form: Application for Outdoor Customer Seating & Signage)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Municipal Signboard Permission & Marathi Devanagari Prominence Clearance (Dept: MCGM License & Estate Department (Section 328/394))",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Municipal Signboard Permission & Marathi Devanagari Prominence Clearance (Form: Application for External Signage / Nameboard)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://portal.mcgm.gov.in/irj/portal/anonymous"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/eodb-approvals",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Integrated Statutory Clearances (CFO Fire NOC, Traffic & SWD) (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/eodb-trenching",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Road Opening / Trenching Permission & Restoration Charges (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/irj/portal/anonymous/qlfirenoc",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Mumbai Fire Brigade (MFB) Fire Safety Inspection NOC (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/irj/portal/anonymous/qlhealthlicense",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MCGM Section 394 Health Trade License (MOH Ward H/West) (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/irj/portal/anonymous/qloccupancycertificate",
+    "context": "Task: Commercial Building Plan Sanction & Occupancy (OC) -> Step: Final Building Completion & Occupancy Certificate (OC) (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/irj/portal/anonymous/qlrooftopdining",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: Outdoor Dining Permission & Devanagari Signage Clearance (Ward H/West) (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/irj/portal/anonymous/qlsignboard",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Municipal Signboard Permission & Marathi Devanagari Prominence Clearance (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/irj/portal/anonymous/qlwaterconnection",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: MCGM Property Tax SAC & Building Plan Verification (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://portal.mcgm.gov.in/water-services",
+    "context": "Task: New Commercial / Domestic Water Supply Connection (MCGM Hydraulic Dept) -> Step: Licensed Plumber Layout & Online Filing (Aaple Sarkar / BMC) (Verification)",
+    "status_code": 404,
+    "status_desc": "DEAD END / 404 Not Found"
+  },
+  {
+    "url": "https://rbi.org.in/Scripts/BS_ViewMasCirculardetails.aspx?id=9861",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Commercial Current Bank Account & E-Payment Merchant Integration (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://udyamregistration.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: PAN & Udyam MSME Zero-Fee Registration (Dept: Ministry of Micro, Small & Medium Enterprises (Udyam Maharashtra))",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://udyamregistration.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: PAN & Udyam MSME Zero-Fee Registration (Form: Udyam Registration Portal Application)",
+    "status_code": 200,
+    "status_desc": "OK (200)"
+  },
+  {
+    "url": "https://udyamregistration.gov.in/Government-India/Ministry-MSME-registration.htm",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: PAN & Udyam MSME Zero-Fee Registration (Verification)",
+    "status_code": 200,
+    "status_desc": "OK (200) -> Redirected to https://udyamregistration.gov.in/ErrorPages/FileNotFound.htm?aspxerrorpath=/udyam/ErrorPages/FileNotFound.aspx"
+  },
+  {
+    "url": "https://www.mca.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MCA Incorporation, RoC Mumbai & Entity PAN (Dept: Ministry of Corporate Affairs (RoC Mumbai) & GSTN)",
+    "status_code": 403,
+    "status_desc": "HTTP 403"
+  },
+  {
+    "url": "https://www.mca.gov.in",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MCA Incorporation, RoC Mumbai & Entity PAN (Form: Simplified Proforma for Incorporating Company Electronically Plus)",
+    "status_code": 403,
+    "status_desc": "HTTP 403"
+  },
+  {
+    "url": "https://www.mca.gov.in",
+    "context": "Task: Register a Small Business or Retail Enterprise (Maharashtra Gumasta & Shops Act) -> Step: Commercial Current Bank Account & E-Payment Merchant Integration (Dept: Ministry of Corporate Affairs (RoC Mumbai) & GSTN)",
+    "status_code": 403,
+    "status_desc": "HTTP 403"
+  },
+  {
+    "url": "https://www.mca.gov.in/content/mca/global/en/home.html",
+    "context": "Task: Register & Commission a Commercial Bakery in Bandra, Mumbai -> Step: MCA Incorporation, RoC Mumbai & Entity PAN (Verification)",
+    "status_code": 403,
+    "status_desc": "HTTP 403"
+  }
+]

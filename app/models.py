@@ -187,4 +187,5 @@ class IntentResolutionResponse(BaseModel):
     top_task_id: Optional[str] = None
     matches: List[IntentMatchModel]
     synthesis: Optional[Dict[str, Any]] = None
+    needs_disambiguation: bool = False
 
