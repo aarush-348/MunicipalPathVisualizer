@@ -1,0 +1,40 @@
+2026-09-27 07:18:41,703 [INFO] AapleSarkarScraper: Starting Phase 2 sample scrape (Target: 18 services)...
+2026-09-27 07:18:41,704 [INFO] AapleSarkarScraper: Scraping Service [1251] Income Certificate from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251
+2026-09-27 07:18:42,371 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1251 "HTTP/1.1 200 OK"
+2026-09-27 07:18:42,490 [INFO] AapleSarkarScraper: Scraping Service [1253] Age Nationality and Domicile Certificate from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253
+2026-09-27 07:18:43,088 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1253 "HTTP/1.1 200 OK"
+2026-09-27 07:18:43,184 [INFO] AapleSarkarScraper: Scraping Service [1284] Caste Certificate from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284
+2026-09-27 07:18:43,796 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1284 "HTTP/1.1 200 OK"
+2026-09-27 07:18:43,951 [INFO] AapleSarkarScraper: Scraping Service [1286] Non Creamy Layer Certificate from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286
+2026-09-27 07:18:44,519 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1286 "HTTP/1.1 200 OK"
+2026-09-27 07:18:44,601 [INFO] AapleSarkarScraper: Scraping Service [1254] Solvency Certificate from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1254
+2026-09-27 07:18:45,235 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1254 "HTTP/1.1 200 OK"
+2026-09-27 07:18:45,324 [INFO] AapleSarkarScraper: Scraping Service [1255] Senior Citizen Certificate from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1255
+2026-09-27 07:18:45,950 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1255 "HTTP/1.1 200 OK"
+2026-09-27 07:18:46,038 [INFO] AapleSarkarScraper: Scraping Service [4440] 7 -12 Extract from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=4440
+2026-09-27 07:18:46,665 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=4440 "HTTP/1.1 200 OK"
+2026-09-27 07:18:46,762 [INFO] AapleSarkarScraper: Scraping Service [2318] Agriculturist Certificate from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2318
+2026-09-27 07:18:47,380 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2318 "HTTP/1.1 200 OK"
+2026-09-27 07:18:47,471 [INFO] AapleSarkarScraper: Scraping Service [1863] Application for Registration of Shops & Establishment (Form A) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863
+2026-09-27 07:18:48,058 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1863 "HTTP/1.1 200 OK"
+2026-09-27 07:18:48,141 [INFO] AapleSarkarScraper: Scraping Service [1864] Application for Notice of Change in Shops & Establishment (Form I) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1864
+2026-09-27 07:18:48,718 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1864 "HTTP/1.1 200 OK"
+2026-09-27 07:18:48,815 [INFO] AapleSarkarScraper: Scraping Service [1866] Application for Cancellation of Shops & Establishment (Form J) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1866
+2026-09-27 07:18:49,427 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=1866 "HTTP/1.1 200 OK"
+2026-09-27 07:18:49,515 [INFO] AapleSarkarScraper: Scraping Service [7129] Application for Cancellation (Trade Licence) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=7129
+2026-09-27 07:18:50,146 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=7129 "HTTP/1.1 200 OK"
+2026-09-27 07:18:50,241 [INFO] AapleSarkarScraper: Scraping Service [7084] Building Permission (BPMS) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=7084
+2026-09-27 07:18:50,869 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=7084 "HTTP/1.1 200 OK"
+2026-09-27 07:18:50,952 [INFO] AapleSarkarScraper: Scraping Service [8864] Commencement Certificate (AutoDCR) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8864
+2026-09-27 07:18:51,591 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8864 "HTTP/1.1 200 OK"
+2026-09-27 07:18:51,692 [INFO] AapleSarkarScraper: Scraping Service [8865] Plinth Completion Certificate (AutoDCR) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8865
+2026-09-27 07:18:52,300 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8865 "HTTP/1.1 200 OK"
+2026-09-27 07:18:52,384 [INFO] AapleSarkarScraper: Scraping Service [8866] Occupancy Certificate (AutoDCR) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8866
+2026-09-27 07:18:53,015 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=8866 "HTTP/1.1 200 OK"
+2026-09-27 07:18:53,096 [INFO] AapleSarkarScraper: Scraping Service [2476] Birth Certificate (Rural) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2476
+2026-09-27 07:18:53,730 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2476 "HTTP/1.1 200 OK"
+2026-09-27 07:18:53,826 [INFO] AapleSarkarScraper: Scraping Service [2480] Death Certificate (Rural) from https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2480
+2026-09-27 07:18:54,428 [INFO] httpx: HTTP Request: GET https://aaplesarkar.mahaonline.gov.in/en/Login/Certificate_Documents?ServiceId=2480 "HTTP/1.1 200 OK"
+2026-09-27 07:18:54,501 [INFO] AapleSarkarScraper: Completed Phase 2 Scrape. Successfully extracted 18 services.
+2026-09-27 07:18:54,508 [INFO] AapleSarkarScraper: Exported JSON dataset to data/sample_services.json
+2026-09-27 07:18:54,510 [INFO] AapleSarkarScraper: Exported CSV dataset to data/sample_services.csv
